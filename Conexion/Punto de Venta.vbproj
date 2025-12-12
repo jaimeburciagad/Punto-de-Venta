@@ -1,0 +1,640 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB540F5F-6FB9-44E0-B5F7-684AF954D529}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>ECVENTA4.My.MyApplication</StartupObject>
+    <RootNamespace>ECVENTA4</RootNamespace>
+    <AssemblyName>PuntoVentaW10</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>\\server\users\public\documents\instaladores\EC\EC Punto de Venta\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <UpdateUrl>\\server\users\public\documents\instaladores\EC\EC Punto de Venta\</UpdateUrl>
+    <ProductName>Punto de Venta</ProductName>
+    <PublisherName>EC</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>132</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>PuntoVentaW10.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>PuntoVentaW10.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>DD5BD15560166547FF49A3CD0D97BC5D500465ED</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Punto de Venta_3_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icono Punto de Venta Cobrar.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\CrystalDecisions.CrystalReports.Engine\13.0.2000.0__692fbea5521e1304\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\CrystalDecisions.ReportSource\13.0.2000.0__692fbea5521e1304\CrystalDecisions.ReportSource.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\CrystalDecisions.Shared\13.0.2000.0__692fbea5521e1304\CrystalDecisions.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\CrystalDecisions.Windows.Forms\13.0.2000.0__692fbea5521e1304\CrystalDecisions.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.CalcEngine, Version=4.0.3518.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.CalcEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.Excel, Version=4.0.3518.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.PDF, Version=1.0.3518.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.PDF.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.PluginCalendar.WinForms, Version=4.0.3512.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.PluginCalendar.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.Win, Version=4.0.3512.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.Win.Spread, Version=4.0.3512.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.Win.Spread.dll</HintPath>
+    </Reference>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=4.10.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FirebirdClient\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.MSXML2">
+      <HintPath>..\..\..\..\Downloads\COSAS QUE NO SE QUE SON\ALEGRIA\SUPERLUGITO\bin\Debug\Interop.MSXML2.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\DUARSANUEVOluisa2\DUARSANUEVOluisa2\DUARSANUEVOluisa\SUPERLUGITO\bin\Debug\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="FirebirdSql.Data.Client.Native" />
+    <Import Include="FirebirdSql.Data.Client.Native.Handle" />
+    <Import Include="FirebirdSql.Data.FirebirdClient" />
+    <Import Include="FirebirdSql.Data.Isql" />
+    <Import Include="FirebirdSql.Data.Services" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CLASES\Base.vb" />
+    <Compile Include="CLASES\Conversion.vb" />
+    <Compile Include="CLASES\FRBUSQUEDA.vb" />
+    <Compile Include="CLASES\GENERAL.VB" />
+    <Compile Include="CLASES\Global.vb" />
+    <Compile Include="CLASES\imp.vb" />
+    <Compile Include="CLASES\Impresion.vb" />
+    <Compile Include="CLASES\Impresionvirtual.vb" />
+    <Compile Include="CLASES\imprimevale.vb" />
+    <Compile Include="CLASES\imptaire.vb" />
+    <Compile Include="CLASES\precotizacion.vb" />
+    <Compile Include="CLASES\predinero.vb" />
+    <Compile Include="CLASES\preimp.vb" />
+    <Compile Include="CLASES\preImpresion.vb" />
+    <Compile Include="CLASES\preImptrans.vb" />
+    <Compile Include="CLASES\prepuntos.vb" />
+    <Compile Include="CLASES\preretiros.vb" />
+    <Compile Include="CLASES\pretiempoaire.vb" />
+    <Compile Include="CLASES\prevales.vb" />
+    <Compile Include="CLASES\previrtual.vb" />
+    <Compile Include="CLASES\RawPrinterHelper.vb" />
+    <Compile Include="CLASES\REPORTE.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devoluciones.Designer.vb">
+      <DependentUpon>Devoluciones.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Devoluciones.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.vb">
+      <DependentUpon>Form1.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\Autorizacion.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\busqueda.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\CONFIGURACION.designer.vb">
+      <DependentUpon>CONFIGURACION.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\CONFIGURACION.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\cortecajanuevo.designer.vb">
+      <DependentUpon>cortecajanuevo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\cortecajanuevo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\corteporiva.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\FrAdmin.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\frautorizado.designer.vb">
+      <DependentUpon>frautorizado.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\frautorizado.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\FrBuscaArt.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\FrCambio.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\FrLogin.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\FrPopup.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\FrRegreso.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\FrVenta.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\ORDENACION.designer.vb">
+      <DependentUpon>ORDENACION.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\ORDENACION.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\Paraautorizar.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\ParaautorizarSALIDA.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\parafacturar.designer.vb">
+      <DependentUpon>parafacturar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\parafacturar.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\reimprime.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\Repsalidascaja.designer.vb">
+      <DependentUpon>Repsalidascaja.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\Repsalidascaja.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\Reptarjetas.designer.vb">
+      <DependentUpon>Reptarjetas.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\Reptarjetas.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\retiros.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\TICKETS.designer.vb">
+      <DependentUpon>TICKETS.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\TICKETS.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMAS\VENTANITA.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="RegistroHistorial.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CLASES\REPORTE.resx" />
+    <EmbeddedResource Include="Devoluciones.resx">
+      <DependentUpon>Devoluciones.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\Autorizacion.resx">
+      <DependentUpon>Autorizacion.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\busqueda.resx" />
+    <EmbeddedResource Include="FORMAS\CONFIGURACION.resx">
+      <DependentUpon>CONFIGURACION.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\cortecajanuevo.resx">
+      <DependentUpon>cortecajanuevo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\corteporiva.resx">
+      <DependentUpon>corteporiva.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\FrAdmin.resx">
+      <DependentUpon>FrAdmin.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\frautorizado.resx">
+      <DependentUpon>frautorizado.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\FrBuscaArt.resx">
+      <DependentUpon>FrBuscaArt.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\FrCambio.resx">
+      <DependentUpon>FrCambio.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\FrLogin.resx">
+      <DependentUpon>FrLogin.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\FrRegreso.resx">
+      <DependentUpon>FrRegreso.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\FrVenta.resx">
+      <DependentUpon>FrVenta.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\ORDENACION.resx">
+      <DependentUpon>ORDENACION.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\Paraautorizar.resx">
+      <DependentUpon>Paraautorizar.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\ParaautorizarSALIDA.resx">
+      <DependentUpon>ParaautorizarSALIDA.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\parafacturar.resx">
+      <DependentUpon>parafacturar.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\reimprime.resx" />
+    <EmbeddedResource Include="FORMAS\Repsalidascaja.resx">
+      <DependentUpon>Repsalidascaja.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\Reptarjetas.resx">
+      <DependentUpon>Reptarjetas.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\retiros.resx">
+      <DependentUpon>retiros.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\TICKETS.resx">
+      <DependentUpon>TICKETS.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\VENTANITA.resx">
+      <DependentUpon>VENTANITA.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\licenses.licx" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Conexion_TemporaryKey.pfx" />
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Punto de Venta_1_TemporaryKey.pfx" />
+    <None Include="Punto de Venta_2_TemporaryKey.pfx" />
+    <None Include="Punto de Venta_3_TemporaryKey.pfx" />
+    <None Include="Punto de Venta_TemporaryKey.pfx" />
+    <None Include="Resources\APNGPrint1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3carrito.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ADENTROGUARDAR.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ADENTROSALIR.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\borrar.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BOTON NUEVO.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BOTON NUEVO1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\buscar.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CALCULAR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\carrito-de-compra.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CARROVOLTEADO.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clientes.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\configurar.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CONSULTAR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia %282%29 de carrito-de-compra1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia %283%29 de carrito-de-compra1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de CALCULAR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de carrito-de-compra1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de CARROVOLTEADO.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de CONSULTAR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de ELIMINAR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cuadro.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Diapositiva1.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Diapositiva11.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Diapositiva12.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ELIMINAR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exportar.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exportar1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exportar2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flechaadelante.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\guardar.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\guardar1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\guardar2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IMPRIMIR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imprimir1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo ec%281%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LOGO REDONDO.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LOGO.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LOGO_EC_1.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LOGO1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo21.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo31.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo2016.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo20161.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logoDUARSA.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\modificar.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NUEVO.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ordenar.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PANTALLA PUNTO DE VENTA CORRECCION.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PRINCIPAL.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PRINCIPAL1.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PUNTO VENTA AZUL SIN LOGO.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\REGRESAR.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_b_Icon_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_b_Icon_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\signo +.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\super luguito21.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tira.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FORMAS\CONFIGPV.TXT" />
+    <Content Include="Icono Punto de Venta Cobrar.ico" />
+    <Content Include="Resources\1485477041-play_78590.png" />
+    <None Include="Resources\1485477101-arrow-left_78605.png" />
+    <Content Include="Resources\printer_102274 %281%29.png" />
+    <Content Include="Resources\printer_102274 %281%291.png" />
+    <None Include="Resources\search-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Scripting">
+      <Guid>{420B2830-E718-11CF-893D-00A0C9054228}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
