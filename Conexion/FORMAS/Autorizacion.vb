@@ -2,19 +2,19 @@ Imports System.Data.SqlClient
 Public Class Autorizacion
 
     Inherits System.Windows.Forms.Form
-    Dim xCon As SqlConnection
+    'Dim xCon As SqlConnection
     Dim fo As FrVenta
 
 
 
 #Region " Código generado por el Diseñador de Windows Forms "
 
-    Public Sub New(ByRef con As SqlConnection, ByRef foma As Form)
+    Public Sub New(ByRef foma As Form)
         MyBase.New()
 
         'El Diseñador de Windows Forms requiere esta llamada.
         InitializeComponent()
-        Me.xCon = con
+        'Me.xCon = con
         fo = foma
 
         'Agregar cualquier inicialización después de la llamada a InitializeComponent()
@@ -113,7 +113,7 @@ Public Class Autorizacion
             Dim dsc As New DataSet
 
             sSql = "select * FROM ecusuariosx where emp_password='" & Me.clave.Text & "'"
-            Base.daQuery(sSql, xCon, dsc, "empleado")
+            Base.daQuery(sSql, sCadenaConexionSQL, dsc, "empleado")
             If dsc.Tables("empleado").Rows.Count > 0 Then
 
                 Select Case dsc.Tables("empleado").Rows(0)("emp_tipo").ToString.Trim

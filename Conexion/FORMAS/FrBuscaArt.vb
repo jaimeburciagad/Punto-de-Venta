@@ -1,7 +1,7 @@
 Imports System.Data.SqlClient
 Public Class FrBuscaArt
     Inherits System.Windows.Forms.Form
-    Private xCon As SqlConnection
+    'Private xCon As SqlConnection
     Dim FactorEmpaque As Double
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
@@ -16,14 +16,14 @@ Public Class FrBuscaArt
 
 #Region " Código generado por el Diseñador de Windows Forms "
 
-    Public Sub New(ByRef con As SqlConnection, ByRef forma As FrVenta)
+    Public Sub New(ByRef forma As FrVenta)
         MyBase.New()
 
         'El Diseñador de Windows Forms requiere esta llamada.
         InitializeComponent()
         'Agregar cualquier inicialización después de la llamada a InitializeComponent()
         SetStyle(ControlStyles.UserPaint Or ControlStyles.AllPaintingInWmPaint Or ControlStyles.DoubleBuffer, True)
-        xCon = con
+        'xCon = con
 
         fo = forma
 
@@ -377,6 +377,7 @@ Public Class FrBuscaArt
     End Sub
 
     Private Sub rellenalista()
+        ' 1. Limpieza de UI (Esto se queda igual)
         Me.ListBox1.Items.Clear()
         p1.Text = ""
         p2.Text = ""
@@ -389,7 +390,7 @@ Public Class FrBuscaArt
         Label2.Text = ""
         LbCapExis.Text = ""
 
-        ' Definición de precios dinamicos (Caja vs Unidad)
+        ' 2. Definición de lógica SQL (Se queda igual)
         Dim SQLPrecio1 As String = "CASE WHEN ISNULL(xupc.upc_factor,1) > 1 THEN round(art_precio3 * ISNULL(xupc.upc_factor,1), 2) ELSE round(art_precio1, 2) END"
         Dim SQLPrecio2 As String = "CASE WHEN ISNULL(xupc.upc_factor,1) > 1 THEN round(art_precio3 * ISNULL(xupc.upc_factor,1), 2) ELSE round(art_precio2, 2) END"
         Dim SQLPrecio3 As String = "CASE WHEN ISNULL(xupc.upc_factor,1) > 1 THEN round(art_precio3 * ISNULL(xupc.upc_factor,1), 2) ELSE round(art_precio3, 2) END"
@@ -397,37 +398,44 @@ Public Class FrBuscaArt
         Me.ListBox1.Items.Add("Descripcion".PadRight(36) & "Menudeo" & "    Mayoreo" & "    Duarsa" & "    UPC")
 
         FactorEmpaque = 1
-        Dim com As New SqlCommand
-        com.Connection = Me.xCon
 
-        ' CORRECCION AQUI: Se cambió el último SQLPrecio1 por SQLPrecio3
-        com.CommandText = "select left(upc_descripcion + space(30), 30) + SPACE(5) + " &
-                      "'($'+right(space(7) + convert(varchar(10), " & SQLPrecio1 & "),7)+')'+space(1)+" &
-                      "'($'+right(space(7) + convert(varchar(10), " & SQLPrecio2 & "),7)+')'+space(1)+" &
-                      "'($'+right(space(7) + convert(varchar(10), " & SQLPrecio3 & "),7)+')'+space(1)+" &
-                      "'UPC ' + upc_upc  " &
-                      "from Xupc inner join articulo on upc_cveart=art_Clave " &
-                      "where UPC_DESCRIPCION like '%" & Me.TextBox1.Text.Replace("'", "") & "%' " &
-                      "and ( " &
-                          "(upc_upc=UPC_CODINV) " & _                      ' Muestra Unidades Principales
-                          "OR (art_codrel<>'' and UPC_CODINV='') " & _     ' Muestra Dulces Viejos
-                          "OR (ISNULL(xupc.upc_factor, 1) > 1) " & _       ' Muestra Cajas Nuevas
-                      ") " &
-                      "and art_activo=1 and upc_activo=1 " &
-                      "order by upc_descripcion"
+        ' 3. ARQUITECTURA NUEVA: Using con Conexión Local
+        ' Ya no usamos Me.xCon. Creamos una conexión fresca.
+        Using xConLocal As New SqlConnection(Globales.sCadenaConexionSQL)
+            Try
+                xConLocal.Open()
 
-        Dim rdr As SqlDataReader
-        Try
-            xCon.Open()
-            rdr = com.ExecuteReader
-            While rdr.Read()
-                Me.ListBox1.Items.Add(rdr.GetValue(0))
-            End While
-            rdr.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-        xCon.Close()
+                Using com As New SqlCommand()
+                    com.Connection = xConLocal
+                    ' Asignamos el Query (Tu lógica original intacta)
+                    com.CommandText = "select left(upc_descripcion + space(30), 30) + SPACE(5) + " &
+                                  "'($'+right(space(7) + convert(varchar(10), " & SQLPrecio1 & "),7)+')'+space(1)+" &
+                                  "'($'+right(space(7) + convert(varchar(10), " & SQLPrecio2 & "),7)+')'+space(1)+" &
+                                  "'($'+right(space(7) + convert(varchar(10), " & SQLPrecio3 & "),7)+')'+space(1)+" &
+                                  "'UPC ' + upc_upc  " &
+                                  "from Xupc inner join articulo on upc_cveart=art_Clave " &
+                                  "where UPC_DESCRIPCION like '%" & Me.TextBox1.Text.Replace("'", "") & "%' " &
+                                  "and ( " &
+                                      "(upc_upc=UPC_CODINV) " &
+                                      "OR (art_codrel<>'' and UPC_CODINV='') " &
+                                      "OR (ISNULL(xupc.upc_factor, 1) > 1) " &
+                                  ") " &
+                                  "and art_activo=1 and upc_activo=1 " &
+                                  "order by upc_descripcion"
+
+                    ' Ejecutamos el Reader
+                    Using rdr As SqlDataReader = com.ExecuteReader()
+                        While rdr.Read()
+                            Me.ListBox1.Items.Add(rdr.GetValue(0))
+                        End While
+                    End Using ' Aquí se cierra el Reader automáticamente
+                End Using
+
+            Catch ex As Exception
+                MsgBox("Error al cargar lista: " & ex.Message)
+            End Try
+        End Using ' Aquí se cierra la conexión xConLocal automáticamente y regresa al Pool
+
     End Sub
 
     Private Sub ListBox1_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox1.SelectedIndexChanged
@@ -452,7 +460,7 @@ Public Class FrBuscaArt
             sql = "select art_clave, ISNULL(xupc.upc_factor, 1) as Factor, art_cap1,art_CAP2,ART_UNI1,ART_UNI2,art_precio1,art_precio2,art_precio3,ART_TOPEMAY " &
       "from Xupc inner Join articulo on upc_cveart=art_Clave where art_activo=1 and upc_activo=1 and upc_upc='" & UPC & "'"
 
-            Base.daQuery(sql, xCon, d, "tabla")
+            Base.daQuery(sql, sCadenaConexionSQL, d, "tabla")
             Dim Cant As Double = 1
             If TxtCantidad.Text <> "" Then
                 Cant = TxtCantidad.Text
@@ -494,11 +502,11 @@ Public Class FrBuscaArt
             Existencias(UPC)
 
 
-            'Base.Ejecuta("exec calcexistencianxart '" & Globales.nombreusuario & "','" & d.Tables("tabla").Rows(0)("art_clave").ToString.Trim & "'", xCon)
+            'Base.Ejecuta("exec calcexistencianxart '" & Globales.nombreusuario & "','" & d.Tables("tabla").Rows(0)("art_clave").ToString.Trim & "'", sCadenaConexionSQL)
 
             'sql = "select * from ExistenciasArticuloActualizadas where usuario='" & Globales.nombreusuario & "' and upc='" & UPC & "'"
 
-            'Base.daQuery(sql, xCon, d, "upc")
+            'Base.daQuery(sql, sCadenaConexionSQL, d, "upc")
 
             'If d.Tables("upc").Rows.Count > 0 Then
 
@@ -508,7 +516,7 @@ Public Class FrBuscaArt
             '        Dim DSC As New DataSet
             '        sql = "select almacen,cap1*Cap2*Cantidad Cantidad from ExistenciasAlmacenes where upc='" & UPC & "'"
             '        Try
-            '            Base.daQuery(sql, xCon, DSC, "Alm")
+            '            Base.daQuery(sql, sCadenaConexionSQL, DSC, "Alm")
             '            Using DSC
             '                If DSC.Tables("Alm").Rows.Count > 0 Then
             '                    Dim StrTmp As String
@@ -567,18 +575,18 @@ Public Class FrBuscaArt
         Dim DSC As New DataSet
         ' OJO: Se eliminó 'Dim FactorEmpaque As Double' para usar la variable global de la clase.
 
-        Base.daQuery(SQL, xCon, DSC, "Cap")
+        Base.daQuery(SQL, sCadenaConexionSQL, DSC, "Cap")
         If DSC.Tables("Cap").Rows.Count > 0 Then
             ' Bloque Legacy: Solo entra si es un producto viejo con relación padre-hijo explícita
             If DSC.Tables("Cap").Rows(0)("art_codrel") <> "" Then
                 SQL = "select distinct UPC_CODINV from ARTICULO join XUPC on ART_CLAVE=upc_cveart where ART_CLAVE='" & DSC.Tables("Cap").Rows(0)("art_codrel") & "'"
-                Base.daQuery(SQL, xCon, DSC, "CapRel")
+                Base.daQuery(SQL, sCadenaConexionSQL, DSC, "CapRel")
                 If DSC.Tables("CapRel").Rows.Count > 0 Then
                     UPC = DSC.Tables("CapRel").Rows(0)("upc_codinv")
                     DSC.Tables.Remove("Cap")
                     ' Buscamos las capacidades del Padre Legacy
                     SQL = "select art_codrel,art_clave, art_cap1, art_uni1, art_cap2, art_uni2 from articulo join xupc on upc_cveart=art_clave where upc_upc='" & UPC & "'"
-                    Base.daQuery(SQL, xCon, DSC, "Cap")
+                    Base.daQuery(SQL, sCadenaConexionSQL, DSC, "Cap")
                     If DSC.Tables("Cap").Rows.Count = 0 Then
                         DSC.Tables.Remove("Cap")
                         Exit Sub
@@ -591,11 +599,11 @@ Public Class FrBuscaArt
             FactorEmpaque = DSC.Tables("Cap").Rows(0)("art_CAP1") * DSC.Tables("Cap").Rows(0)("art_CAP2")
 
             ' Ejecuta el SP de cálculo de existencias sobre el UPC Padre/Agrupador
-            Base.Ejecuta("exec calcexistencianxart '" & Globales.nombreusuario & "','" & DSC.Tables("Cap").Rows(0)("art_clave").ToString.Trim & "'", xCon)
+            Base.Ejecuta("exec calcexistencianxart '" & Globales.nombreusuario & "','" & DSC.Tables("Cap").Rows(0)("art_clave").ToString.Trim & "'", sCadenaConexionSQL)
 
             SQL = "select * from ExistenciasArticuloActualizadas where usuario='" & Globales.nombreusuario & "' and upc='" & UPC & "'"
 
-            Base.daQuery(SQL, xCon, DSC, "upc")
+            Base.daQuery(SQL, sCadenaConexionSQL, DSC, "upc")
 
             Dim ExistStr As String
             If DSC.Tables("upc").Rows.Count > 0 Then
@@ -618,7 +626,7 @@ Public Class FrBuscaArt
                 If DSC.Tables("upc").Rows(0)("CantidadAlmacenes") > 0 Then
                     SQL = "select almacen,cap1*Cap2*Cantidad Cantidad from ExistenciasAlmacenes where upc='" & UPC & "'"
                     Try
-                        Base.daQuery(SQL, xCon, DSC, "Alm")
+                        Base.daQuery(SQL, sCadenaConexionSQL, DSC, "Alm")
                         Using DSC
                             If DSC.Tables("Alm").Rows.Count > 0 Then
                                 For i = 0 To DSC.Tables("Alm").Rows.Count - 1
@@ -642,7 +650,7 @@ Public Class FrBuscaArt
 
             Dim CompraEmp As String
             SQL = "select top 1 dcom_cap1 Cap1, dcom_uni1 Uni1,dcom_cap2 Cap2,dcom_uni2 Uni2 from ECDETCOMPRA join eccompra on dcom_compra=com_id where dcom_articulo='" & UPC & "' and com_fechacaptura>(select max(fecha) from eccontrolinv) order by com_fechacaptura desc"
-            Base.daQuery(SQL, xCon, DSC, "CapCom")
+            Base.daQuery(SQL, sCadenaConexionSQL, DSC, "CapCom")
             If DSC.Tables("CapCom").Rows.Count > 0 Then
                 CompraEmp = DSC.Tables("CapCom").Rows(0)("Cap1") & " " & DSC.Tables("CapCom").Rows(0)("Uni1") & " / " & DSC.Tables("CapCom").Rows(0)("Cap2") & " " & DSC.Tables("CapCom").Rows(0)("Uni2")
                 If CompraEmp = DSC.Tables("Cap").Rows(0)("art_cap1") & " " & DSC.Tables("Cap").Rows(0)("art_uni1") & " / " & DSC.Tables("Cap").Rows(0)("art_cap2") & " " & DSC.Tables("Cap").Rows(0)("art_uni2") Then
@@ -667,7 +675,7 @@ Public Class FrBuscaArt
                 'Dim dsc As New DataSet
                 'Sql = "select upc_upc from Xupc inner join articulo on upc_cveart=art_Clave where convert(char(30),upc_descripcion)+SPACE(2)+'('+convert(CHAR(7),art_precio1)+')('+ convert(CHAR(7),art_precio2)+')('+convert(char(7),art_precio3)+')'+ space(2)+'COD ' + upc_upc= '" & Me.ListBox1.SelectedItem & "'"
 
-                ' Base.daQuery(sql, xCon, dsc, "articulo")
+                ' Base.daQuery(sql, sCadenaConexionSQL, dsc, "articulo")
                 Dim UPC As String
                 Dim i As Integer
                 i = 1

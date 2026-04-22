@@ -3,6 +3,11 @@
 'como públicas y no c hace validación alguna.
 Module Globales
     'Estas son obligatorias y deben venir en el XML
+
+    Public sCadenaConexionSQL As String
+    Public sCadenaConexionRemota As String
+
+
     Public sUsuarioBase As String
     Public sClaveUsuario As String
     Public usmicro As String
@@ -40,6 +45,7 @@ Module Globales
     'Estas van variando conforme se mueve de un lado del programa a otro
     Public sNominaEmpleado As String
     Public sNombreEmpleado As String
+    Public TipoUsuario As String
     Public iTurnoActivo As Integer
     Public oFechaTurno As Date
     Public nombreusuario As String
@@ -112,4 +118,27 @@ Module Globales
             sNombreEmpleado = sNombreEmpleado.Replace("#", "Ñ")
         End Set
     End Property
+
+    Public Enum ColVenta
+        ColCantidad = 0
+        ColDescripcion = 1
+        ColPrecio = 2
+        ColTotal = 3
+        ColUPCInv = 4
+        ColVale = 5
+        ColFIVA = 6
+        ColF1 = 7
+        ColF2 = 8
+        ColF3 = 9
+        ColFIEPS = 10
+        ColArtClave = 11
+        ColNomLargo = 12
+        ColFamilia = 13
+        ColCostoCap = 14
+        ColTipoOferta = 15
+        ColPrecio1 = 16
+        ColComisionRen = 17
+        ColFactor = 18
+        ColF6 = 19
+    End Enum
 End Module

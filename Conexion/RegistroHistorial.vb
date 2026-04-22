@@ -5,7 +5,7 @@ Public Class RegistroHistorial
         Dim SQL As String
         Try
             SQL = "insert into HistorialAutorizaciones (NombreComputadora,Fecha,Usuario,Folio,Tipo,Modulo) values ('" & CompuNombre & "',getdate(),'" & Usuario & "'," & Folio & ",'" & Tipo & "','" & Modulo & "')"
-            Base.Ejecuta(SQL, Xcon)
+            Base.Ejecuta(SQL, sCadenaConexionSQL)
         Catch ex As Exception
             MsgBox("Error al insertar Historial." & Chr(13) & Chr(13) & ex.Message, vbExclamation, Modulo)
         End Try

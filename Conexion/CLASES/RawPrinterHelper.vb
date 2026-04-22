@@ -62,4 +62,37 @@ Public Class RawPrinterHelper
         ClosePrinter(hPrinter)
         Return True
     End Function
+
+    ' AGREGA ESTO DENTRO DE TU CLASE RawPrinterHelper
+    Public Shared Function SendBytesToPrinter(ByVal szPrinterName As String, ByVal pBytesData As Byte(), ByVal dwCount As Integer) As Boolean
+        Dim dwWritten As Integer = 0
+        Dim hPrinter As IntPtr = IntPtr.Zero
+        Dim pBytes As IntPtr = IntPtr.Zero
+        Dim success As Boolean = False
+
+        If Not OpenPrinter(szPrinterName, hPrinter, IntPtr.Zero) Then Return False
+
+        Dim di As New DOCINFOA With {
+        .pDocName = "RAW Bytes",
+        .pDataType = "RAW"
+    }
+
+        If StartDocPrinter(hPrinter, 1, di) Then
+            If StartPagePrinter(hPrinter) Then
+                ' Reservamos memoria no administrada
+                pBytes = Marshal.AllocCoTaskMem(dwCount)
+                ' Copiamos el array de bytes a la memoria
+                Marshal.Copy(pBytesData, 0, pBytes, dwCount)
+                ' Mandamos a imprimir
+                success = WritePrinter(hPrinter, pBytes, dwCount, dwWritten)
+
+                Marshal.FreeCoTaskMem(pBytes)
+                EndPagePrinter(hPrinter)
+            End If
+            EndDocPrinter(hPrinter)
+        End If
+
+        ClosePrinter(hPrinter)
+        Return success
+    End Function
 End Class

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class parafacturar
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,54 +20,12 @@ Partial Class parafacturar
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim EnhancedRowHeaderRenderer1 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer3 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer2 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer6 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer7 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer4 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer5 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer8 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer9 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer10 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer11 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer12 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer13 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer14 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedRowHeaderRenderer15 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim NamedStyle9 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("Style1")
-        Dim NamedStyle10 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("RowHeaderEnhanced")
-        Dim EnhancedRowHeaderRenderer18 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim NamedStyle11 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("CornerEnhanced")
-        Dim EnhancedCornerRenderer3 As FarPoint.Win.Spread.CellType.EnhancedCornerRenderer = New FarPoint.Win.Spread.CellType.EnhancedCornerRenderer()
-        Dim NamedStyle12 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("DataAreaDefault")
-        Dim GeneralCellType3 As FarPoint.Win.Spread.CellType.GeneralCellType = New FarPoint.Win.Spread.CellType.GeneralCellType()
-        Dim SpreadSkin2 As FarPoint.Win.Spread.SpreadSkin = New FarPoint.Win.Spread.SpreadSkin()
-        Dim NamedStyle13 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("Style1")
-        Dim NamedStyle14 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("CornerEnhanced")
-        Dim EnhancedCornerRenderer4 As FarPoint.Win.Spread.CellType.EnhancedCornerRenderer = New FarPoint.Win.Spread.CellType.EnhancedCornerRenderer()
-        Dim NamedStyle15 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("DataAreaDefault")
-        Dim GeneralCellType4 As FarPoint.Win.Spread.CellType.GeneralCellType = New FarPoint.Win.Spread.CellType.GeneralCellType()
-        Dim EnhancedFocusIndicatorRenderer2 As FarPoint.Win.Spread.EnhancedFocusIndicatorRenderer = New FarPoint.Win.Spread.EnhancedFocusIndicatorRenderer()
-        Dim EnhancedInterfaceRenderer2 As FarPoint.Win.Spread.EnhancedInterfaceRenderer = New FarPoint.Win.Spread.EnhancedInterfaceRenderer()
-        Dim NamedStyle16 As FarPoint.Win.Spread.NamedStyle = New FarPoint.Win.Spread.NamedStyle("RowHeaderEnhanced")
-        Dim EnhancedRowHeaderRenderer19 As FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer = New FarPoint.Win.Spread.CellType.EnhancedRowHeaderRenderer()
-        Dim EnhancedScrollBarRenderer2 As FarPoint.Win.Spread.EnhancedScrollBarRenderer = New FarPoint.Win.Spread.EnhancedScrollBarRenderer()
-        Dim ComboBoxCellType3 As FarPoint.Win.Spread.CellType.ComboBoxCellType = New FarPoint.Win.Spread.CellType.ComboBoxCellType()
-        Dim NumberCellType3 As FarPoint.Win.Spread.CellType.NumberCellType = New FarPoint.Win.Spread.CellType.NumberCellType()
-        Dim CurrencyCellType7 As FarPoint.Win.Spread.CellType.CurrencyCellType = New FarPoint.Win.Spread.CellType.CurrencyCellType()
-        Dim CurrencyCellType8 As FarPoint.Win.Spread.CellType.CurrencyCellType = New FarPoint.Win.Spread.CellType.CurrencyCellType()
-        Dim CurrencyCellType9 As FarPoint.Win.Spread.CellType.CurrencyCellType = New FarPoint.Win.Spread.CellType.CurrencyCellType()
-        Dim CurrencyCellType10 As FarPoint.Win.Spread.CellType.CurrencyCellType = New FarPoint.Win.Spread.CellType.CurrencyCellType()
-        Dim CurrencyCellType11 As FarPoint.Win.Spread.CellType.CurrencyCellType = New FarPoint.Win.Spread.CellType.CurrencyCellType()
-        Dim CurrencyCellType12 As FarPoint.Win.Spread.CellType.CurrencyCellType = New FarPoint.Win.Spread.CellType.CurrencyCellType()
-        Dim TextCellType2 As FarPoint.Win.Spread.CellType.TextCellType = New FarPoint.Win.Spread.CellType.TextCellType()
-        Dim NumberCellType4 As FarPoint.Win.Spread.CellType.NumberCellType = New FarPoint.Win.Spread.CellType.NumberCellType()
-        Dim ComboBoxCellType4 As FarPoint.Win.Spread.CellType.ComboBoxCellType = New FarPoint.Win.Spread.CellType.ComboBoxCellType()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(parafacturar))
         Me.Panel_tickets = New System.Windows.Forms.Panel()
+        Me.FpTickets = New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None, CType(resources.GetObject("Panel_tickets.Controls"), Object))
+        Me.FpTickets_Sheet1 = Me.FpTickets.GetSheet(0)
         Me.PanelSeleccionTarjetas = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.lbFila = New System.Windows.Forms.Label()
@@ -75,8 +33,6 @@ Partial Class parafacturar
         Me.BtnRegistraTarjeta = New System.Windows.Forms.Button()
         Me.rbTDebito = New System.Windows.Forms.RadioButton()
         Me.rbTCredito = New System.Windows.Forms.RadioButton()
-        Me.FpTickets = New FarPoint.Win.Spread.FpSpread()
-        Me.FpTickets_Sheet1 = New FarPoint.Win.Spread.SheetView()
         Me.BtnInicializar = New System.Windows.Forms.Button()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.BtnEnviar = New System.Windows.Forms.Button()
@@ -93,71 +49,12 @@ Partial Class parafacturar
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Panel_tickets.SuspendLayout()
+        CType(Me.FpTickets, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelSeleccionTarjetas.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        CType(Me.FpTickets, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.FpTickets_Sheet1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        EnhancedRowHeaderRenderer1.Name = "EnhancedRowHeaderRenderer1"
-        EnhancedRowHeaderRenderer1.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer3.Name = "EnhancedRowHeaderRenderer3"
-        EnhancedRowHeaderRenderer3.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer2.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer2.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer2.Name = "EnhancedRowHeaderRenderer2"
-        EnhancedRowHeaderRenderer2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer2.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer6.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer6.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer6.Name = "EnhancedRowHeaderRenderer6"
-        EnhancedRowHeaderRenderer6.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer6.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer7.Name = "EnhancedRowHeaderRenderer7"
-        EnhancedRowHeaderRenderer7.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer4.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer4.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer4.Name = "EnhancedRowHeaderRenderer4"
-        EnhancedRowHeaderRenderer4.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer4.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer5.Name = "EnhancedRowHeaderRenderer5"
-        EnhancedRowHeaderRenderer5.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer8.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer8.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer8.Name = "EnhancedRowHeaderRenderer8"
-        EnhancedRowHeaderRenderer8.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer8.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer9.Name = "EnhancedRowHeaderRenderer9"
-        EnhancedRowHeaderRenderer9.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer10.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer10.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer10.Name = "EnhancedRowHeaderRenderer10"
-        EnhancedRowHeaderRenderer10.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer10.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer11.Name = "EnhancedRowHeaderRenderer11"
-        EnhancedRowHeaderRenderer11.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer12.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer12.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer12.Name = "EnhancedRowHeaderRenderer12"
-        EnhancedRowHeaderRenderer12.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer12.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer13.Name = "EnhancedRowHeaderRenderer13"
-        EnhancedRowHeaderRenderer13.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer14.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer14.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer14.Name = "EnhancedRowHeaderRenderer14"
-        EnhancedRowHeaderRenderer14.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer14.TextRotationAngle = 0R
-        EnhancedRowHeaderRenderer15.Name = "EnhancedRowHeaderRenderer15"
-        EnhancedRowHeaderRenderer15.TextRotationAngle = 0R
         '
         'Panel_tickets
         '
@@ -165,17 +62,26 @@ Partial Class parafacturar
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel_tickets.BackColor = System.Drawing.Color.AliceBlue
         Me.Panel_tickets.Controls.Add(Me.PanelSeleccionTarjetas)
-        Me.Panel_tickets.Controls.Add(Me.FpTickets)
         Me.Panel_tickets.Controls.Add(Me.BtnInicializar)
         Me.Panel_tickets.Controls.Add(Me.Label28)
         Me.Panel_tickets.Controls.Add(Me.BtnEnviar)
         Me.Panel_tickets.Controls.Add(Me.BtnRegresar)
+        Me.Panel_tickets.Controls.Add(Me.FpTickets)
         Me.Panel_tickets.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Panel_tickets.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.Panel_tickets.Location = New System.Drawing.Point(12, 122)
         Me.Panel_tickets.Name = "Panel_tickets"
         Me.Panel_tickets.Size = New System.Drawing.Size(792, 399)
         Me.Panel_tickets.TabIndex = 4
+        '
+        'FpTickets
+        '
+        Me.FpTickets.AccessibleDescription = ""
+        Me.FpTickets.Font = New System.Drawing.Font("Calibri", 11.0!)
+        Me.FpTickets.Location = New System.Drawing.Point(12, 44)
+        Me.FpTickets.Name = "FpTickets"
+        Me.FpTickets.Size = New System.Drawing.Size(761, 340)
+        Me.FpTickets.TabIndex = 23957
         '
         'PanelSeleccionTarjetas
         '
@@ -268,233 +174,6 @@ Partial Class parafacturar
         Me.rbTCredito.TabStop = True
         Me.rbTCredito.Text = "Tarjeta de Crédito"
         Me.rbTCredito.UseVisualStyleBackColor = True
-        '
-        'FpTickets
-        '
-        Me.FpTickets.AccessibleDescription = "FpTickets, Sheet1, Row 0, Column 0, "
-        Me.FpTickets.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FpTickets.BackColor = System.Drawing.Color.White
-        Me.FpTickets.HorizontalScrollBarPolicy = FarPoint.Win.Spread.ScrollBarPolicy.AsNeeded
-        Me.FpTickets.Location = New System.Drawing.Point(12, 44)
-        Me.FpTickets.Name = "FpTickets"
-        NamedStyle9.ForeColor = System.Drawing.SystemColors.ControlText
-        NamedStyle9.HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        NamedStyle9.Locked = False
-        NamedStyle9.NoteIndicatorColor = System.Drawing.Color.Red
-        NamedStyle9.VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        NamedStyle10.BackColor = System.Drawing.Color.FromArgb(CType(CType(228, Byte), Integer), CType(CType(236, Byte), Integer), CType(CType(247, Byte), Integer))
-        NamedStyle10.ForeColor = System.Drawing.SystemColors.ControlText
-        NamedStyle10.HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        NamedStyle10.NoteIndicatorColor = System.Drawing.Color.Red
-        EnhancedRowHeaderRenderer18.BackColor = System.Drawing.SystemColors.Control
-        EnhancedRowHeaderRenderer18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        EnhancedRowHeaderRenderer18.ForeColor = System.Drawing.SystemColors.ControlText
-        EnhancedRowHeaderRenderer18.Name = ""
-        EnhancedRowHeaderRenderer18.RightToLeft = System.Windows.Forms.RightToLeft.No
-        EnhancedRowHeaderRenderer18.TextRotationAngle = 0R
-        NamedStyle10.Renderer = EnhancedRowHeaderRenderer18
-        NamedStyle10.VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        NamedStyle11.BackColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(196, Byte), Integer), CType(CType(233, Byte), Integer))
-        NamedStyle11.ForeColor = System.Drawing.SystemColors.ControlText
-        NamedStyle11.HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        NamedStyle11.NoteIndicatorColor = System.Drawing.Color.Red
-        NamedStyle11.Renderer = EnhancedCornerRenderer3
-        NamedStyle11.VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        NamedStyle12.BackColor = System.Drawing.SystemColors.Window
-        NamedStyle12.CellType = GeneralCellType3
-        NamedStyle12.ForeColor = System.Drawing.SystemColors.WindowText
-        NamedStyle12.NoteIndicatorColor = System.Drawing.Color.Red
-        NamedStyle12.Renderer = GeneralCellType3
-        Me.FpTickets.NamedStyles.AddRange(New FarPoint.Win.Spread.NamedStyle() {NamedStyle9, NamedStyle10, NamedStyle11, NamedStyle12})
-        Me.FpTickets.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.FpTickets.Sheets.AddRange(New FarPoint.Win.Spread.SheetView() {Me.FpTickets_Sheet1})
-        Me.FpTickets.Size = New System.Drawing.Size(761, 340)
-        NamedStyle13.ForeColor = System.Drawing.SystemColors.ControlText
-        NamedStyle13.HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        NamedStyle13.Locked = False
-        NamedStyle13.NoteIndicatorColor = System.Drawing.Color.Red
-        NamedStyle13.VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        SpreadSkin2.ColumnHeaderDefaultStyle = NamedStyle13
-        NamedStyle14.BackColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(196, Byte), Integer), CType(CType(233, Byte), Integer))
-        NamedStyle14.ForeColor = System.Drawing.SystemColors.ControlText
-        NamedStyle14.HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        NamedStyle14.NoteIndicatorColor = System.Drawing.Color.Red
-        NamedStyle14.Renderer = EnhancedCornerRenderer4
-        NamedStyle14.VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        SpreadSkin2.CornerDefaultStyle = NamedStyle14
-        NamedStyle15.BackColor = System.Drawing.SystemColors.Window
-        NamedStyle15.CellType = GeneralCellType4
-        NamedStyle15.ForeColor = System.Drawing.SystemColors.WindowText
-        NamedStyle15.NoteIndicatorColor = System.Drawing.Color.Red
-        NamedStyle15.Renderer = GeneralCellType4
-        SpreadSkin2.DefaultStyle = NamedStyle15
-        SpreadSkin2.FocusRenderer = EnhancedFocusIndicatorRenderer2
-        EnhancedInterfaceRenderer2.GrayAreaColor = System.Drawing.Color.LightSteelBlue
-        EnhancedInterfaceRenderer2.ScrollBoxBackgroundColor = System.Drawing.Color.FromArgb(CType(CType(161, Byte), Integer), CType(CType(186, Byte), Integer), CType(CType(221, Byte), Integer))
-        EnhancedInterfaceRenderer2.SheetTabLowerActiveColor = System.Drawing.Color.FromArgb(CType(CType(183, Byte), Integer), CType(CType(210, Byte), Integer), CType(CType(244, Byte), Integer))
-        EnhancedInterfaceRenderer2.SheetTabLowerNormalColor = System.Drawing.Color.FromArgb(CType(CType(217, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(249, Byte), Integer))
-        EnhancedInterfaceRenderer2.SheetTabUpperActiveColor = System.Drawing.Color.FromArgb(CType(CType(216, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(244, Byte), Integer))
-        EnhancedInterfaceRenderer2.SheetTabUpperNormalColor = System.Drawing.Color.FromArgb(CType(CType(213, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(249, Byte), Integer))
-        EnhancedInterfaceRenderer2.TabStripBackgroundColor = System.Drawing.Color.FromArgb(CType(CType(161, Byte), Integer), CType(CType(186, Byte), Integer), CType(CType(221, Byte), Integer))
-        SpreadSkin2.InterfaceRenderer = EnhancedInterfaceRenderer2
-        SpreadSkin2.Name = "CustomSkin1"
-        NamedStyle16.BackColor = System.Drawing.Color.FromArgb(CType(CType(228, Byte), Integer), CType(CType(236, Byte), Integer), CType(CType(247, Byte), Integer))
-        NamedStyle16.ForeColor = System.Drawing.SystemColors.ControlText
-        NamedStyle16.HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        NamedStyle16.NoteIndicatorColor = System.Drawing.Color.Red
-        EnhancedRowHeaderRenderer19.Name = ""
-        EnhancedRowHeaderRenderer19.TextRotationAngle = 0R
-        NamedStyle16.Renderer = EnhancedRowHeaderRenderer19
-        NamedStyle16.VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        SpreadSkin2.RowHeaderDefaultStyle = NamedStyle16
-        SpreadSkin2.ScrollBarRenderer = EnhancedScrollBarRenderer2
-        SpreadSkin2.SelectionRenderer = New FarPoint.Win.Spread.DefaultSelectionRenderer()
-        Me.FpTickets.Skin = SpreadSkin2
-        Me.FpTickets.TabIndex = 5
-        Me.FpTickets.VerticalScrollBarPolicy = FarPoint.Win.Spread.ScrollBarPolicy.AsNeeded
-        '
-        'FpTickets_Sheet1
-        '
-        Me.FpTickets_Sheet1.Reset()
-        Me.FpTickets_Sheet1.SheetName = "Sheet1"
-        'Formulas and custom names must be loaded with R1C1 reference style
-        Me.FpTickets_Sheet1.ReferenceStyle = FarPoint.Win.Spread.Model.ReferenceStyle.R1C1
-        Me.FpTickets_Sheet1.ColumnCount = 10
-        Me.FpTickets_Sheet1.ColumnHeader.RowCount = 2
-        Me.FpTickets_Sheet1.RowCount = 1
-        Me.FpTickets_Sheet1.RowHeader.ColumnCount = 0
-        ComboBoxCellType3.ButtonAlign = FarPoint.Win.ButtonAlign.Right
-        ComboBoxCellType3.Items = New String() {"Adquisición de Mercancías", "Gastos en General"}
-        Me.FpTickets_Sheet1.Cells.Get(0, 9).CellType = ComboBoxCellType3
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 0).ForeColor = System.Drawing.SystemColors.Highlight
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 0).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 0).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 0).Value = "# Ticket"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 0).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 1).ForeColor = System.Drawing.SystemColors.Highlight
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 1).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 1).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 1).Value = "Monto Gravado 0%"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 1).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 2).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 2).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 2).Value = "Monto Gravado 8%"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 2).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 3).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 3).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 3).Value = "Monto Gravado 16%"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 3).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 4).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 4).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 4).Value = "Total IEPS"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 4).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 5).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 5).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 5).Value = "Total IVA"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 5).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 6).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 6).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 6).Value = "Total"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 6).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 7).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 7).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 7).Value = "Tarjeta"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 7).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 8).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 8).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 8).Value = "Menores"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 8).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 9).RowSpan = 2
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 9).Value = "Uso de CFDI"
-        Me.FpTickets_Sheet1.ColumnHeader.Cells.Get(0, 9).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.ColumnHeader.DefaultStyle.ForeColor = System.Drawing.SystemColors.Highlight
-        Me.FpTickets_Sheet1.ColumnHeader.DefaultStyle.NoteIndicatorColor = System.Drawing.Color.Red
-        Me.FpTickets_Sheet1.ColumnHeader.DefaultStyle.Parent = "Style1"
-        NumberCellType3.DecimalPlaces = 0
-        Me.FpTickets_Sheet1.Columns.Get(0).CellType = NumberCellType3
-        Me.FpTickets_Sheet1.Columns.Get(0).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(0).Locked = False
-        Me.FpTickets_Sheet1.Columns.Get(0).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(0).Width = 80.0!
-        CurrencyCellType7.CurrencySymbol = "$"
-        CurrencyCellType7.DecimalPlaces = 2
-        CurrencyCellType7.DecimalSeparator = "."
-        CurrencyCellType7.Separator = ","
-        CurrencyCellType7.ShowSeparator = True
-        Me.FpTickets_Sheet1.Columns.Get(1).CellType = CurrencyCellType7
-        Me.FpTickets_Sheet1.Columns.Get(1).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Left
-        Me.FpTickets_Sheet1.Columns.Get(1).Locked = True
-        Me.FpTickets_Sheet1.Columns.Get(1).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(1).Width = 80.0!
-        CurrencyCellType8.CurrencySymbol = "$"
-        CurrencyCellType8.DecimalPlaces = 2
-        CurrencyCellType8.DecimalSeparator = "."
-        CurrencyCellType8.Separator = ","
-        CurrencyCellType8.ShowSeparator = True
-        Me.FpTickets_Sheet1.Columns.Get(2).CellType = CurrencyCellType8
-        Me.FpTickets_Sheet1.Columns.Get(2).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Left
-        Me.FpTickets_Sheet1.Columns.Get(2).Locked = True
-        Me.FpTickets_Sheet1.Columns.Get(2).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(2).Width = 80.0!
-        CurrencyCellType9.CurrencySymbol = "$"
-        CurrencyCellType9.DecimalPlaces = 2
-        CurrencyCellType9.DecimalSeparator = "."
-        CurrencyCellType9.Separator = ","
-        CurrencyCellType9.ShowSeparator = True
-        Me.FpTickets_Sheet1.Columns.Get(3).CellType = CurrencyCellType9
-        Me.FpTickets_Sheet1.Columns.Get(3).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Left
-        Me.FpTickets_Sheet1.Columns.Get(3).Locked = True
-        Me.FpTickets_Sheet1.Columns.Get(3).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(3).Width = 80.0!
-        CurrencyCellType10.CurrencySymbol = "$"
-        CurrencyCellType10.DecimalPlaces = 2
-        CurrencyCellType10.DecimalSeparator = "."
-        CurrencyCellType10.Separator = ","
-        CurrencyCellType10.ShowSeparator = True
-        Me.FpTickets_Sheet1.Columns.Get(4).CellType = CurrencyCellType10
-        Me.FpTickets_Sheet1.Columns.Get(4).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Left
-        Me.FpTickets_Sheet1.Columns.Get(4).Locked = True
-        Me.FpTickets_Sheet1.Columns.Get(4).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(4).Width = 80.0!
-        CurrencyCellType11.CurrencySymbol = "$"
-        CurrencyCellType11.DecimalPlaces = 2
-        CurrencyCellType11.DecimalSeparator = "."
-        CurrencyCellType11.Separator = ","
-        CurrencyCellType11.ShowSeparator = True
-        Me.FpTickets_Sheet1.Columns.Get(5).CellType = CurrencyCellType11
-        Me.FpTickets_Sheet1.Columns.Get(5).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Left
-        Me.FpTickets_Sheet1.Columns.Get(5).Locked = True
-        Me.FpTickets_Sheet1.Columns.Get(5).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(5).Width = 80.0!
-        CurrencyCellType12.CurrencySymbol = "$"
-        CurrencyCellType12.DecimalPlaces = 2
-        CurrencyCellType12.DecimalSeparator = "."
-        CurrencyCellType12.Separator = ","
-        CurrencyCellType12.ShowSeparator = True
-        Me.FpTickets_Sheet1.Columns.Get(6).CellType = CurrencyCellType12
-        Me.FpTickets_Sheet1.Columns.Get(6).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Left
-        Me.FpTickets_Sheet1.Columns.Get(6).Locked = True
-        Me.FpTickets_Sheet1.Columns.Get(6).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(6).Width = 80.0!
-        Me.FpTickets_Sheet1.Columns.Get(7).CellType = TextCellType2
-        Me.FpTickets_Sheet1.Columns.Get(7).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(7).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(7).Visible = False
-        NumberCellType4.DecimalPlaces = 0
-        NumberCellType4.MaximumValue = 1.0R
-        NumberCellType4.MinimumValue = 0R
-        Me.FpTickets_Sheet1.Columns.Get(8).CellType = NumberCellType4
-        Me.FpTickets_Sheet1.Columns.Get(8).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
-        Me.FpTickets_Sheet1.Columns.Get(8).Visible = False
-        ComboBoxCellType4.ButtonAlign = FarPoint.Win.ButtonAlign.Right
-        ComboBoxCellType4.Items = New String() {"Adquisición de Mercancías", "Gastos en General"}
-        Me.FpTickets_Sheet1.Columns.Get(9).CellType = ComboBoxCellType4
-        Me.FpTickets_Sheet1.Columns.Get(9).Visible = False
-        Me.FpTickets_Sheet1.Columns.Get(9).Width = 170.0!
-        Me.FpTickets_Sheet1.RowHeader.Columns.Default.Resizable = False
-        Me.FpTickets_Sheet1.ReferenceStyle = FarPoint.Win.Spread.Model.ReferenceStyle.A1
         '
         'BtnInicializar
         '
@@ -698,11 +377,10 @@ Partial Class parafacturar
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "parafacturar"
         Me.Panel_tickets.ResumeLayout(False)
+        CType(Me.FpTickets, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelSeleccionTarjetas.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        CType(Me.FpTickets, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.FpTickets_Sheet1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -723,8 +401,6 @@ Partial Class parafacturar
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Chk_menores As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox1 As CheckBox
-    Friend WithEvents FpTickets As FarPoint.Win.Spread.FpSpread
-    Friend WithEvents FpTickets_Sheet1 As FarPoint.Win.Spread.SheetView
     Friend WithEvents Label4 As Label
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents Label5 As Label
@@ -735,4 +411,6 @@ Partial Class parafacturar
     Friend WithEvents BtnCierraPanel As Button
     Friend WithEvents BtnRegistraTarjeta As Button
     Friend WithEvents lbFila As Label
+    Friend WithEvents FpTickets As FarPoint.Win.Spread.FpSpread
+    Friend WithEvents FpTickets_Sheet1 As FarPoint.Win.Spread.SheetView
 End Class

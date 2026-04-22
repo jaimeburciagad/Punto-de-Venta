@@ -1,7 +1,7 @@
 Imports System.Console
 Public Class FrAdmin
     Inherits System.Windows.Forms.Form
-    Private xCon As System.Data.SqlClient.SqlConnection
+    'Private xCon As System.Data.SqlClient.SqlConnection
     Dim encargada As Integer
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents AdministraciónDeCajasToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
@@ -31,14 +31,14 @@ Public Class FrAdmin
 
 #Region " Código generado por el Diseñador de Windows Forms "
 
-    Public Sub New(ByRef con As System.Data.SqlClient.SqlConnection, ByVal a As Integer, ByVal b As String)
+    Public Sub New(ByVal a As Integer, ByVal b As String)
         MyBase.New()
         encargada = a
         usuario = b
 
         'El Diseñador de Windows Forms requiere esta llamada.
         InitializeComponent()
-        xCon = con
+        'xCon = con
         'Agregar cualquier inicialización después de la llamada a InitializeComponent()
 
     End Sub
@@ -385,7 +385,7 @@ Public Class FrAdmin
         'End If
 
         sql = "Select  * from progusuarios where usuario='" & usuario & "'"
-        Base.daQuery(sql, xCon, dsc, "Prog")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "Prog")
 
 
         For i = 0 To dsc.Tables("Prog").Rows.Count - 1
@@ -413,7 +413,7 @@ Public Class FrAdmin
 
     Private Sub Button31_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         'Dim oForma As Form
-        'oForma = New ventascliente(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New ventascliente(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -426,7 +426,7 @@ Public Class FrAdmin
 
     Private Sub AdministraciónDeTicketsToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AdministraciónDeTicketsToolStripMenuItem.Click
         'Dim oForma As Form
-        'oForma = New reimprime(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New reimprime(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -434,7 +434,7 @@ Public Class FrAdmin
 
     Private Sub RetirosDeEfectioToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RetirosDeEfectioToolStripMenuItem.Click
         'Dim oForma As Form
-        'oForma = New retiros(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New retiros(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -442,7 +442,7 @@ Public Class FrAdmin
 
     Private Sub ReporteRetirosDeEfectivoToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ReporteRetirosDeEfectivoToolStripMenuItem.Click
         'Dim oForma As Form
-        'oForma = New Repsalidascaja(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New Repsalidascaja(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -450,7 +450,7 @@ Public Class FrAdmin
 
     Private Sub CorteDeCajaToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CorteDeCajaToolStripMenuItem.Click
         'Dim oForma As Form
-        'oForma = New cortecajanuevo(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New cortecajanuevo(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -460,7 +460,7 @@ Public Class FrAdmin
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         'Dim oForma As Form
-        'oForma = New reimprime(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New reimprime(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -469,7 +469,7 @@ Public Class FrAdmin
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
         'Dim oForma As Form
-        'oForma = New retiros(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New retiros(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -477,7 +477,7 @@ Public Class FrAdmin
 
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
         'Dim oForma As Form
-        'oForma = New Repsalidascaja(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New Repsalidascaja(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -485,7 +485,7 @@ Public Class FrAdmin
 
     Private Sub Button4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
         'Dim oForma As Form
-        'oForma = New cortecajanuevo(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New cortecajanuevo(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -497,7 +497,7 @@ Public Class FrAdmin
 
     Private Sub EmisiónDeEtiquetasToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles EmisiónDeEtiquetasToolStripMenuItem.Click
         'Dim oForma As Form
-        'oForma = New etiquetas(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New etiquetas(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()
@@ -506,7 +506,7 @@ Public Class FrAdmin
 
     Private Sub Button7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button7.Click
         'Dim oForma As Form
-        'oForma = New Reptarjetas(IIf(CheckBox1.Checked, FrLogin.rCon, xCon), Me)
+        'oForma = New Reptarjetas(IIf(CheckBox1.Checked, FrLogin.rCon, sCadenaConexionSQL), Me)
         'AddHandler oForma.Closed, AddressOf MuestraAdmin
         'Hide()
         'oForma.Show()

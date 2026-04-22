@@ -98,7 +98,7 @@ Public Class preImptrans
         renglones.Add("SON: " & oConv.numeroEnLetras)
         renglones.Add(enter)
         sql = "select sum(pago) as pago, tipo_pago, referencia, banco from ecformapago where referencia=" & CDbl(numt) & " group by tipo_pago,referencia,banco"
-        Base.daQuery(sql, xcon, dsc, "pagos")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "pagos")
         renglones.Add("-----------------------------------------")
         renglones.Add("Su Pago:")
 

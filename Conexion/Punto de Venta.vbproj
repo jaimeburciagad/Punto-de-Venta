@@ -11,7 +11,7 @@
     <AssemblyName>PuntoVentaW10</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
@@ -105,34 +105,64 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\CrystalDecisions.Windows.Forms\13.0.2000.0__692fbea5521e1304\CrystalDecisions.Windows.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="FarPoint.CalcEngine, Version=4.0.3518.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+    <Reference Include="DPCtlUruNet, Version=1.0.0.1, Culture=neutral, PublicKeyToken=7f32ef930fec5e5f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.CalcEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\DigitalPersona\U.are.U SDK\Windows\Lib\DotNET\DPCtlUruNet.dll</HintPath>
     </Reference>
-    <Reference Include="FarPoint.Excel, Version=4.0.3518.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+    <Reference Include="DPUruNet, Version=1.0.0.1, Culture=neutral, PublicKeyToken=7f32ef930fec5e5f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.Excel.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\DigitalPersona\U.are.U SDK\Windows\Lib\DotNET\DPUruNet.dll</HintPath>
     </Reference>
-    <Reference Include="FarPoint.PDF, Version=1.0.3518.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+    <Reference Include="FarPoint.CalcEngine, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.PDF.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\FarPoint.CalcEngine.dll</HintPath>
     </Reference>
-    <Reference Include="FarPoint.PluginCalendar.WinForms, Version=4.0.3512.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+    <Reference Include="FarPoint.Excel, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.PluginCalendar.WinForms.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\FarPoint.Excel.dll</HintPath>
     </Reference>
-    <Reference Include="FarPoint.Win, Version=4.0.3512.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+    <Reference Include="FarPoint.PDF, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.Win.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\FarPoint.PDF.dll</HintPath>
     </Reference>
-    <Reference Include="FarPoint.Win.Spread, Version=4.0.3512.2008, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+    <Reference Include="FarPoint.PluginCalendar.WinForms, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\FarPoint Technologies\Spread.WinForms.4.dotNet35\v4.0.3512\Bin\FarPoint.Win.Spread.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\FarPoint.PluginCalendar.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.Win, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\FarPoint.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.Win.Spread, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\FarPoint.Win.Spread.dll</HintPath>
+    </Reference>
+    <Reference Include="FarPoint.Win.TextRenderer, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\FarPoint.Win.TextRenderer.dll</HintPath>
     </Reference>
     <Reference Include="FirebirdSql.Data.FirebirdClient, Version=4.10.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\FirebirdClient\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
+    <Reference Include="GrapeCity.CalcEngine, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457" />
+    <Reference Include="GrapeCity.Spreadsheet, Version=18.0.20241.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\GrapeCity.Spreadsheet.dll</HintPath>
+    </Reference>
+    <Reference Include="GrapeCity.Spreadsheet.DataVisualization, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\GrapeCity.Spreadsheet.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="GrapeCity.Spreadsheet.Win, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\GrapeCity.Spreadsheet.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="GrapeCity.Spreadsheet.WinForms.Ribbon, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MESCIUS\Spread.NET 18\Windows Forms\v18.2.20254.0\bin\GrapeCity.Spreadsheet.WinForms.Ribbon.dll</HintPath>
+    </Reference>
+    <Reference Include="GrapeCity.Win.PluginInputMan, Version=18.2.20254.0, Culture=neutral, PublicKeyToken=327c3516b1b18457, processorArchitecture=MSIL" />
     <Reference Include="Interop.MSXML2">
       <HintPath>..\..\..\..\Downloads\COSAS QUE NO SE QUE SON\ALEGRIA\SUPERLUGITO\bin\Debug\Interop.MSXML2.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -143,9 +173,13 @@
       <HintPath>..\..\..\..\DUARSANUEVOluisa2\DUARSANUEVOluisa2\DUARSANUEVOluisa\SUPERLUGITO\bin\Debug\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -172,9 +206,11 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutorizacionConHuella.vb" />
     <Compile Include="CLASES\Base.vb" />
+    <Compile Include="CLASES\ConfiguraSpread.vb" />
     <Compile Include="CLASES\Conversion.vb" />
-    <Compile Include="CLASES\FRBUSQUEDA.vb" />
+    <Compile Include="CLASES\DiseñaSpread.vb" />
     <Compile Include="CLASES\GENERAL.VB" />
     <Compile Include="CLASES\Global.vb" />
     <Compile Include="CLASES\imp.vb" />
@@ -182,6 +218,7 @@
     <Compile Include="CLASES\Impresionvirtual.vb" />
     <Compile Include="CLASES\imprimevale.vb" />
     <Compile Include="CLASES\imptaire.vb" />
+    <Compile Include="CLASES\Logger.vb" />
     <Compile Include="CLASES\precotizacion.vb" />
     <Compile Include="CLASES\predinero.vb" />
     <Compile Include="CLASES\preimp.vb" />
@@ -194,12 +231,6 @@
     <Compile Include="CLASES\previrtual.vb" />
     <Compile Include="CLASES\RawPrinterHelper.vb" />
     <Compile Include="CLASES\REPORTE.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Devoluciones.Designer.vb">
-      <DependentUpon>Devoluciones.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Devoluciones.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.vb">
@@ -215,28 +246,13 @@
     <Compile Include="FORMAS\busqueda.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FORMAS\CONFIGURACION.designer.vb">
-      <DependentUpon>CONFIGURACION.vb</DependentUpon>
+    <Compile Include="FORMAS\Devoluciones.Designer.vb">
+      <DependentUpon>Devoluciones.vb</DependentUpon>
     </Compile>
-    <Compile Include="FORMAS\CONFIGURACION.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\cortecajanuevo.designer.vb">
-      <DependentUpon>cortecajanuevo.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FORMAS\cortecajanuevo.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\corteporiva.vb">
+    <Compile Include="FORMAS\Devoluciones.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FORMAS\FrAdmin.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\frautorizado.designer.vb">
-      <DependentUpon>frautorizado.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FORMAS\frautorizado.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FORMAS\FrBuscaArt.vb">
@@ -248,22 +264,19 @@
     <Compile Include="FORMAS\FrLogin.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FORMAS\FrPopup.vb">
+    <Compile Include="FORMAS\FrmHuellaEnroll.Designer.vb">
+      <DependentUpon>FrmHuellaEnroll.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\FrmHuellaEnroll.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FORMAS\FrRegreso.vb">
+    <Compile Include="FORMAS\FrmPanelAutorizaciones.Designer.vb">
+      <DependentUpon>FrmPanelAutorizaciones.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMAS\FrmPanelAutorizaciones.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FORMAS\FrVenta.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\ORDENACION.designer.vb">
-      <DependentUpon>ORDENACION.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FORMAS\ORDENACION.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\Paraautorizar.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FORMAS\ParaautorizarSALIDA.vb">
@@ -273,30 +286,6 @@
       <DependentUpon>parafacturar.vb</DependentUpon>
     </Compile>
     <Compile Include="FORMAS\parafacturar.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\reimprime.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\Repsalidascaja.designer.vb">
-      <DependentUpon>Repsalidascaja.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FORMAS\Repsalidascaja.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\Reptarjetas.designer.vb">
-      <DependentUpon>Reptarjetas.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FORMAS\Reptarjetas.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\retiros.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FORMAS\TICKETS.designer.vb">
-      <DependentUpon>TICKETS.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FORMAS\TICKETS.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FORMAS\VENTANITA.vb">
@@ -322,9 +311,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CLASES\REPORTE.resx" />
-    <EmbeddedResource Include="Devoluciones.resx">
-      <DependentUpon>Devoluciones.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
@@ -332,20 +318,11 @@
       <DependentUpon>Autorizacion.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMAS\busqueda.resx" />
-    <EmbeddedResource Include="FORMAS\CONFIGURACION.resx">
-      <DependentUpon>CONFIGURACION.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\cortecajanuevo.resx">
-      <DependentUpon>cortecajanuevo.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\corteporiva.resx">
-      <DependentUpon>corteporiva.vb</DependentUpon>
+    <EmbeddedResource Include="FORMAS\Devoluciones.resx">
+      <DependentUpon>Devoluciones.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMAS\FrAdmin.resx">
       <DependentUpon>FrAdmin.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\frautorizado.resx">
-      <DependentUpon>frautorizado.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMAS\FrBuscaArt.resx">
       <DependentUpon>FrBuscaArt.vb</DependentUpon>
@@ -356,36 +333,20 @@
     <EmbeddedResource Include="FORMAS\FrLogin.resx">
       <DependentUpon>FrLogin.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\FrRegreso.resx">
-      <DependentUpon>FrRegreso.vb</DependentUpon>
+    <EmbeddedResource Include="FORMAS\FrmHuellaEnroll.resx">
+      <DependentUpon>FrmHuellaEnroll.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMAS\FrmPanelAutorizaciones.resx">
+      <DependentUpon>FrmPanelAutorizaciones.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMAS\FrVenta.resx">
       <DependentUpon>FrVenta.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\ORDENACION.resx">
-      <DependentUpon>ORDENACION.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\Paraautorizar.resx">
-      <DependentUpon>Paraautorizar.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMAS\ParaautorizarSALIDA.resx">
       <DependentUpon>ParaautorizarSALIDA.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMAS\parafacturar.resx">
       <DependentUpon>parafacturar.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\reimprime.resx" />
-    <EmbeddedResource Include="FORMAS\Repsalidascaja.resx">
-      <DependentUpon>Repsalidascaja.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\Reptarjetas.resx">
-      <DependentUpon>Reptarjetas.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\retiros.resx">
-      <DependentUpon>retiros.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMAS\TICKETS.resx">
-      <DependentUpon>TICKETS.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMAS\VENTANITA.resx">
       <DependentUpon>VENTANITA.vb</DependentUpon>
@@ -600,8 +561,37 @@
   <ItemGroup>
     <Content Include="FORMAS\CONFIGPV.TXT" />
     <Content Include="Icono Punto de Venta Cobrar.ico" />
+    <None Include="Resources\ValesIcon.png" />
+    <None Include="Resources\Transfer.png" />
+    <None Include="Resources\1485477034-close2_78601.png" />
     <Content Include="Resources\1485477041-play_78590.png" />
     <None Include="Resources\1485477101-arrow-left_78605.png" />
+    <None Include="Resources\DuarsaLogoTicket.bmp" />
+    <None Include="Resources\LogoDuarsaNew.png" />
+    <None Include="Resources\1485477207-magnifier_78608.png" />
+    <None Include="Resources\1485477079-close_785651.png" />
+    <None Include="Resources\1485477079-close_78565 %281%29.png" />
+    <None Include="Resources\1485477179-pen_78607.png" />
+    <None Include="Resources\1485477149-rotation-left_78589.png" />
+    <None Include="Resources\pages_documents_copy_paste_icon_147449 %281%29.png" />
+    <None Include="Resources\1485477101-arrow-left_786051.png" />
+    <None Include="Resources\1485477061-cart_78585.png" />
+    <None Include="Resources\1485477061-cart_78585 %281%29.png" />
+    <None Include="Resources\1485477156-box_78606.png" />
+    <None Include="Resources\1485477156-box_78606 %281%29.png" />
+    <None Include="Resources\1485477156-box_78606 %281%291.png" />
+    <None Include="Resources\1485477156-box_78606 %281%292.png" />
+    <None Include="Resources\1485477156-box_78606 %282%29.png" />
+    <None Include="Resources\1485477097-avatar_78580.png" />
+    <None Include="Resources\Credit.png" />
+    <None Include="Resources\money-transfer-icon-40389.png" />
+    <None Include="Resources\1485477165-credit-card_78583.png" />
+    <None Include="Resources\cheque-icon-6025.png" />
+    <None Include="Resources\cheque-darkicon-6025.png" />
+    <None Include="Resources\CashIcon.png" />
+    <None Include="Resources\CheckIcon.png" />
+    <None Include="Resources\Loan.png" />
+    <None Include="Resources\1485477061-cart_785851.png" />
     <Content Include="Resources\printer_102274 %281%29.png" />
     <Content Include="Resources\printer_102274 %281%291.png" />
     <None Include="Resources\search-icon.png" />

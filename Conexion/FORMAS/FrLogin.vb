@@ -2,9 +2,11 @@ Imports System.Data.SqlClient
 Imports System.Deployment.Application
 Public Class FrLogin
     Inherits System.Windows.Forms.Form
-    Public xCon As New SqlConnection
-    Public rCon As New SqlConnection
-    Public Shared ConStr, rConStr As String
+
+    'Public xCon As New SqlConnection
+    'Public rCon As New SqlConnection
+
+    'Public Shared ConStr, rConStr As String
 
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents Label22 As System.Windows.Forms.Label
@@ -332,15 +334,50 @@ Public Class FrLogin
         Otro = 5
     End Enum
 
+    Private Function LoginPorPassword(password As String) As DataRow
+        Dim dsc As New DataSet
+        Dim sql As String = "SELECT TOP 1 emp_nomina, emp_nombre, emp_tipo, IDRol
+                         FROM ecusuariosx
+                         WHERE emp_password = @pwd"
+
+        Using xConLocal As New SqlConnection(Globales.sCadenaConexionSQL)
+            Using cmd As New SqlCommand(sql, xConLocal) ' o tu conexión actual
+                cmd.Parameters.Add("@pwd", SqlDbType.VarChar, 50).Value = password.Trim()
+                Using da As New SqlDataAdapter(cmd)
+                    da.Fill(dsc, "EMP")
+                End Using
+            End Using
+        End Using
+
+        If dsc.Tables("EMP").Rows.Count = 0 Then Return Nothing
+        Return dsc.Tables("EMP").Rows(0)
+    End Function
+    Private Sub CargaSesionDesdeRow(r As DataRow)
+        Globales.sNominaEmpleado = r("emp_nomina").ToString()
+        Globales.NombreEmpleado = r("emp_nombre").ToString().Trim()
+        Globales.nombreusuario = Globales.NombreEmpleado
+        Globales.TipoUsuario = r("emp_tipo").ToString().Trim()
+    End Sub
+    Private Function PuestoDesdeEmpTipo(empTipo As String) As Puesto
+        Dim t As String = If(empTipo, "")
+        Select Case t.Trim().ToUpperInvariant()
+            Case "CAJERA" : Return Puesto.Vendedora
+            Case "SUPERVISOR" : Return Puesto.Encargada
+            Case "NORMAL" : Return Puesto.Encargada
+            Case "SUP" : Return Puesto.Supervisora
+            Case Else : Return Puesto.NoExiste
+        End Select
+    End Function
+
     Private Function determinaNivel(ByVal sNomina As String) As Puesto
         Dim sSql As String
         Dim dsc As New DataSet
 
 
-        Base.Ejecuta("SELECT * FROM ECUSUARIOSX", xCon)
+        Base.Ejecuta("SELECT * FROM ECUSUARIOSX", sCadenaConexionSQL)
         sSql = "select * from ecusuariosx where emp_password='" & sNomina & "'"
         Try
-            Base.daQuery(sSql, xCon, dsc, "EMPLEADO")
+            Base.daQuery(sSql, sCadenaConexionSQL, dsc, "EMPLEADO")
 
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -374,7 +411,7 @@ Public Class FrLogin
         fecha = Today.Year
         fecha = fecha & IIf(Today.Month < 10, "0" & Today.Month, Today.Month)
         fecha = fecha & IIf(Today.Day < 10, "0" & Today.Day, Today.Day)
-        Base.Ejecuta("exec sp_creaturno '" & fecha & "'," & Globales.caja & ",'" & Globales.nombreusuario & "'", xCon)
+        Base.Ejecuta("exec sp_creaturno '" & fecha & "'," & Globales.caja & ",'" & Globales.nombreusuario & "'", sCadenaConexionSQL)
         Return turnoAbierto()
     End Function
     Private Function turnoAbierto() As Boolean
@@ -383,7 +420,7 @@ Public Class FrLogin
         sSql = "select his_turno, his_fecha, his_activo  "
         sSql &= "from echisturno "
         sSql &= "where his_activo='A' AND HIS_CAJA='" & Globales.caja & "'"
-        Base.daQuery(sSql, xCon, dsc, "turno")
+        Base.daQuery(sSql, sCadenaConexionSQL, dsc, "turno")
         If dsc.Tables("turno").Rows.Count > 0 Then
             Globales.iTurnoActivo = dsc.Tables("turno").Rows(0)("his_turno")
             Globales.oFechaTurno = dsc.Tables("turno").Rows(0)("his_fecha")
@@ -410,7 +447,7 @@ Public Class FrLogin
         Dim dsc As New DataSet
         Dim sql As String
         sql = "select * from fondos where corte=0 and caja='" + Globales.caja + "'"
-        Base.daQuery(sql, xCon, dsc, "fondo")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "fondo")
         If dsc.Tables("fondo").Rows.Count > 0 Then
             Return True
         Else
@@ -475,7 +512,7 @@ sigue:
 
 
         sql = "select * from ecerp2018.dbo.ECERP_TICKET where ecerp_ticket_empresa_clave='" & Globales.sEmpresa & "' order by ecerp_ticket_empresa_renglon"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
 
         If dsc.Tables("tabla").Rows.Count > 0 Then
@@ -492,7 +529,7 @@ sigue:
         dsc.Tables.Remove("tabla")
 
         sql = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='" & Globales.sEmpresa & "'"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
 
         If dsc.Tables("tabla").Rows.Count > 0 Then
@@ -535,7 +572,7 @@ sigue:
         DatosLuis()
 
         sql = "Select * from ecerp2018.dbo.ecerp_empresa where ecerp_empresa_clave='" & Globales.sEmpresa & "'"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
 
 
@@ -569,7 +606,7 @@ sigue:
         Else
             If My.Computer.Network.Ping(sRemoto) Then
                 sql = "select * from ecerp2018.dbo.ECERP_TICKET where ecerp_ticket_empresa_clave='" & Globales.sEmpresa & "' order by ecerp_ticket_empresa_renglon"
-                Base.daQuery(sql, rCon, dsc, "tabla")
+                Base.daQuery(sql, sCadenaConexionRemota, dsc, "tabla")
 
                 If dsc.Tables("tabla").Rows.Count > 0 Then
                     Globales.rgrupo = dsc.Tables("tabla").Rows(0)("ecerp_ticket_empresa_texto")
@@ -584,7 +621,7 @@ sigue:
                 dsc.Tables.Remove("tabla")
 
                 sql = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='" & Globales.sEmpresa & "'"
-                Base.daQuery(sql, rCon, dsc, "tabla")
+                Base.daQuery(sql, sCadenaConexionRemota, dsc, "tabla")
 
                 If dsc.Tables("tabla").Rows.Count > 0 Then
                     Globales.rBaseMicrosip = "USER=" & dsc.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -621,7 +658,7 @@ sigue:
                 dsc.Tables.Remove("tabla")
 
                 sql = "Select * from ecerp2018.dbo.ecerp_empresa where ecerp_empresa_clave='" & Globales.sEmpresa & "'"
-                Base.daQuery(sql, rCon, dsc, "tabla")
+                Base.daQuery(sql, sCadenaConexionRemota, dsc, "tabla")
 
 
                 If dsc.Tables("tabla").Rows.Count > 0 Then
@@ -659,7 +696,7 @@ sigue:
         Dim DSC As New DataSet
 
         SQL = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='2'"
-        Base.daQuery(SQL, xCon, DSC, "tabla")
+        Base.daQuery(SQL, sCadenaConexionSQL, DSC, "tabla")
 
         If DSC.Tables("tabla").Rows.Count > 0 Then
             Globales.BaseMicrosipCrisp = "USER=" & DSC.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -699,7 +736,7 @@ sigue:
         Else
             If My.Computer.Network.Ping(sRemoto) Then
                 SQL = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='2'"
-                Base.daQuery(SQL, rCon, DSC, "tabla")
+                Base.daQuery(SQL, sCadenaConexionRemota, DSC, "tabla")
 
                 If DSC.Tables("tabla").Rows.Count > 0 Then
                     Globales.rBaseMicrosipCrisp = "USER=" & DSC.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -745,7 +782,7 @@ sigue:
         Dim DSC As New DataSet
 
         SQL = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='3'"
-        Base.daQuery(SQL, xCon, DSC, "tabla")
+        Base.daQuery(SQL, sCadenaConexionSQL, DSC, "tabla")
 
         If DSC.Tables("tabla").Rows.Count > 0 Then
             Globales.BaseMicrosipLuisMario = "USER=" & DSC.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -785,7 +822,7 @@ sigue:
         Else
             If My.Computer.Network.Ping(sRemoto) Then
                 SQL = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='3'"
-                Base.daQuery(SQL, rCon, DSC, "tabla")
+                Base.daQuery(SQL, sCadenaConexionRemota, DSC, "tabla")
 
                 If DSC.Tables("tabla").Rows.Count > 0 Then
                     Globales.rBaseMicrosipLuisMario = "USER=" & DSC.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -876,7 +913,7 @@ sigue:
 
 
         sql = "select * from ecerp2018.dbo.ECERP_TICKET where ecerp_ticket_empresa_clave='" & Globales.sEmpresa & "' order by ecerp_ticket_empresa_renglon"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
         If dsc.Tables("tabla").Rows.Count > 0 Then
 
@@ -892,7 +929,7 @@ sigue:
         dsc.Tables.Remove("tabla")
 
         sql = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='" & Globales.sEmpresa & "'"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
         If dsc.Tables("tabla").Rows.Count > 0 Then
             Globales.basemicrosip = "USER=" & dsc.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -918,7 +955,7 @@ sigue:
 
 
         sql = "Select * from ecerp2018.dbo.ecerp_empresa where ecerp_empresa_clave='" & Globales.sEmpresa & "'"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
         If dsc.Tables("tabla").Rows.Count > 0 Then
             Globales.nomempresa = dsc.Tables("tabla").Rows(0)("ECERP_empresa_refsis")
@@ -947,7 +984,7 @@ sigue:
         Else
             If My.Computer.Network.Ping(sRemoto) Then
                 sql = "select * from ecerp2018.dbo.ECERP_TICKET where ecerp_ticket_empresa_clave='" & Globales.sEmpresa & "' order by ecerp_ticket_empresa_renglon"
-                Base.daQuery(sql, rCon, dsc, "tabla")
+                Base.daQuery(sql, sCadenaConexionRemota, dsc, "tabla")
 
                 If dsc.Tables("tabla").Rows.Count > 0 Then
                     Globales.rgrupo = dsc.Tables("tabla").Rows(0)("ecerp_ticket_empresa_texto")
@@ -962,7 +999,7 @@ sigue:
                 dsc.Tables.Remove("tabla")
 
                 sql = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='" & Globales.sEmpresa & "'"
-                Base.daQuery(sql, rCon, dsc, "tabla")
+                Base.daQuery(sql, sCadenaConexionRemota, dsc, "tabla")
 
                 If dsc.Tables("tabla").Rows.Count > 0 Then
                     Globales.rBaseMicrosip = "USER=" & dsc.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -982,7 +1019,7 @@ sigue:
                 dsc.Tables.Remove("tabla")
 
                 sql = "Select * from ecerp2018.dbo.ecerp_empresa where ecerp_empresa_clave='" & Globales.sEmpresa & "'"
-                Base.daQuery(sql, rCon, dsc, "tabla")
+                Base.daQuery(sql, sCadenaConexionRemota, dsc, "tabla")
 
                 If dsc.Tables("tabla").Rows.Count > 0 Then
                     Globales.rNomEmpresa = dsc.Tables("tabla").Rows(0)("ECERP_empresa_refsis")
@@ -1042,7 +1079,7 @@ sigue:
 
 
         sql = "select * from ecerp2018.dbo.ECERP_TICKET where ecerp_ticket_empresa_clave='" & Globales.sEmpresa & "' order by ecerp_ticket_empresa_renglon"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
         If dsc.Tables("tabla").Rows.Count > 0 Then
 
@@ -1058,7 +1095,7 @@ sigue:
         dsc.Tables.Remove("tabla")
 
         sql = "sELECT * FROM ECERP2018.DBO.ECERP_CONFIGBD WHERE ecerp_Configbd_empresa_clave='" & Globales.sEmpresa & "'"
-        Base.daQuery(sql, xCon, dsc, "tabla")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
 
         If dsc.Tables("tabla").Rows.Count > 0 Then
             Globales.basemicrosip = "USER=" & dsc.Tables("TABLA").Rows(0)("ECERP_CONFIGBD_USUARIO_VC") & ";" &
@@ -1106,17 +1143,19 @@ sigue:
         sConexion &= " DATABASE=" & Globales.sBaseDatos & ";"
         sConexion &= " INTEGRATED SECURITY=FALSE;"
         sConexion &= " USER ID=" & Globales.sUsuarioBase & ";"
-        sConexion &= " PASSWORD=" & Globales.sClaveUsuario
-        xCon.ConnectionString = sConexion
-        ConStr = sConexion
-        rCon.ConnectionString = "SERVER=" & Globales.sRemoto & ";" & " DATABASE=" & Globales.sBaseDatos & ";" & " INTEGRATED SECURITY=FALSE;" & " USER ID=" & Globales.sUsuarioBase & ";" & " PASSWORD=" & Globales.sClaveUsuario
-        rConStr = "SERVER=" & Globales.sRemoto & ";" & " DATABASE=" & Globales.sBaseDatos & ";" & " INTEGRATED SECURITY=FALSE;" & " USER ID=" & Globales.sUsuarioBase & ";" & " PASSWORD=" & Globales.sClaveUsuario
+        sConexion &= " PASSWORD=" & Globales.sClaveUsuario & ";"
+        sConexion &= " Connect Timeout=30; Encrypt=False; TrustServerCertificate=True;"
+        Globales.sCadenaConexionSQL = sConexion
+
+        'ConStr = sConexion
+        'rCon.ConnectionString = "SERVER=" & Globales.sRemoto & ";" & " DATABASE=" & Globales.sBaseDatos & ";" & " INTEGRATED SECURITY=FALSE;" & " USER ID=" & Globales.sUsuarioBase & ";" & " PASSWORD=" & Globales.sClaveUsuario
+        Globales.sCadenaConexionRemota = "SERVER=" & Globales.sRemoto & ";" & " DATABASE=" & Globales.sBaseDatos & ";" & " INTEGRATED SECURITY=FALSE;" & " USER ID=" & Globales.sUsuarioBase & ";" & " PASSWORD=" & Globales.sClaveUsuario & "; Connect Timeout=30; Encrypt=False; TrustServerCertificate=True;"
 
 
 
 
         'Sql = "select emp_microsip,micro_impuesto,micro_exento from ecempresas"
-        'Base.daQuery(Sql, xCon, dsc, "tabla")
+        'Base.daQuery(Sql, sCadenaConexionSQL,dsc, "tabla")
         'If DSC.Tables("tabla").Rows.Count > 0 Then
         '    Globales.CVEEXCENTO = DSC.Tables("tabla").Rows(0)("micro_exento")
         '    Globales.CVEIMPUESTO = DSC.Tables("tabla").Rows(0)("micro_impuesto")
@@ -1142,7 +1181,6 @@ sigue:
 
     Private Sub PictureBox3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 
-        Dim iUsuario As Puesto
         Dim oForma As Form
         If txt_user.Text <> "" Then
             Dim i As Integer
@@ -1154,9 +1192,18 @@ sigue:
             Next
             txt_user.Text = Mid(txt_user.Text, i, Len(txt_user.Text) - i + 1)
 
-            iUsuario = determinaNivel(txt_user.Text)
+            Dim DatosUsuario As DataRow = LoginPorPassword(txt_user.Text)
+            If DatosUsuario Is Nothing Then
+                MessageBox.Show("Número de nómina no existe, favor de verificar", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                txt_user.Clear()
+                Exit Sub
+            Else
+                CargaSesionDesdeRow(DatosUsuario)
+            End If
 
-            Select Case iUsuario
+
+
+            Select Case PuestoDesdeEmpTipo(Globales.TipoUsuario)
                 Case Puesto.Vendedora
                     'Si es vendedora y ya se abrió el turno se entra
                     'a la pantalla de venta de manera directa
@@ -1166,7 +1213,7 @@ sigue:
 
                             txt_user.Clear()
 
-                            oForma = New FrVenta(xCon, Me)
+                            oForma = New FrVenta(Me)
                             AddHandler oForma.Closed, AddressOf MuestraLogin
                             Hide()
                             oForma.Show()
@@ -1185,14 +1232,14 @@ sigue:
                 Case Puesto.Supervisora
                     'Se entra a la pantalla de menú administrativo
                     txt_user.Clear()
-                    oForma = New FrAdmin(xCon, 0, "")
+                    oForma = New FrAdmin(0, "")
                     AddHandler oForma.Closed, AddressOf MuestraLogin
 
                     Hide()
                     oForma.Show()
                 Case Puesto.Encargada
                     txt_user.Clear()
-                    oForma = New FrAdmin(xCon, 1, Globales.nombreusuario)
+                    oForma = New FrAdmin(1, Globales.nombreusuario)
                     AddHandler oForma.Closed, AddressOf MuestraLogin
 
                     Hide()
@@ -1233,7 +1280,7 @@ sigue:
         cuanto = 0
         Dim SQL As String
         SQL = "insert fondos values(" & cuanto & ",getdate(),'" & cajax & "',0)"
-        Base.Ejecuta(SQL, xCon)
+        Base.Ejecuta(SQL, sCadenaConexionSQL)
 
     End Sub
 

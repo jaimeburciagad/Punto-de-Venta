@@ -13,19 +13,19 @@ Public Class pretiempoaire
     Dim iva As Double
     Dim subt As Double
     Dim losqueno As Double
-    Dim xcon As SqlConnection
+    'Dim xcon As SqlConnection
     Dim sql As String
     Dim i As Integer
     Dim llevavale As Integer
 
 
 
-    Public Sub New(ByVal numtic As String, ByRef con As SqlConnection)
+    Public Sub New(ByVal numtic As String)
         Dim dsc As New DataSet
         Dim dsc1 As New DataSet
         Dim xtexto As String
-        xcon = con
-        
+        'xcon = con
+
         renglones.Add(centra(Globales.grupo))
         renglones.Add(centra(Globales.empresa))
         renglones.Add(centra(Globales.rfc))
@@ -49,13 +49,13 @@ Public Class pretiempoaire
 
         sql = "SELECT * FROM TMPAUXVTA WHERE TMP_USUARIO='" & Globales.caja & "'"
 
-        Base.daQuery(sql, xcon, dsc1, "IMPRIME")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc1, "IMPRIME")
 
         If dsc1.Tables("IMPRIME").Rows.Count > 0 Then
             For i = 0 To dsc1.Tables("IMPRIME").Rows.Count - 1
 
                 sql = "SELECT * FROM ECDETVENTATEL WHERE DVE_VENTA=" & numtic
-                Base.daQuery(sql, xcon, dsc1, "FOLIOS")
+                Base.daQuery(sql, sCadenaConexionSQL, dsc1, "FOLIOS")
                 If dsc1.Tables("FOLIOS").Rows.Count > 0 Then
                     If CDbl(dsc1.Tables("imprime").Rows(i)("tmp_cantidad")) <> 0 Then
                         renglones.Add(dsc1.Tables("imprime").Rows(i)("tmp_dscart"))

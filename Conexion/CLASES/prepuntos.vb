@@ -8,11 +8,11 @@ Public Class prepuntos
     Private enter As Char = Chr(13)
     Private line As Char = Chr(10)
 
-    Public Sub New(ByRef numtic As String, ByRef con As SqlConnection)
+    Public Sub New(ByRef numtic As String)
         Dim SQL As String
         Dim DSC As New DataSet
 
-        
+
         renglones.Add(Globales.grupo)
         renglones.Add(Globales.empresa)
         renglones.Add(Globales.rfc)
@@ -41,7 +41,7 @@ Public Class prepuntos
 
 
         SQL = "SELECT * FROM ECCANJEPUNTOS INNER JOIN ARTICULO ON ART_CLAVE=CANJE_ARTICULO WHERE CANJE_TICKET=" & numtic
-        Base.daQuery(SQL, con, DSC, "PUNTOS")
+        Base.daQuery(SQL, sCadenaConexionSQL, DSC, "PUNTOS")
 
         Dim j As Integer
         Dim xtotal As Integer

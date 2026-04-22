@@ -1,8 +1,7 @@
 Imports System.Data.SqlClient
 Public Class GENERAL
 
-
-    Public Shared Sub parametrosbusqueda(ByVal forma As busqueda, ByVal encabezado As String, ByVal campos As String, ByVal tabla As String, ByVal orden As String, ByVal ColumnaABuscarPor As String, ByVal conexion As SqlConnection, ByVal NombresDisplayColumnasABuscarPor As String, ByVal AnchoColumnas As String, ByVal tipocampo As String, ByVal ValorDeColumnasARegresar As String, ByVal WhereClause As String, Optional ByVal Columnas As String = "")
+    Public Shared Sub parametrosbusqueda(ByVal forma As busqueda, ByVal encabezado As String, ByVal campos As String, ByVal tabla As String, ByVal orden As String, ByVal ColumnaABuscarPor As String, ByVal conexion As String, ByVal NombresDisplayColumnasABuscarPor As String, ByVal AnchoColumnas As String, ByVal tipocampo As String, ByVal ValorDeColumnasARegresar As String, ByVal WhereClause As String, Optional ByVal VieneDe As String = "", Optional ByVal Columnas As String = "", Optional ByVal AnchoForma As Integer = -1)
         forma.DSCCAMPOS = campos
         forma.DSCENCABEZADO = encabezado
         forma.DSCORDEN = orden
@@ -12,9 +11,11 @@ Public Class GENERAL
         forma.tipocampos = tipocampo
         forma.longcampos = AnchoColumnas
         forma.DSCFILTRO = ValorDeColumnasARegresar
-        forma.xCon = conexion
+        'forma.xCon = conexion
         forma.filtrotabla = WhereClause
         forma.Columnas = Columnas
+        forma.VieneDe = VieneDe
+        forma.Ancho = AnchoForma
     End Sub
     Public Shared Function fechatexto(ByVal fecha As DateTime) As String
         fechatexto = Mid("00" & fecha.Day, Len("00" & fecha.Day) - 1, 2) & "/" & _
@@ -134,10 +135,7 @@ Public Class GENERAL
 
 
     End Sub
-    Public Shared Sub PARAMETROSCONF(ByVal FORMA As CONFIGURACION, ByVal CONCEPTO As String, ByVal conexion As SqlConnection)
-        FORMA.CONCEPTO = CONCEPTO
-        FORMA.xCon = conexion
-    End Sub
+
 
     'Public Shared Sub PARAMETROSCLASIFICACIONES(ByRef FORMA As SELCLASIFICACIONES, ByRef FPSPREADX As FarPoint.Win.Spread.FpSpread, ByVal conexion As SqlConnection)
     '    FORMA.FP_FAMILIAS = FPSPREADX
@@ -153,7 +151,7 @@ Public Class GENERAL
         texto = ""
 
         sql = "Select * from ecconfiguracion where  conf_id='" & CONCEPTO & "' and conf_orden<>0  order by conf_orden"
-        Base.daQuery(sql, xcon, dsc, "conf")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "conf")
         If dsc.Tables("conf").Rows.Count > 0 Then
             For i = 0 To dsc.Tables("conf").Rows.Count - 1
                 texto = IIf(texto = "", dsc.Tables("conf").Rows(i)("conf_nombre"), texto & "," & dsc.Tables("conf").Rows(i)("conf_nombre"))
@@ -171,7 +169,7 @@ Public Class GENERAL
         Dim dsc As New DataSet
         Dim i As Integer
         sql = "Select * from ecconfiguracion where conf_id='" & CONCEPTO & "' order by conf_columna"
-        Base.daQuery(sql, xcon, dsc, "conf")
+        Base.daQuery(sql, sCadenaConexionSQL, dsc, "conf")
         If dsc.Tables("conf").Rows.Count > 0 Then
             For i = 0 To dsc.Tables("conf").Rows.Count - 1
                 If CDbl(dsc.Tables("CONF").Rows(i)("CONF_ESTATUS")) = 0 Then
@@ -183,10 +181,23 @@ Public Class GENERAL
         End If
     End Sub
 
-    Public Shared Sub PARAMETROSORDEN(ByVal FORMA As ORDENACION, ByVal CONCEPTO As String, ByVal conexion As SqlConnection)
-        FORMA.CONCEPTO = CONCEPTO
-        FORMA.xCon = conexion
-    End Sub
+    Public Class StoredUserTemplate
+        Public Property UserID As Integer
+        Public Property FirstName As String
+        Public Property LastName As String
+        Public Property UserRole As String
+        Public Property Template As DPUruNet.Fmd
+        Public Property OriginalImageWidth As Integer
+        Public Property OriginalImageHeight As Integer
+        Public Property OriginalImageResolution As Integer
 
+        Public Sub New(userId As Integer, firstName As String, lastName As String, template As DPUruNet.Fmd, userRole As String)
+            Me.UserID = userId
+            Me.FirstName = firstName
+            Me.LastName = lastName
+            Me.Template = template
+            Me.UserRole = userRole
+        End Sub
+    End Class
 
 End Class

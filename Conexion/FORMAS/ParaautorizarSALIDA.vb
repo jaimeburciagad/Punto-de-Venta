@@ -1,26 +1,28 @@
 Imports System.Data.SqlClient
 Public Class paraautorizarSALIDA
     Inherits System.Windows.Forms.Form
-    
+
 #Region " Código generado por el Diseñador de Windows Forms "
-    Dim xcon As SqlConnection
-    Dim autorizado, CambiaTipoVenta, CambiaCliente As Boolean
+    'Dim xcon As SqlConnection
+    Dim autorizado, CambiaTipoVenta, CambiaCliente, PagoExcedente As Boolean
     Dim fomas As FrVenta
 
 
 
-    Public Sub New(ByRef foma As Form, ByRef autorizo As Boolean, ByRef con As SqlConnection, ByRef Optional CambiandoVenta As Boolean = False, ByRef Optional CambiandoCliente As Boolean = False)
+    Public Sub New(ByRef foma As Form, ByRef autorizo As Boolean, ByRef Optional CambiandoVenta As Boolean = False, ByRef Optional CambiandoCliente As Boolean = False, ByRef Optional PagandoExcedente As Boolean = False)
         MyBase.New()
 
         'El Diseñador de Windows Forms requiere esta llamada.
         InitializeComponent()
-        xcon = con
+        'xcon = con
         CambiaTipoVenta = CambiandoVenta
         CambiaCliente = CambiandoCliente
         If CambiandoVenta Then
             Label1.Text = "Código de Autorización" & vbCrLf & "Cambio en Tipo de Venta"
         ElseIf CambiandoCliente Then
             Label1.Text = "Código de Autorización" & vbCrLf & "Cambio de Cliente"
+        ElseIf PagandoExcedente Then
+            Label1.Text = "Código de Autorización" & vbCrLf & "Pago Excedente"
         Else
             Label1.Text = "Código de Autorización" & vbCrLf & "Cerrar Punto de Venta"
         End If
@@ -111,12 +113,12 @@ Public Class paraautorizarSALIDA
             Dim sSql As String
             Dim dsc As New DataSet
             sSql = "Select * FROM ecusuariosx where emp_password='" & Me.TextBox1.Text & "'"
-            Base.daQuery(sSql, xcon, dsc, "empleado")
+            Base.daQuery(sSql, sCadenaConexionSQL, dsc, "empleado")
             autorizado = False
             If dsc.Tables("empleado").Rows.Count > 0 Then
                 If dsc.Tables("empleado").Rows(0)("emp_tipo").ToString.Trim = "Supervisorss" Or (dsc.Tables("empleado").Rows(0)("emp_nombre").ToString.Trim = "Jaime/JR//" And dsc.Tables("empleado").Rows(0)("emp_tipo").ToString.Trim = "Supervisor") Then
                     fomas.AutorizaCierreCambioVentana = True
-                    If Not CambiaTipoVenta AndAlso Not cambiacliente Then
+                    If Not CambiaTipoVenta AndAlso Not CambiaCliente AndAlso Not PagoExcedente Then
                         fomas.Flogin.Show()
                         fomas.Dispose()
                         fomas.Close()
