@@ -137,6 +137,7 @@ Public Class FrVenta
     Friend WithEvents FpFormasPago_Sheet1 As SheetView
     Friend WithEvents Label4 As Label
     Friend WithEvents PictureBox2 As PictureBox
+    Friend WithEvents FpArticulos_Sheet2 As SheetView
     Public acredito As Double
 
     'Funcion Que Manda a Llamar un Sonido.....(API windows)
@@ -242,7 +243,7 @@ Public Class FrVenta
         Me.Label17 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.FpFormasPago = New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None, resources.GetObject("resource1"))
-        Me.FpFormasPago_Sheet1 = Me.FpFormasPago.GetSheet(0)
+        Me.FpArticulos_Sheet1 = Me.FpFormasPago.GetSheet(0)
         Me.LFORPAG = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Lkilos = New System.Windows.Forms.Label()
@@ -312,8 +313,8 @@ Public Class FrVenta
         Me.LbClienteTicket = New System.Windows.Forms.Label()
         Me.TimerReloj = New System.Windows.Forms.Timer(Me.components)
         Me.FpArticulos = New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None, resources.GetObject("resource2"))
-        Me.FpArticulos_Sheet1 = Me.FpArticulos.GetSheet(0)
         Me.PictureBox7 = New System.Windows.Forms.PictureBox()
+        Me.FpArticulos_Sheet2 = Me.FpArticulos.GetSheet(0)
         Me.grformapago.SuspendLayout()
         Me.banco.SuspendLayout()
         Me.credito.SuspendLayout()

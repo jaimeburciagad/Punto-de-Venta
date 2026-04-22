@@ -336,7 +336,7 @@ Public Class FrLogin
 
     Private Function LoginPorPassword(password As String) As DataRow
         Dim dsc As New DataSet
-        Dim sql As String = "SELECT TOP 1 emp_nomina, emp_nombre, emp_tipo, IDRol
+        Dim sql As String = "SELECT TOP 1 emp_nomina, emp_nombre, emp_tipo
                          FROM ecusuariosx
                          WHERE emp_password = @pwd"
 
