@@ -1775,7 +1775,14 @@ Public Class FrVenta
                     Dim fueConF6 As Integer = DSC.Tables("ticket").Rows(i).Field(Of Integer?)("FueConF6").GetValueOrDefault(0)
                     VentaCajaVirtual = (fueConF6 = 1)
                     ToggleCajaVirtual()
-                    ProcAgregaArticulo(True, DSC.Tables("Ticket").Rows(i)("Cantidad"), DSC.Tables("Ticket").Rows(i)("FueConF1"), DSC.Tables("Ticket").Rows(i)("FueConF2"), DSC.Tables("Ticket").Rows(i)("FueConF3"), DSC.Tables("Ticket").Rows(i)("TraeVale"), fueConF6)
+                    ProcAgregaArticulo(True,
+                                       DSC.Tables("Ticket").Rows(i)("Cantidad"),
+                                       DSC.Tables("Ticket").Rows(i)("FueConF1"),
+                                       DSC.Tables("Ticket").Rows(i)("FueConF2"),
+                                       DSC.Tables("Ticket").Rows(i)("FueConF3"),
+                                       DSC.Tables("Ticket").Rows(i)("TraeVale"),
+                                       fueConF6,
+                                       DSC.Tables("Ticket").Rows(i)("Factor"))
                 Next
                 Me.TX_UPC.Focus()
                 Return True
@@ -2058,16 +2065,24 @@ Public Class FrVenta
             If .RowCount > 1 Then
                 Dim UPCAnterior As String = .Cells(iRowActual - 1, ColVenta.ColUPCInv).Text.Trim
                 Dim CantidadAnterior As Decimal = CDec(.Cells(iRowActual - 1, ColVenta.ColCantidad).Value)
+                Dim F6Anterior As Integer = CInt(Val(.Cells(iRowActual - 1, ColVenta.ColF6).Value))
+                Dim FactorAnterior As Decimal = CDec(Val(.Cells(iRowActual - 1, ColVenta.ColFactor).Value))
+                Dim ValeAnterior As String = .Cells(iRowActual - 1, ColVenta.ColVale).Text.Trim
+                Dim ValeActual As String = IIf(Item.TraeVale, "*", "")
 
                 If UPCAnterior = Item.UPC AndAlso
-                Not Item.EsCancelacion AndAlso
-                CantidadAnterior > 0 AndAlso
-                Not Item.EsKilos AndAlso
-                Not Item.CargandoPendiente Then
+                   F6Anterior = valF6 AndAlso
+                   Math.Abs(FactorAnterior - Item.Factor) < 0.0001D AndAlso
+                   ValeAnterior = ValeActual AndAlso
+                   Not Item.EsCancelacion AndAlso
+                   CantidadAnterior > 0 AndAlso
+                   Not Item.EsKilos AndAlso
+                   Not Item.CargandoPendiente Then
 
                     EsRepetido = True
                 End If
             End If
+
 
             ' =========================================================================
             ' 2. operación EN GRID Y EN SQL (Aquí estaba el fallo)
@@ -2082,14 +2097,22 @@ Public Class FrVenta
 
                 ' 2.1 Actualizar Grid
                 .Cells(RenglonObjetivo, ColVenta.ColCantidad).Value = CantidadFinal
-                .RemoveRows(iRowActual, 1) ' Borrar el vacío
+                .Cells(RenglonObjetivo, ColVenta.ColF6).Value = valF6
+                .Cells(RenglonObjetivo, ColVenta.ColFactor).Value = Item.Factor
+                .Cells(RenglonObjetivo, ColVenta.ColVale).Value = IIf(Item.TraeVale, "*", "")
+                .RemoveRows(iRowActual, 1)
 
                 ' 2.2 Actualizar SQL (RESTAURADO)
                 ' Actualizamos la cantidad en el renglón correspondiente
                 SQL = "UPDATE tmpauxvta2 SET cantidad=" & CantidadFinal &
-                  ", FueConF1=" & valF1 & ", FueConF2=" & valF2 &
-                  ", FueConF3=" & valF3 & ", FueConF6=" & valF6 &
-                  " WHERE renglon=" & RenglonObjetivo & " AND usuario='" & Globales.caja & "'"
+                      ", FueConF1=" & valF1 &
+                      ", FueConF2=" & valF2 &
+                      ", FueConF3=" & valF3 &
+                      ", FueConF6=" & valF6 &
+                      ", Factor=" & Item.Factor &
+                      ", TraeVale='" & IIf(Item.TraeVale, "*", "") & "'" &
+                      " WHERE renglon=" & RenglonObjetivo & " AND usuario='" & Globales.caja & "'"
+
                 Base.Ejecuta(SQL, sCadenaConexionSQL)
 
                 iRowActual = RenglonObjetivo
@@ -2115,7 +2138,9 @@ Public Class FrVenta
                 .Cells(iRowActual, ColVenta.ColF2).Value = valF2
                 .Cells(iRowActual, ColVenta.ColF3).Value = valF3
                 .Cells(iRowActual, ColVenta.ColF6).Value = valF6
+                .Cells(iRowActual, ColVenta.ColFactor).Value = Item.Factor
                 .Cells(iRowActual, ColVenta.ColVale).Value = IIf(Item.TraeVale, "*", "")
+
 
                 ' Colores
                 If Item.EsCancelacion Then
@@ -2138,12 +2163,11 @@ Public Class FrVenta
                 ' Solo insertamos si NO estamos cargando un ticket pendiente (porque esos ya existen)
                 If Not Item.CargandoPendiente Then
                     SQL = "INSERT INTO tmpauxvta2 (renglon, usuario, articulo, cantidad, tipo, " &
-                      "FueConF1, FueConF2, FueConF3, ClienteID, ArtClave, TraeVale, Factor, FueConF6) " &
-                      "VALUES (" &
-                      RenglonObjetivo & ", '" & Globales.caja & "', '" & Item.UPC & "', " & CantidadFinal & ", " & Item.TipoVenta & ", " &
-                      valF1 & ", " & valF2 & ", " & valF3 & ", " & ClienteID & ", '" & Item.Clave & "', " &
-                      IIf(Item.TraeVale, 1, 0) & ", " & Item.Factor & ", " & valF6 & ")"
-
+                          "FueConF1, FueConF2, FueConF3, ClienteID, ArtClave, TraeVale, Factor, FueConF6) " &
+                          "VALUES (" &
+                          RenglonObjetivo & ", '" & Globales.caja & "', '" & Item.UPC & "', " & CantidadFinal & ", " & Item.TipoVenta & ", " &
+                          valF1 & ", " & valF2 & ", " & valF3 & ", " & ClienteID & ", '" & Item.Clave & "', '" &
+                          IIf(Item.TraeVale, "*", "") & "', " & Item.Factor & ", " & valF6 & ")"
                     Base.Ejecuta(SQL, sCadenaConexionSQL)
                 End If
 
@@ -2177,8 +2201,8 @@ Public Class FrVenta
                        PrecioOferta2:=Item.PrecioOferta2,
                        PrecioOferta3:=Item.PrecioOferta3,
                        CantidadCobradas:=Item.CantidadCobradas,
-                       TipoOferta:=Item.TipoOferta)
-
+                       TipoOferta:=Item.TipoOferta,
+                       FactorCaptura:=Item.Factor)
             ' Scroll
             .ActiveRowIndex = iRowActual
             FpArticulos.ShowActiveCell(FarPoint.Win.Spread.VerticalPosition.Bottom, FarPoint.Win.Spread.HorizontalPosition.Left)
@@ -2465,8 +2489,7 @@ Public Class FrVenta
     '    End If
 
     'End Sub
-    Private Sub CONTROLPRECIOS(ByVal UPCUPC As String, ByVal DPRECIO1 As Decimal, ByVal DPRECIO2 As Decimal, ByVal DPRECIO3 As Decimal, ByVal TOPE As Decimal, ByVal SCANT As Decimal, ByVal SCANTANT As Decimal, ByVal RENGLON As Integer, ByVal ArtClave As String, ByVal Optional CargandoPendiente As Boolean = False, Optional ByVal CantidadDisponible As Decimal = -1, Optional ByVal PrecioOferta1 As Decimal = -1, Optional ByVal PrecioOferta2 As Decimal = -1, Optional ByVal PrecioOferta3 As Decimal = -1, Optional ByVal CantidadCobradas As Integer = 0, Optional ByVal TipoOferta As Integer = 0)
-
+    Private Sub CONTROLPRECIOS(ByVal UPCUPC As String, ByVal DPRECIO1 As Decimal, ByVal DPRECIO2 As Decimal, ByVal DPRECIO3 As Decimal, ByVal TOPE As Decimal, ByVal SCANT As Decimal, ByVal SCANTANT As Decimal, ByVal RENGLON As Integer, ByVal ArtClave As String, ByVal Optional CargandoPendiente As Boolean = False, Optional ByVal CantidadDisponible As Decimal = -1, Optional ByVal PrecioOferta1 As Decimal = -1, Optional ByVal PrecioOferta2 As Decimal = -1, Optional ByVal PrecioOferta3 As Decimal = -1, Optional ByVal CantidadCobradas As Integer = 0, Optional ByVal TipoOferta As Integer = 0, Optional ByVal FactorCaptura As Decimal = 1D)
         ' 1. VARIABLES DE TRABAJO (Decimales)
         Dim CantidadTotalAcumulada As Decimal = 0D
         Dim SQL As String = ""
@@ -2474,7 +2497,8 @@ Public Class FrVenta
 
         ' Calculamos el diferencial que estamos agregando en este momento
         ' (Lo que llevo ahora - Lo que llevaba antes en este renglón)
-        Dim DiferenciaCantidad As Decimal = SCANT - SCANTANT
+        If FactorCaptura <= 0D Then FactorCaptura = 1D
+        Dim DiferenciaCantidad As Decimal = (SCANT - SCANTANT) * FactorCaptura
 
         ' =============================================================================================
         ' PASO 1: OBTENER EL ACUMULADO (Global o Local según el caso)
@@ -2497,10 +2521,12 @@ Public Class FrVenta
 
             If CantidadDisponible > 0 Then
                 ' CHECK GLOBAL (Universo de todas las cajas)
-                SQL = "select sum(cantidad) Cantidad from tmpauxvta2 where " & WhereClause
+                SQL = "select sum(cantidad * ISNULL(NULLIF(Factor, 0), 1)) Cantidad from tmpauxvta2 where " & WhereClause
+
             Else
                 ' CHECK LOCAL (Solo mi ticket actual)
-                SQL = "select sum(cantidad) Cantidad from tmpauxvta2 where " & WhereClause & " AND USUARIO='" & Globales.caja & "'"
+                SQL = "select sum(cantidad * ISNULL(NULLIF(Factor, 0), 1)) Cantidad from tmpauxvta2 where " & WhereClause & " AND USUARIO='" & Globales.caja & "'"
+
             End If
 
             Base.daQuery(SQL, sCadenaConexionSQL, dscLocal, "Historial")
@@ -2523,44 +2549,44 @@ Public Class FrVenta
         End Try
 
 
-        ' =============================================================================================
-        ' PASO 2: ACTUALIZAR LA TABLA TEMPORAL (Globales.caja)
-        ' =============================================================================================
-        ' Como dependemos 100% del server, esta actualización es CRÍTICA.
+        '' =============================================================================================
+        '' PASO 2: ACTUALIZAR LA TABLA TEMPORAL (Globales.caja)
+        '' =============================================================================================
+        '' Como dependemos 100% del server, esta actualización es CRÍTICA.
 
-        If Not CargandoPendiente Then
-            Try
-                ' A) Verificar si existe (Lectura rápido)
-                SQL = "SELECT ARTICULO FROM " & Globales.caja & " WHERE ARTICULO='" & ArtClave & "'"
-                Base.daQuery(SQL, sCadenaConexionSQL, dscLocal, "Existe")
+        'If Not CargandoPendiente Then
+        '    Try
+        '        ' A) Verificar si existe (Lectura rápido)
+        '        SQL = "SELECT ARTICULO FROM " & Globales.caja & " WHERE ARTICULO='" & ArtClave & "'"
+        '        Base.daQuery(SQL, sCadenaConexionSQL, dscLocal, "Existe")
 
-                If dscLocal.Tables("Existe").Rows.Count > 0 Then
-                    ' UPDATE: Sumamos la diferencia (Maneja F3 y devoluciones)
-                    SQL = "UPDATE " & Globales.caja & " SET CANTIDAD=CANTIDAD+" & DiferenciaCantidad & " WHERE ARTICULO='" & ArtClave & "'"
-                    Base.Ejecuta(SQL, sCadenaConexionSQL)
-                Else
-                    ' INSERT: Creamos el registro
-                    If DiferenciaCantidad > 0 Then
-                        SQL = "INSERT INTO " & Globales.caja & " (articulo,cantidad) VALUES ('" & ArtClave & "'," & DiferenciaCantidad & ")"
-                        Base.Ejecuta(SQL, sCadenaConexionSQL)
-                    End If
-                End If
+        '        If dscLocal.Tables("Existe").Rows.Count > 0 Then
+        '            ' UPDATE: Sumamos la diferencia (Maneja F3 y devoluciones)
+        '            SQL = "UPDATE " & Globales.caja & " SET CANTIDAD=CANTIDAD+" & DiferenciaCantidad & " WHERE ARTICULO='" & ArtClave & "'"
+        '            Base.Ejecuta(SQL, sCadenaConexionSQL)
+        '        Else
+        '            ' INSERT: Creamos el registro
+        '            If DiferenciaCantidad > 0 Then
+        '                SQL = "INSERT INTO " & Globales.caja & " (articulo,cantidad) VALUES ('" & ArtClave & "'," & DiferenciaCantidad & ")"
+        '                Base.Ejecuta(SQL, sCadenaConexionSQL)
+        '            End If
+        '        End If
 
-                dscLocal.Tables.Remove("Existe")
+        '        dscLocal.Tables.Remove("Existe")
 
-            Catch ex As Exception
-                ' ALERTA CRÍTICA (Ya no es silenciosa)
-                ' Si esto falla, el servidor pierde la cuenta de los Artículos.
-                ' Avisamos al usuario pero NO cerramos el programa con Stop.
-                MsgBox("¡ALERTA DE RED!" & vbCrLf & vbCrLf &
-                   "No se pudo actualizar el acumulado en el Servidor." & vbCrLf &
-                   "Es posible que las ofertas de Mayoreo no se calculen correctamente." & vbCrLf &
-                   "Verifique su conexión.", vbExclamation, "Error de Comunicación")
+        '    Catch ex As Exception
+        '        ' ALERTA CRÍTICA (Ya no es silenciosa)
+        '        ' Si esto falla, el servidor pierde la cuenta de los Artículos.
+        '        ' Avisamos al usuario pero NO cerramos el programa con Stop.
+        '        MsgBox("¡ALERTA DE RED!" & vbCrLf & vbCrLf &
+        '           "No se pudo actualizar el acumulado en el Servidor." & vbCrLf &
+        '           "Es posible que las ofertas de Mayoreo no se calculen correctamente." & vbCrLf &
+        '           "Verifique su conexión.", vbExclamation, "Error de Comunicación")
 
-                ' Opcional: Podrías poner un 'Exit Sub' Aquí si prefieres que NO se calcule precio
-                ' si no hay red, pero generalmente es mejor dejar que intente cobrar con lo que tiene.
-            End Try
-        End If
+        '        ' Opcional: Podrías poner un 'Exit Sub' Aquí si prefieres que NO se calcule precio
+        '        ' si no hay red, pero generalmente es mejor dejar que intente cobrar con lo que tiene.
+        '    End Try
+        'End If
 
         ' =============================================================================================
         ' PASO 3: DETERMINAR EL PRECIO CORRECTO (CON CANDADO DE SEGURIDAD)
@@ -2614,14 +2640,16 @@ Public Class FrVenta
         ' PASO 4: APLICAR PRECIO AL renglón ACTUAL
         ' =============================================================================================
         ' Actualizamos visualmente el renglón que acabamos de escanear o modificar.
-
         With FpArticulos.ActiveSheet
-            .Cells(RENGLON, ColVenta.ColPrecio).Value = PrecioFinal
-            ' Recalculamos el total de este renglón (Cantidad * Nuevo Precio)
-            ' Usamos CDec para garantizar precisión monetaria.
-            Dim CantidadRenglon As Decimal = CDec(.Cells(RENGLON, ColVenta.ColCantidad).Value)
-            .Cells(RENGLON, ColVenta.ColTotal).Value = CantidadRenglon * PrecioFinal
+            If FactorCaptura <= 1D Then
+                .Cells(RENGLON, ColVenta.ColPrecio).Value = PrecioFinal
+                ' Recalculamos el total de este renglón (Cantidad * Nuevo Precio)
+                ' Usamos CDec para garantizar precisión monetaria.
+                Dim CantidadRenglon As Decimal = CDec(.Cells(RENGLON, ColVenta.ColCantidad).Value)
+                .Cells(RENGLON, ColVenta.ColTotal).Value = CantidadRenglon * PrecioFinal
+            End If
         End With
+
 
         ' =============================================================================================
         ' PASO 5: PEINAR A LOS HERMANOS (RECALCULA)
@@ -2905,6 +2933,15 @@ Public Class FrVenta
             ' Recorremos TODOS los renglones del grid
             For i As Integer = 0 To .RowCount - 1
                 Dim EsHermano As Boolean = False
+
+                Dim FactorRenglon As Decimal = CDec(Val(.Cells(i, ColVenta.ColFactor).Value))
+                If FactorRenglon <= 0D Then FactorRenglon = 1D
+
+                If FactorRenglon > 1D Then
+                    Continue For
+                End If
+
+
 
                 ' 1. IDENTIFICAR A LOS "HERMANOS"
                 ' Dependiendo del tipo de oferta, la hermandad se define diferente.
@@ -4044,8 +4081,8 @@ Public Class FrVenta
 
 
         If Entra Then
-            SQL = "DELETE FROM " & Globales.caja & " "
-            Base.Ejecuta(SQL, sCadenaConexionSQL)
+            'SQL = "DELETE FROM " & Globales.caja & " "
+            'Base.Ejecuta(SQL, sCadenaConexionSQL)
             SQL = "delete from tmpauxvta2 where usuario='" & Globales.caja & "'"
             Base.Ejecuta(SQL, sCadenaConexionSQL)
             TIPOVENTA = 1
@@ -4692,6 +4729,9 @@ Public Class FrVenta
             Dim UPC As String = .Cells(iRen, ColVenta.ColUPCInv).Text
             Dim Clave As String = .Cells(iRen, ColVenta.ColArtClave).Text
 
+            Dim FactorCaptura As Decimal = CDec(Val(.Cells(iRen, ColVenta.ColFactor).Value))
+            If FactorCaptura <= 0D Then FactorCaptura = 1D
+
             ' 1. VALIDACIÓN DE SALDO (RecorreSpread)
             ' Antes de mover nada, verificamos si es una Cancelación válida (-1)
             If NuevaCantidad < 0 Then
@@ -4809,7 +4849,8 @@ Public Class FrVenta
                PrecioOferta2:=POff2,
                PrecioOferta3:=POff3,
                CantidadCobradas:=CInt(Cobrados),
-               TipoOferta:=TipoOfer)
+               TipoOferta:=TipoOfer,
+               FactorCaptura:=FactorCaptura)
 
         End With
 
@@ -5802,7 +5843,16 @@ Public Class FrVenta
 
         Me.txe.Focus()
     End Sub
-    Private Sub ProcesarHallazgo(ByVal dsc As DataSet, ByVal xtipo As Integer, ByVal cantidad As Decimal, ByVal CargandoPendiente As Boolean, ByVal TraeVale As Boolean, ByVal FueConF1 As Boolean, ByRef cancelacion As Boolean, ByVal FueConF3 As Boolean)
+    Private Sub ProcesarHallazgo(ByVal dsc As DataSet,
+                             ByVal xtipo As Integer,
+                             ByVal cantidad As Decimal,
+                             ByVal CargandoPendiente As Boolean,
+                             ByVal TraeVale As Boolean,
+                             ByVal FueConF1 As Boolean,
+                             ByRef cancelacion As Boolean,
+                             ByVal FueConF3 As Boolean,
+                             ByVal PendFueConF6 As Integer,
+                             ByVal PendFactor As Decimal)
 
         ' 1. LLENADO BASE DEL OBJETO
         Dim NuevoItem As New ArticuloVenta()
@@ -5844,27 +5894,45 @@ Public Class FrVenta
             Dim EsVentaCajaLocal As Boolean = False
             Dim PrecioBaseMayoreo As Decimal = CDec(dsc.Tables("articulo").Rows(0)("ART_PRECIO3"))
 
-            ' Caso A: Caja Virtual F6
-            ' Nota: CDec(1) es seguro, pero CDec del dataset evita el double
-            If VentaCajaVirtual AndAlso CDec(dsc.Tables("articulo").Rows(0)("Factor")) = 1D Then
 
-                ' Multiplicación Decimal pura
-                Dim Contenido As Decimal = CDec(dsc.Tables("articulo").Rows(0)("art_cap1")) * CDec(dsc.Tables("articulo").Rows(0)("art_cap2"))
+            If CargandoPendiente Then
+                If PendFactor <= 0D Then PendFactor = 1D
 
-                If Contenido > 1D Then
-                    EsVentaCajaLocal = True
-                    .Factor = Contenido
+                .Factor = PendFactor
+                .EsCajaVirtual = (PendFueConF6 = 1)
+                EsVentaCajaLocal = (.Factor > 1D)
+
+                If .EsCajaVirtual AndAlso .Factor > 1D Then
                     .Descripcion = "Caja - " & dsc.Tables("articulo").Rows(0)("upc_descripcion").ToString.Trim & " (" & dsc.Tables("articulo").Rows(0)("art_cap1") & dsc.Tables("articulo").Rows(0)("art_uni1") & " / " & dsc.Tables("articulo").Rows(0)("art_cap2") & dsc.Tables("articulo").Rows(0)("art_uni2") & ")"
+                ElseIf .Factor > 1D Then
+                    .Descripcion = dsc.Tables("articulo").Rows(0)("upc_descripcion").ToString.Trim
                 End If
-                .EsCajaVirtual = True
-                TX_UPC.BackColor = Color.White
 
-                ' Caso B: Caja Física
-            ElseIf CDec(dsc.Tables("articulo").Rows(0)("Factor")) > 1D Then
-                EsVentaCajaLocal = True
-                .Factor = CDec(dsc.Tables("articulo").Rows(0)("Factor"))
-                .Descripcion = dsc.Tables("articulo").Rows(0)("upc_descripcion").ToString.Trim
+            Else
+                ' Caso A: Caja Virtual F6
+                ' Nota: CDec(1) es seguro, pero CDec del dataset evita el double
+                If VentaCajaVirtual AndAlso CDec(dsc.Tables("articulo").Rows(0)("Factor")) = 1D Then
+
+                    ' Multiplicación Decimal pura
+                    Dim Contenido As Decimal = CDec(dsc.Tables("articulo").Rows(0)("art_cap1")) * CDec(dsc.Tables("articulo").Rows(0)("art_cap2"))
+
+                    If Contenido > 1D Then
+                        EsVentaCajaLocal = True
+                        .Factor = Contenido
+                        .Descripcion = "Caja - " & dsc.Tables("articulo").Rows(0)("upc_descripcion").ToString.Trim & " (" & dsc.Tables("articulo").Rows(0)("art_cap1") & dsc.Tables("articulo").Rows(0)("art_uni1") & " / " & dsc.Tables("articulo").Rows(0)("art_cap2") & dsc.Tables("articulo").Rows(0)("art_uni2") & ")"
+                    End If
+                    .EsCajaVirtual = True
+                    TX_UPC.BackColor = Color.White
+
+                    ' Caso B: Caja Física
+                ElseIf CDec(dsc.Tables("articulo").Rows(0)("Factor")) > 1D Then
+                    EsVentaCajaLocal = True
+                    .Factor = CDec(dsc.Tables("articulo").Rows(0)("Factor"))
+                    .Descripcion = dsc.Tables("articulo").Rows(0)("upc_descripcion").ToString.Trim
+                End If
             End If
+
+
 
             ' ==========================================================================
             ' Lógica DE PRECIOS
@@ -5993,7 +6061,14 @@ Public Class FrVenta
             End With
         End If
     End Sub
-    Private Sub ProcAgregaArticulo(ByVal Optional CargandoPendiente As Boolean = False, ByVal Optional CantPend As Double = 1, ByVal Optional PendFueConF1 As Integer = 0, ByVal Optional PendFueConF2 As Integer = 0, ByVal Optional PendFueConF3 As Integer = 0, Optional PendTraeVale As String = "", Optional PendFueConF6 As Integer = 0)
+    Private Sub ProcAgregaArticulo(ByVal Optional CargandoPendiente As Boolean = False,
+                                   ByVal Optional CantPend As Double = 1,
+                                   ByVal Optional PendFueConF1 As Integer = 0,
+                                   ByVal Optional PendFueConF2 As Integer = 0,
+                                   ByVal Optional PendFueConF3 As Integer = 0,
+                                   Optional PendTraeVale As String = "",
+                                   Optional PendFueConF6 As Integer = 0,
+                                   Optional PendFactor As Decimal = 1D)
         Dim i As Integer
         Dim TOPE As Decimal
         Dim UPCUPC As String
@@ -6063,6 +6138,7 @@ Public Class FrVenta
             FueConF3 = IIf(PendFueConF3 = 1, True, False)
             TraeVale = IIf(PendTraeVale = "*", True, False)
             VentaCajaVirtual = IIf(PendFueConF6 = 1, True, False)
+
         End If
         ' =================================================================================
         ' 3. ANÁLISIS PREVIO (Detectar Báscula)
@@ -6127,7 +6203,8 @@ Public Class FrVenta
 
             If ArtActivo AndAlso UpcActivo Then
                 ' -> TODO BIEN: PROCESAMOS LA VENTA
-                ProcesarHallazgo(dsc, xtipo, cantidad, CargandoPendiente, TraeVale, FueConF1, cancelacion, FueConF3)
+                ProcesarHallazgo(dsc, xtipo, cantidad, CargandoPendiente, TraeVale, FueConF1, cancelacion, FueConF3, PendFueConF6, PendFactor)
+
             Else
                 ' -> EXISTE PERO está INACTIVO
                 MsgBox("El Artículo se encuentra inactivo.", MsgBoxStyle.Exclamation, "Punto de Venta")
