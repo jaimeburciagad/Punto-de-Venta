@@ -102,6 +102,8 @@ Public Class previrtual
                             "dve_cantidad, " &
                             "dve_precio, " &
                             "dve_total, " &
+                            "V.DVE_FACTORAPLICADO, " &
+                            "V.FueConF6, " &
                             "A.upc_descripcion as Descripcion " &
                             "FROM ECVENTADETE V " &
                             "LEFT JOIN xupc A ON V.dve_upc = A.upc_upc " &
@@ -114,7 +116,14 @@ Public Class previrtual
             Dim Cant As Decimal = CDec(row("dve_cantidad"))
             Dim Prec As Decimal = CDec(row("dve_precio"))
             Dim Tot As Decimal = CDec(row("dve_total"))
+
+            Dim Factor As Decimal = CDec(Val(row("DVE_FACTORAPLICADO")))
+            Dim FueConF6 As Integer = CInt(Val(row("FueConF6")))
             Dim Desc As String = row("Descripcion").ToString()
+
+            If FueConF6 = 1 AndAlso Factor > 1D Then
+                Desc = "Caja - " & Desc & " x " & Factor.ToString("0.###")
+            End If
 
             ' Imprimimos Descripción
             renglones.Add(Left(Desc, Globales.numletras))

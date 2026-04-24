@@ -413,11 +413,13 @@ Public Class FrCambio
         dtVales.Columns.Add("dve_cantidad", GetType(Decimal))
         dtVales.Columns.Add("dve_precio", GetType(Decimal))
         dtVales.Columns.Add("dve_total", GetType(Decimal))
+        dtVales.Columns.Add("dve_factoraplicado", GetType(Decimal))
+        dtVales.Columns.Add("FueConF6", GetType(Integer))
 
         ' --- DICCIONARIOS ---
-        ' Inventario: Key = UPC (Sin importar si es vale o no)
+        ' Inventario: Key = UPC + PrecioUnitarioInventario + F6 + Factor
         Dim DicInventario As New Dictionary(Of String, ItemAcumulado)
-        ' impresión: Key = Clave
+        ' impresión: Key = Clave + PrecioCapturado + F6 + Factor
         Dim DicImpresion As New Dictionary(Of String, ItemAcumulado)
 
         Dim CancelacionesVales As New Dictionary(Of String, Decimal)
@@ -433,9 +435,25 @@ Public Class FrCambio
                 Dim Cant As Decimal = CDec(Val(.Cells(k, ColVenta.ColCantidad).Value))
                 If Cant < 0 Then
                     Dim UPC As String = .Cells(k, ColVenta.ColUPCInv).Text.Trim
-                    If CancelacionesVales.ContainsKey(UPC) Then CancelacionesVales(UPC) += Cant Else CancelacionesVales.Add(UPC, Cant)
+
+                    Dim FactorCancelacion As Decimal = CDec(Val(.Cells(k, ColVenta.ColFactor).Value))
+                    If FactorCancelacion <= 0D Then FactorCancelacion = 1D
+
+                    Dim F6Cancelacion As Integer = CInt(Val(.Cells(k, ColVenta.ColF6).Value))
+
+                    Dim KeyValeCancelacion As String =
+                            UPC & "|" &
+                            FactorCancelacion.ToString("0.####", CultureInfo.InvariantCulture) & "|" &
+                            F6Cancelacion.ToString()
+
+                    If CancelacionesVales.ContainsKey(KeyValeCancelacion) Then
+                        CancelacionesVales(KeyValeCancelacion) += Cant
+                    Else
+                        CancelacionesVales.Add(KeyValeCancelacion, Cant)
+                    End If
                 End If
             Next
+
 
             ' 3.2 Barrida Principal
             For i As Integer = 0 To .RowCount - 1
@@ -460,62 +478,82 @@ Public Class FrCambio
                 Dim F6 As Integer = CInt(Val(.Cells(i, ColVenta.ColF6).Value))
                 Dim TieneAsterisco As Boolean = (.Cells(i, ColVenta.ColVale).Text = "*")
 
+                Dim Factor As Decimal = CDec(Val(.Cells(i, ColVenta.ColFactor).Value))
+                If Factor <= 0D Then Factor = 1D
+
+                Dim CantidadCapturada As Decimal = Cantidad
+                Dim CantidadInventario As Decimal = Cantidad * Factor
+                Dim PrecioInventario As Decimal = Precio
+                If Factor > 1D Then
+                    PrecioInventario = Precio / Factor
+                End If
+
+                Dim KeyInventario As String =
+                    UPC & "|" &
+                    PrecioInventario.ToString("0.####", CultureInfo.InvariantCulture) & "|" &
+                    F6.ToString() & "|" &
+                    Factor.ToString("0.####", CultureInfo.InvariantCulture)
+
+                Dim KeyImpresion As String =
+                    ArtClave & "|" &
+                    Precio.ToString("0.####", CultureInfo.InvariantCulture) & "|" &
+                    F6.ToString() & "|" &
+                    Factor.ToString("0.####", CultureInfo.InvariantCulture)
+
                 Dim ImpIVA As Decimal = 0
                 Dim ImpIEPS As Decimal = 0
                 If PorcIVA > 0 Then ImpIVA = (TotalLinea / (1 + (PorcIVA / 100D))) * (PorcIVA / 100D)
                 If PorcIEPS > 0 Then ImpIEPS = (TotalLinea / (1 + (PorcIEPS / 100D))) * (PorcIEPS / 100D)
 
                 ' ------------------------------------------------------------------
-                ' A) INVENTARIO (ECVENTADET) - AGRUPAR POR UPC PURO
+                ' A) INVENTARIO (ECVENTADET) - AGRUPAR POR UPC + PRESENTACION
                 ' ------------------------------------------------------------------
-                ' aquí sumamos TODO (Normales + Vales). 
-                ' Resultado: 1 solo renglón por UPC con la cantidad total a descontar.
-                If Not DicInventario.ContainsKey(UPC) Then
-                    DicInventario.Add(UPC, New ItemAcumulado With {
+                If Not DicInventario.ContainsKey(KeyInventario) Then
+                    DicInventario.Add(KeyInventario, New ItemAcumulado With {
                         .UPC = UPC, .Clave = ArtClave, .Descripcion = NomLargo,
-                        .PrecioU = Precio, .CostoU = CostoU, .Familia = Familia,
+                        .PrecioU = PrecioInventario, .CostoU = CostoU, .Familia = Familia,
                         .PorcIVA = PorcIVA, .PorcIEPS = PorcIEPS,
                         .F1 = F1, .F2 = F2, .F3 = F3, .F6 = F6
                     })
                 End If
-                With DicInventario(UPC)
-                    .Cantidad += Cantidad
+                With DicInventario(KeyInventario)
+                    .Cantidad += CantidadInventario
                     .Total += TotalLinea
                     .ImporteIVA += ImpIVA
                     .ImporteIEPS += ImpIEPS
                 End With
 
                 ' ------------------------------------------------------------------
-                ' B) impresión (ECDETVENTA) - AGRUPAR POR CLAVE
+                ' B) IMPRESION (ECDETVENTA) - AGRUPAR POR CLAVE + PRECIO + PRESENTACION
                 ' ------------------------------------------------------------------
-                If Not DicImpresion.ContainsKey(ArtClave) Then
-                    DicImpresion.Add(ArtClave, New ItemAcumulado With {
+                If Not DicImpresion.ContainsKey(KeyImpresion) Then
+                    DicImpresion.Add(KeyImpresion, New ItemAcumulado With {
                         .Clave = ArtClave, .PrecioU = Precio, .CostoU = CostoU, .Familia = Familia,
                         .PorcIVA = PorcIVA, .PorcIEPS = PorcIEPS
                     })
                 End If
-                With DicImpresion(ArtClave)
-                    .Cantidad += Cantidad
+                With DicImpresion(KeyImpresion)
+                    .Cantidad += CantidadCapturada
                     .Total += TotalLinea
                     .ImporteIVA += ImpIVA
                     .ImporteIEPS += ImpIEPS
                 End With
 
+
                 ' ------------------------------------------------------------------
                 ' C) VALES (ECVENTADETE) - SIN AGRUPAR (Detalle Pendiente)
                 ' ------------------------------------------------------------------
-                Dim CantidadNeta As Decimal = Cantidad
-                If CancelacionesVales.ContainsKey(UPC) Then
-                    Dim Restar As Decimal = Math.Min(CantidadNeta, Math.Abs(CancelacionesVales(UPC)))
+                Dim KeyVale As String =
+                    UPC & "|" &
+                    Factor.ToString("0.####", CultureInfo.InvariantCulture) & "|" &
+                    F6.ToString()
+
+                Dim CantidadNeta As Decimal = CantidadCapturada
+                If CancelacionesVales.ContainsKey(KeyVale) Then
+                    Dim Restar As Decimal = Math.Min(CantidadNeta, Math.Abs(CancelacionesVales(KeyVale)))
                     CantidadNeta -= Restar
-                    CancelacionesVales(UPC) += Restar
+                    CancelacionesVales(KeyVale) += Restar
                 End If
-
-                If CantidadNeta > 0 And TieneAsterisco Then
-                    TraeValeGlobal = True
-                    dtVales.Rows.Add(ArtClave, UPC, CantidadNeta, Precio, (CantidadNeta * Precio))
-                End If
-
             Next
         End With
 
