@@ -440,6 +440,26 @@ Public Class parafacturar
                           "LEFT JOIN (Select ID_ARTICULO,SUM(CANTIDAD)As CANTDEV FROM eccancxupc WHERE N_TICKET In (" & TEXTO & ") GROUP BY ID_ARTICULO ) dev On dev.id_articulo=e.dve_articulo " &
                           "WHERE DVE_VENTA In (" & TEXTO & ") And dve_cantidad>0 and dve_precio>0 " &
                           "ORDER BY DVE_VENTA,dve_renglon asc"
+                        SQL = "SELECT " &
+                          "e.DVE_VENTA, e.DVE_ARTICULO, e.DVE_UPC, " &
+                          "e.DVE_CANTIDAD - ISNULL(dev.CANTDEV, 0) AS DVE_CANTIDAD, " &
+                          "ROUND(e.DVE_TOTAL - (ISNULL(dev.CANTDEV, 0) * e.DVE_PRECIO), 2) AS DVE_TOTAL, " &
+                          "e.DVE_PRECIO, " &
+                          "ISNULL(e.DVE_CANTCAPTURADA, e.DVE_CANTIDAD) AS DVE_CANTCAPTURADA, " &
+                          "ISNULL(e.DVE_FACTORAPLICADO, 1) AS DVE_FACTORAPLICADO, " &
+                          "ISNULL(e.FueConF6, 0) AS FueConF6, " &
+                          "ISNULL(e.DVE_DESCRIPCION, '') AS DVE_DESCRIPCION, " &
+                          "ARTICULO.* " &
+                          "FROM ECVENTADET e " &
+                          "INNER JOIN ARTICULO ON ART_CLAVE = e.DVE_ARTICULO " &
+                          "LEFT JOIN (" &
+                          "   SELECT N_TICKET, UPC_UPC, SUM(CANTIDAD) AS CANTDEV " &
+                          "   FROM ECCANCXUPC " &
+                          "   WHERE N_TICKET IN (" & TEXTO & ") " &
+                          "   GROUP BY N_TICKET, UPC_UPC " &
+                          ") dev ON dev.N_TICKET = e.DVE_VENTA AND dev.UPC_UPC = e.DVE_UPC " &
+                          "WHERE e.DVE_VENTA IN (" & TEXTO & ") AND e.DVE_CANTIDAD > 0 AND e.DVE_PRECIO > 0 " &
+                          "ORDER BY e.DVE_VENTA, e.DVE_RENGLON ASC"
 
                         Base.daQuery(SQL, sCadenaConexionSQL, DSC, "TABLA")
 

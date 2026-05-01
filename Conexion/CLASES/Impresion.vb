@@ -253,7 +253,7 @@ Public Class Impresion
     ' =================================================================================
     ' ABRIR CAJÓN (Usa RawPrinterHelper)
     ' =================================================================================
-    Private Sub AbrirCajon()
+    Private Sub AbrirCajonConCodigo()
         Try
             ' Comandos ESC/POS estándar (27, 112, 0, 25, 250)
             Dim codigos() As Byte = {27, 112, 0, 25, 250}
@@ -261,6 +261,27 @@ Public Class Impresion
         Catch
             ' Fallo silencioso del cajón
         End Try
+    End Sub
+
+    Private Sub AbrirCajon()
+
+        Try
+            CajonPOS.AbrirPorSistema()
+
+        Catch ex As Exception
+            Debug.Print("Error al abrir cajón por OPOS: " & ex.Message)
+
+            ' Fallback temporal mientras pruebas en producción.
+            ' Después de una semana estable, puedes quitar esto.
+            Try
+                Dim codigos() As Byte = {27, 112, 0, 25, 250}
+                RawPrinterHelper.SendBytesToPrinter(_impresoraUsar, codigos, codigos.Length)
+            Catch
+                ' Fallo silencioso del cajón.
+            End Try
+
+        End Try
+
     End Sub
 
 End Class

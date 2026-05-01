@@ -140,5 +140,7 @@ Module Globales
         ColComisionRen = 17
         ColFactor = 18
         ColF6 = 19
+        ColFactorFactura = 20
+
     End Enum
 End Module

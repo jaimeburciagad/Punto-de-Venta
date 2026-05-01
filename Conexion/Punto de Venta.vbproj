@@ -172,6 +172,10 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\..\..\..\DUARSANUEVOluisa2\DUARSANUEVOluisa2\DUARSANUEVOluisa\SUPERLUGITO\bin\Debug\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.PointOfService, Version=1.14.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Point Of Service\SDK\Microsoft.PointOfService.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -208,6 +212,8 @@
   <ItemGroup>
     <Compile Include="AutorizacionConHuella.vb" />
     <Compile Include="CLASES\Base.vb" />
+    <Compile Include="CLASES\CajonPOS.vb" />
+    <Compile Include="CLASES\CashDrawerMonitor.vb" />
     <Compile Include="CLASES\ConfiguraSpread.vb" />
     <Compile Include="CLASES\Conversion.vb" />
     <Compile Include="CLASES\DiseñaSpread.vb" />

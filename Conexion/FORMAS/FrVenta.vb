@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+ÔªøImports System.ComponentModel
 Imports System.Data.SqlClient
 Imports System.Diagnostics.Eventing.Reader
 Imports System.Drawing.Imaging
@@ -10,7 +10,8 @@ Imports FarPoint.Win.Spread.CellType
 Imports FarPoint.Win.Spread.Model
 Imports GrapeCity.Spreadsheet.Charts
 
-
+Imports System.Drawing
+Imports Microsoft.PointOfService
 Public Class FrVenta
 
     Inherits System.Windows.Forms.Form
@@ -19,8 +20,8 @@ Public Class FrVenta
     Dim cerrar As Integer = 1
     Private sConexion As String
     Private hashPanel As New Hashtable
-    Private sCant As String = "" ' Almacena la cantidad de un ArtÌculo a pedir
-    Private imgFamilia As Image 'Imagen del tÌtulo principal
+    Private sCant As String = "" ' Almacena la cantidad de un Art√≠culo a pedir
+    Private imgFamilia As Image 'Imagen del t√≠tulo principal
     Private masClicks As Integer
     Private claveArt As String
     Private preImpresion As New Collection
@@ -143,15 +144,19 @@ Public Class FrVenta
     'Funcion Que Manda a Llamar un Sonido.....(API windows)
     Private Declare Function sndPlaySoundA Lib "WinMM" (ByVal nameString As String, ByVal flags As Integer) As Integer
 
+    Private WithEvents TimerCajon As New Timer With {.Interval = 1000}
+    Private pnlBannerCajon As Panel
+    Private lblBannerCajonTitulo As Label
+    Private lblBannerCajonDetalle As Label
 
-#Region " cÛdigo generado por el DiseÒador de Windows Forms "
+#Region " c√≥digo generado por el Dise√±ador de Windows Forms "
 
     Public Sub New(ByRef Login As FrLogin)
         MyBase.New()
         Flogin = Login
-        'El DiseÒador de Windows Forms requiere esta llamada.
+        'El Dise√±ador de Windows Forms requiere esta llamada.
         InitializeComponent()
-        'Agregar cualquier inicializaciÛn despuÈs de la llamada a InitializeComponent()
+        'Agregar cualquier inicializaci√≥n despu√©s de la llamada a InitializeComponent()
         SetStyle(ControlStyles.UserPaint Or ControlStyles.AllPaintingInWmPaint Or ControlStyles.DoubleBuffer, True)
         'xCon = con
     End Sub
@@ -166,12 +171,12 @@ Public Class FrVenta
         MyBase.Dispose(disposing)
     End Sub
 
-    'Requerido por el DiseÒador de Windows Forms
+    'Requerido por el Dise√±ador de Windows Forms
     Private components As System.ComponentModel.IContainer
 
-    'NOTA: el DiseÒador de Windows Forms requiere el siguiente procedimiento
-    'Puede modificarse utilizando el DiseÒador de Windows Forms. 
-    'No lo modifique con el editor de cÛdigo.
+    'NOTA: el Dise√±ador de Windows Forms requiere el siguiente procedimiento
+    'Puede modificarse utilizando el Dise√±ador de Windows Forms. 
+    'No lo modifique con el editor de c√≥digo.
     Friend WithEvents tb_total As System.Windows.Forms.TextBox
     Friend WithEvents TX_UPC As System.Windows.Forms.TextBox
     Friend WithEvents tx_cantidad As System.Windows.Forms.TextBox
@@ -242,7 +247,7 @@ Public Class FrVenta
         Me.lcambio = New System.Windows.Forms.Label()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.FpFormasPago = New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None, resources.GetObject("resource1"))
+        Me.FpFormasPago = New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None, CType(resources.GetObject("grformapago.Controls"), Object))
         Me.FpArticulos_Sheet1 = Me.FpFormasPago.GetSheet(0)
         Me.LFORPAG = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -312,9 +317,9 @@ Public Class FrVenta
         Me.rbTCredito = New System.Windows.Forms.RadioButton()
         Me.LbClienteTicket = New System.Windows.Forms.Label()
         Me.TimerReloj = New System.Windows.Forms.Timer(Me.components)
-        Me.FpArticulos = New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None, resources.GetObject("resource2"))
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
+        Me.FpArticulos = New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None, resources.GetObject("resource1"))
         Me.FpArticulos_Sheet2 = Me.FpArticulos.GetSheet(0)
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.grformapago.SuspendLayout()
         Me.banco.SuspendLayout()
         Me.credito.SuspendLayout()
@@ -684,7 +689,7 @@ Public Class FrVenta
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(91, 30)
         Me.Label26.TabIndex = 496
-        Me.Label26.Text = "F8 - CrÈdito"
+        Me.Label26.Text = "F8 - Cr√©dito"
         Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'PictureBox13
@@ -884,7 +889,7 @@ Public Class FrVenta
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(343, 32)
         Me.Label2.TabIndex = 4
-        Me.Label2.Text = "Autorizar CancelaciÛn de Productos"
+        Me.Label2.Text = "Autorizar Cancelaci√≥n de Productos"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txt_cveenc
@@ -950,7 +955,7 @@ Public Class FrVenta
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(186, 21)
         Me.Label1.TabIndex = 471
-        Me.Label1.Text = "AdministraciÛn de Ventas"
+        Me.Label1.Text = "Administraci√≥n de Ventas"
         '
         'Label28
         '
@@ -961,7 +966,7 @@ Public Class FrVenta
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(318, 26)
         Me.Label28.TabIndex = 470
-        Me.Label28.Text = "Venta P˙blico Menudeo y Mayoreo"
+        Me.Label28.Text = "Venta P√∫blico Menudeo y Mayoreo"
         '
         'LbF1
         '
@@ -986,7 +991,7 @@ Public Class FrVenta
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(168, 44)
         Me.Label29.TabIndex = 482
-        Me.Label29.Text = "F2 - Cancelar ArtÌculo"
+        Me.Label29.Text = "F2 - Cancelar Art√≠culo"
         Me.Label29.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label30
@@ -1025,7 +1030,7 @@ Public Class FrVenta
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(168, 44)
         Me.Label32.TabIndex = 485
-        Me.Label32.Text = "F11 - DevoluciÛn"
+        Me.Label32.Text = "F11 - Devoluci√≥n"
         Me.Label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Panel3
@@ -1100,7 +1105,7 @@ Public Class FrVenta
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(168, 44)
         Me.Label8.TabIndex = 488
-        Me.Label8.Text = "F12 - FacturaciÛn"
+        Me.Label8.Text = "F12 - Facturaci√≥n"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label7
@@ -1210,7 +1215,7 @@ Public Class FrVenta
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(168, 44)
         Me.Label4.TabIndex = 509
-        Me.Label4.Text = "F6 - Caja Virtual"
+        Me.Label4.Text = "F6 - Venta por Caja"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'PictureBox2
@@ -1318,7 +1323,7 @@ Public Class FrVenta
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(363, 43)
         Me.Label20.TabIndex = 4
-        Me.Label20.Text = "NotificaciÛn de Oferta Expirada"
+        Me.Label20.Text = "Notificaci√≥n de Oferta Expirada"
         Me.Label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Button2
@@ -1446,7 +1451,7 @@ Public Class FrVenta
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(280, 32)
         Me.Label23.TabIndex = 503
-        Me.Label23.Text = "ConfirmaciÛn"
+        Me.Label23.Text = "Confirmaci√≥n"
         Me.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label36
@@ -1457,7 +1462,7 @@ Public Class FrVenta
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(344, 43)
         Me.Label36.TabIndex = 4
-        Me.Label36.Text = "N˙mero de TelÈfono"
+        Me.Label36.Text = "N√∫mero de Tel√©fono"
         Me.Label36.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Button4
@@ -1572,8 +1577,8 @@ Public Class FrVenta
         Me.rbTDebito.Size = New System.Drawing.Size(109, 19)
         Me.rbTDebito.TabIndex = 1
         Me.rbTDebito.TabStop = True
-        Me.rbTDebito.Tag = "DÈbito"
-        Me.rbTDebito.Text = "Tarjeta de DÈbito"
+        Me.rbTDebito.Tag = "D√©bito"
+        Me.rbTDebito.Text = "Tarjeta de D√©bito"
         Me.rbTDebito.UseVisualStyleBackColor = True
         '
         'rbTCredito
@@ -1584,8 +1589,8 @@ Public Class FrVenta
         Me.rbTCredito.Size = New System.Drawing.Size(112, 19)
         Me.rbTCredito.TabIndex = 0
         Me.rbTCredito.TabStop = True
-        Me.rbTCredito.Tag = "CrÈdito"
-        Me.rbTCredito.Text = "Tarjeta de CrÈdito"
+        Me.rbTCredito.Tag = "Cr√©dito"
+        Me.rbTCredito.Text = "Tarjeta de Cr√©dito"
         Me.rbTCredito.UseVisualStyleBackColor = True
         '
         'LbClienteTicket
@@ -1597,7 +1602,7 @@ Public Class FrVenta
         Me.LbClienteTicket.Name = "LbClienteTicket"
         Me.LbClienteTicket.Size = New System.Drawing.Size(630, 26)
         Me.LbClienteTicket.TabIndex = 508
-        Me.LbClienteTicket.Text = "Cliente: P˙blico en General"
+        Me.LbClienteTicket.Text = "Cliente: P√∫blico en General"
         Me.LbClienteTicket.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'TimerReloj
@@ -1714,6 +1719,20 @@ Public Class FrVenta
     Dim Corriendo As Boolean
     Public TipoTarj As String
     Private Sub FrVenta_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        CrearBannerCajon()
+        Try
+            CajonPOS.Inicializar(20)
+
+            AddHandler CajonPOS.EstadoActualizado, AddressOf Cajon_EstadoActualizado
+            AddHandler CajonPOS.AlertaTiempoExcedido, AddressOf Cajon_AlertaTiempoExcedido
+            AddHandler CajonPOS.ErrorCajon, AddressOf Cajon_Error
+
+            TimerCajon.Start()
+
+        Catch ex As Exception
+            Debug.Print("No se pudo iniciar monitoreo de caj√≥n: " & ex.Message)
+        End Try
+
         Label6.Text = "Caja: " & Globales.caja.Substring(Len(Globales.caja) - 1, 1) & " | Cajera: " & Globales.NombreEmpleado & " | Tipo Venta: "
 
         datostel = False
@@ -1759,7 +1778,7 @@ Public Class FrVenta
         If DSC.Tables("Ticket").Rows.Count > 0 Then
             Dim Continuar As MsgBoxResult
             If Not CambiandoVenta Then
-                Continuar = MsgBox("Hay una cuenta pendiente, ødesea continuar con esa venta?", vbYesNo)
+                Continuar = MsgBox("Hay una cuenta pendiente, ¬ødesea continuar con esa venta?", vbYesNo)
             Else
                 Continuar = MsgBoxResult.Yes
             End If
@@ -1782,7 +1801,8 @@ Public Class FrVenta
                                        DSC.Tables("Ticket").Rows(i)("FueConF3"),
                                        DSC.Tables("Ticket").Rows(i)("TraeVale"),
                                        fueConF6,
-                                       DSC.Tables("Ticket").Rows(i)("Factor"))
+                                       DSC.Tables("Ticket").Rows(i)("Factor"),
+                                       DSC.Tables("Ticket").Rows(i)("FactorFactura"))
                 Next
                 Me.TX_UPC.Focus()
                 Return True
@@ -1813,11 +1833,11 @@ Public Class FrVenta
         Dim HuboCredito As Boolean = False
 
         ' PASO 1: LECTURA DE DATOS
-        ' AquÌ SÌ usamos tu nueva clase Base.daQuery, porque solo es lectura
-        ' y no necesita estar dentro de la transacciÛn todavÌa.
+        ' Aqu√≠ S√≠ usamos tu nueva clase Base.daQuery, porque solo es lectura
+        ' y no necesita estar dentro de la transacci√≥n todav√≠a.
         sSql = "Select ven_fecha, ven_usuario from ecventa where ven_id=" & iID
         Try
-            Base.daQuery(sSql, sCadenaConexionSQL, dsc, "venta") ' <--- FÌjate que ya no pasamos conexiÛn
+            Base.daQuery(sSql, sCadenaConexionSQL, dsc, "venta") ' <--- F√≠jate que ya no pasamos conexi√≥n
             If dsc.Tables("venta").Rows.Count > 0 Then
                 xfecha = Format(dsc.Tables("venta").Rows(0)("ven_fecha"), "yyyyMMdd HH:mm.fff")
                 xusuario = CDbl(dsc.Tables("venta").Rows(0)("ven_usuario"))
@@ -1829,16 +1849,16 @@ Public Class FrVenta
             Return False
         End Try
 
-        ' PASO 2: transacciÛn BLINDADA
-        ' Creamos una conexiÛn LOCAL solo para este proceso CrÌtico.
+        ' PASO 2: transacci√≥n BLINDADA
+        ' Creamos una conexi√≥n LOCAL solo para este proceso Cr√≠tico.
         Using xConLocal As New SqlConnection(Globales.sCadenaConexionSQL)
             Try
                 xConLocal.Open()
 
-                ' Iniciamos la transacciÛn sobre esta conexiÛn local
+                ' Iniciamos la transacci√≥n sobre esta conexi√≥n local
                 Using transaction As SqlTransaction = xConLocal.BeginTransaction("GuardarPagos")
 
-                    ' Creamos el comando que ejectur· todas las Ûrdenes dentro de la transacciÛn
+                    ' Creamos el comando que ejectur√° todas las √≥rdenes dentro de la transacci√≥n
                     Using cmd As SqlCommand = xConLocal.CreateCommand()
                         cmd.Transaction = transaction
                         cmd.CommandTimeout = 120
@@ -1861,7 +1881,7 @@ Public Class FrVenta
                                 cmd.CommandText = sSql
                                 cmd.ExecuteNonQuery() ' Ejecutamos directo con el comando local
 
-                                ' B. LÛgica EspecÌfica por Tipo de Pago
+                                ' B. L√≥gica Espec√≠fica por Tipo de Pago
                                 Dim TipoPago As String = LTrim(RTrim(.Cells(iRen, 0).Text))
 
                                 If TipoPago = "Tarjeta" Then
@@ -1883,7 +1903,7 @@ Public Class FrVenta
                                     cmd.ExecuteNonQuery()
 
                                 ElseIf TipoPago = "Credito" Then
-                                    ' Insertamos valorRenglon (correcciÛn de LÛgica de acumulado)
+                                    ' Insertamos valorRenglon (correcci√≥n de L√≥gica de acumulado)
                                     sSql = "Insert into eccuentasxcob values ('" & xfecha & "','" & txb_credito1.Text & "',1," & valorRenglon & "," &
                                        valorRenglon & ",0,1," & iID & ")"
                                     cmd.CommandText = sSql
@@ -1907,14 +1927,14 @@ Public Class FrVenta
                         Return True
 
                     End Using ' Fin del cmd
-                End Using ' Fin de la Transaction (Rollback autom·tico si falla antes del Commit)
+                End Using ' Fin de la Transaction (Rollback autom√°tico si falla antes del Commit)
 
             Catch ex As Exception
-                MsgBox("Error CrÌtico al guardar pagos: " & ex.Message, MsgBoxStyle.Critical)
+                MsgBox("Error Cr√≠tico al guardar pagos: " & ex.Message, MsgBoxStyle.Critical)
                 Return False
             End Try
 
-        End Using ' Fin de xConLocal (Cierra la conexiÛn autom·ticamente)
+        End Using ' Fin de xConLocal (Cierra la conexi√≥n autom√°ticamente)
 
     End Function
     Public Function GuardaFormaDePagoConHandlerOriginal()
@@ -2053,14 +2073,14 @@ Public Class FrVenta
         Dim valF6 As Integer = IIf(Item.EsCajaVirtual, 1, 0)
 
         ' Nota: Asumo que TxtControl.Text tiene el ID del Cliente. 
-        ' Si Item.ClienteID ya lo trae, ˙salo, si no, usa el textbox.
+        ' Si Item.ClienteID ya lo trae, √∫salo, si no, usa el textbox.
         Dim ClienteID As String = Item.ClienteID.ToString()
 
         With FpArticulos.ActiveSheet
             Dim iRowActual As Integer = .RowCount - 1
 
             ' =========================================================================
-            ' 1. VALIDACI”N DE REPETIDO
+            ' 1. VALIDACI√ìN DE REPETIDO
             ' =========================================================================
             If .RowCount > 1 Then
                 Dim UPCAnterior As String = .Cells(iRowActual - 1, ColVenta.ColUPCInv).Text.Trim
@@ -2085,7 +2105,7 @@ Public Class FrVenta
 
 
             ' =========================================================================
-            ' 2. operaciÛn EN GRID Y EN SQL (AquÌ estaba el fallo)
+            ' 2. operaci√≥n EN GRID Y EN SQL (Aqu√≠ estaba el fallo)
             ' =========================================================================
 
             If EsRepetido Then
@@ -2099,17 +2119,19 @@ Public Class FrVenta
                 .Cells(RenglonObjetivo, ColVenta.ColCantidad).Value = CantidadFinal
                 .Cells(RenglonObjetivo, ColVenta.ColF6).Value = valF6
                 .Cells(RenglonObjetivo, ColVenta.ColFactor).Value = Item.Factor
+                .Cells(RenglonObjetivo, ColVenta.ColFactorFactura).Value = Item.FactorFactura
                 .Cells(RenglonObjetivo, ColVenta.ColVale).Value = IIf(Item.TraeVale, "*", "")
                 .RemoveRows(iRowActual, 1)
 
                 ' 2.2 Actualizar SQL (RESTAURADO)
-                ' Actualizamos la cantidad en el renglÛn correspondiente
+                ' Actualizamos la cantidad en el rengl√≥n correspondiente
                 SQL = "UPDATE tmpauxvta2 SET cantidad=" & CantidadFinal &
                       ", FueConF1=" & valF1 &
                       ", FueConF2=" & valF2 &
                       ", FueConF3=" & valF3 &
                       ", FueConF6=" & valF6 &
                       ", Factor=" & Item.Factor &
+                      ", FactorFactura=" & Item.FactorFactura &
                       ", TraeVale='" & IIf(Item.TraeVale, "*", "") & "'" &
                       " WHERE renglon=" & RenglonObjetivo & " AND usuario='" & Globales.caja & "'"
 
@@ -2118,7 +2140,7 @@ Public Class FrVenta
                 iRowActual = RenglonObjetivo
 
             Else
-                ' >>> NUEVO renglÛn (INSERT SQL) <<<
+                ' >>> NUEVO rengl√≥n (INSERT SQL) <<<
                 RenglonObjetivo = iRowActual
                 CantidadFinal = Item.Cantidad
 
@@ -2139,6 +2161,7 @@ Public Class FrVenta
                 .Cells(iRowActual, ColVenta.ColF3).Value = valF3
                 .Cells(iRowActual, ColVenta.ColF6).Value = valF6
                 .Cells(iRowActual, ColVenta.ColFactor).Value = Item.Factor
+                .Cells(iRowActual, ColVenta.ColFactorFactura).Value = Item.FactorFactura
                 .Cells(iRowActual, ColVenta.ColVale).Value = IIf(Item.TraeVale, "*", "")
 
 
@@ -2163,11 +2186,11 @@ Public Class FrVenta
                 ' Solo insertamos si NO estamos cargando un ticket pendiente (porque esos ya existen)
                 If Not Item.CargandoPendiente Then
                     SQL = "INSERT INTO tmpauxvta2 (renglon, usuario, articulo, cantidad, tipo, " &
-                          "FueConF1, FueConF2, FueConF3, ClienteID, ArtClave, TraeVale, Factor, FueConF6) " &
+                          "FueConF1, FueConF2, FueConF3, ClienteID, ArtClave, TraeVale, Factor, FueConF6, FactorFactura) " &
                           "VALUES (" &
                           RenglonObjetivo & ", '" & Globales.caja & "', '" & Item.UPC & "', " & CantidadFinal & ", " & Item.TipoVenta & ", " &
                           valF1 & ", " & valF2 & ", " & valF3 & ", " & ClienteID & ", '" & Item.Clave & "', '" &
-                          IIf(Item.TraeVale, "*", "") & "', " & Item.Factor & ", " & valF6 & ")"
+                          IIf(Item.TraeVale, "*", "") & "', " & Item.Factor & ", " & valF6 & ", " & Item.FactorFactura & ")"
                     Base.Ejecuta(SQL, sCadenaConexionSQL)
                 End If
 
@@ -2176,7 +2199,7 @@ Public Class FrVenta
             claveArt = Item.UPC
 
             ' =========================================================================
-            ' 3. LLAMADA A CONTROL PRECIOS (Solo para ajustar $$, la cantidad ya est· guardada)
+            ' 3. LLAMADA A CONTROL PRECIOS (Solo para ajustar $$, la cantidad ya est√° guardada)
             ' =========================================================================
             ' IMPORTANTE: Como ya guardamos la cantidad arriba (INSERT o UPDATE), 
             ' ControlPrecios NO necesita hacer INSERT. 
@@ -2184,7 +2207,7 @@ Public Class FrVenta
             ' Si le mandamos SCANT=CantidadFinal y SCANTANT=0, va a sumar OTRA VEZ.
 
             ' TRUCO: Le mandamos SCANT = SCANTANT para que Diferencia sea 0.
-            ' ASÌ ControlPrecios SOLO ejecuta la LÛgica de precios (Paso 3, 4 y 5) y no toca la cantidad en BD.
+            ' AS√≠ ControlPrecios SOLO ejecuta la L√≥gica de precios (Paso 3, 4 y 5) y no toca la cantidad en BD.
 
             CONTROLPRECIOS(UPCUPC:=Item.UPC,
                        DPRECIO1:=Item.Precio1,
@@ -2238,7 +2261,7 @@ Public Class FrVenta
     '        If .RowCount > 1 Then
     '            If Item.EsKilos Then
     '                ' =============================================================================
-    '                ' CASO 1: ArtÌculo REPETIDO (Incrementar Cantidad)
+    '                ' CASO 1: Art√≠culo REPETIDO (Incrementar Cantidad)
     '                ' =============================================================================
     '                If claveArt = Item.UPC AndAlso Not Item.EsCancelacion AndAlso .Cells(Item.Renglon - 1, ColVenta.ColCantidad).Value > 0 And Not Item.EsKilos And Not Item.CargandoPendiente Then
     '                    Item.Renglon -= 1
@@ -2251,7 +2274,7 @@ Public Class FrVenta
     '                    End If
 
     '                    If Not Item.CargandoPendiente Then
-    '                        ' actualizaciÛn EN BD
+    '                        ' actualizaci√≥n EN BD
     '                        SQL = "update tmpauxvta2 set cantidad=" & sCant & ", FueConF1=" & valF1 & ", FueConF2=" & valF2 & ", FueConF3=" & valF3 & ", FueConF6=" & valF6 & " where renglon=" & Item.Renglon & " and usuario='" & Globales.caja & "'"
     '                        Base.Ejecuta(SQL, sCadenaConexionSQL)
 
@@ -2259,7 +2282,7 @@ Public Class FrVenta
     '                        'Base.Ejecuta(SQL)
     '                    End If
 
-    '                    ' actualizaciÛn Visual del Grid
+    '                    ' actualizaci√≥n Visual del Grid
     '                    If Item.EsKilos Then
     '                        .Cells(Item.Renglon, ColVenta.ColCantidad).Value = "0"
     '                        .Cells(Item.Renglon, ColVenta.ColPrecio).Value = IIf(Item.TipoOferta = 0, Item.Precio1, Item.PrecioOferta1)
@@ -2272,7 +2295,7 @@ Public Class FrVenta
     '                        .RemoveRows(Item.Renglon + 1, 1)
     '                    End If
 
-    '                    ' actualizaciÛn de datos informativos (Restaurado)
+    '                    ' actualizaci√≥n de datos informativos (Restaurado)
     '                    .Cells(Item.Renglon, ColVenta.ColFIVA).Value = Item.IVA
     '                    .Cells(Item.Renglon, ColVenta.ColFIEPS).Value = Item.IEPS
     '                    .Cells(Item.Renglon, ColVenta.ColArtClave).Value = Item.Clave
@@ -2289,7 +2312,7 @@ Public Class FrVenta
     '                    .Cells(Item.Renglon, ColVenta.ColVale).Value = IIf(Item.TraeVale, "*", "")
     '                Else
     '                    ' =============================================================================
-    '                    ' CASO 2: NUEVO renglÛn (Grid ya tenÌa datos)
+    '                    ' CASO 2: NUEVO rengl√≥n (Grid ya ten√≠a datos)
     '                    ' =============================================================================
     '                    If Not Item.CargandoPendiente Then
     '                        SQL = "insert into tmpauxvta2 (renglon,usuario,articulo,cantidad,tipo,FueConF1,FueConF2,FueConF3,ClienteID,ArtClave,TraeVale,Factor,FueConF6) values(" &
@@ -2352,7 +2375,7 @@ Public Class FrVenta
     '                    .ActiveRowIndex = iren
     '                End If
     '            Else
-    '                ' CASO 3: PRIMER renglÛn (Grid vacÌo)
+    '                ' CASO 3: PRIMER rengl√≥n (Grid vac√≠o)
     '                If Not CargandoPendiente Then
     '                    SQL = "insert into tmpauxvta2 (renglon,usuario,articulo,cantidad,tipo,FueConF1,FueConF2,FueConF3,ClienteID,ArtClave,TraeVale,Factor,FueConF6) values(" &
     '                                            iren & ",'" & Globales.caja & "','" & UPCUPC & "'," & IIf(kilos, 0, sCant) & "," & txt_tipoventa.Text & "," & valF1 & ", " & valF2 & "," & valF3 & "," & CDbl(TxtControl.Text) & ",'" & ArtClave & "',''," & FactorCapturado & "," & valF6 & ")"
@@ -2496,12 +2519,12 @@ Public Class FrVenta
         Dim dscLocal As New DataSet
 
         ' Calculamos el diferencial que estamos agregando en este momento
-        ' (Lo que llevo ahora - Lo que llevaba antes en este renglÛn)
+        ' (Lo que llevo ahora - Lo que llevaba antes en este rengl√≥n)
         If FactorCaptura <= 0D Then FactorCaptura = 1D
         Dim DiferenciaCantidad As Decimal = (SCANT - SCANTANT) * FactorCaptura
 
         ' =============================================================================================
-        ' PASO 1: OBTENER EL ACUMULADO (Global o Local seg˙n el caso)
+        ' PASO 1: OBTENER EL ACUMULADO (Global o Local seg√∫n el caso)
         ' =============================================================================================
 
         Try
@@ -2512,8 +2535,8 @@ Public Class FrVenta
                 WhereClause = "ArtClave='" & ArtClave & "'" ' Oferta Familia
             End If
 
-            ' === correcciÛn APLICADA AquÌ ===
-            ' LÛgica del Universo:
+            ' === correcci√≥n APLICADA Aqu√≠ ===
+            ' L√≥gica del Universo:
             ' A) Si hay CantidadDisponible (> 0), es una carrera contra el inventario global.
             '    Revisamos TODAS las cajas (sin filtrar usuario).
             ' B) Si es ilimitada (-1), es un descuento por volumen personal.
@@ -2544,7 +2567,7 @@ Public Class FrVenta
             dscLocal.Tables.Remove("Historial")
 
         Catch ex As Exception
-            Console.WriteLine("Error consultando histÛricos: " & ex.Message)
+            Console.WriteLine("Error consultando hist√≥ricos: " & ex.Message)
             CantidadTotalAcumulada = SCANT
         End Try
 
@@ -2552,11 +2575,11 @@ Public Class FrVenta
         '' =============================================================================================
         '' PASO 2: ACTUALIZAR LA TABLA TEMPORAL (Globales.caja)
         '' =============================================================================================
-        '' Como dependemos 100% del server, esta actualizaciÛn es CRÕTICA.
+        '' Como dependemos 100% del server, esta actualizaci√≥n es CR√çTICA.
 
         'If Not CargandoPendiente Then
         '    Try
-        '        ' A) Verificar si existe (Lectura r·pido)
+        '        ' A) Verificar si existe (Lectura r√°pido)
         '        SQL = "SELECT ARTICULO FROM " & Globales.caja & " WHERE ARTICULO='" & ArtClave & "'"
         '        Base.daQuery(SQL, sCadenaConexionSQL, dscLocal, "Existe")
 
@@ -2575,15 +2598,15 @@ Public Class FrVenta
         '        dscLocal.Tables.Remove("Existe")
 
         '    Catch ex As Exception
-        '        ' ALERTA CRÕTICA (Ya no es silenciosa)
-        '        ' Si esto falla, el servidor pierde la cuenta de los ArtÌculos.
+        '        ' ALERTA CR√çTICA (Ya no es silenciosa)
+        '        ' Si esto falla, el servidor pierde la cuenta de los Art√≠culos.
         '        ' Avisamos al usuario pero NO cerramos el programa con Stop.
-        '        MsgBox("°ALERTA DE RED!" & vbCrLf & vbCrLf &
+        '        MsgBox("¬°ALERTA DE RED!" & vbCrLf & vbCrLf &
         '           "No se pudo actualizar el acumulado en el Servidor." & vbCrLf &
         '           "Es posible que las ofertas de Mayoreo no se calculen correctamente." & vbCrLf &
-        '           "Verifique su conexiÛn.", vbExclamation, "Error de ComunicaciÛn")
+        '           "Verifique su conexi√≥n.", vbExclamation, "Error de Comunicaci√≥n")
 
-        '        ' Opcional: PodrÌas poner un 'Exit Sub' AquÌ si prefieres que NO se calcule precio
+        '        ' Opcional: Podr√≠as poner un 'Exit Sub' Aqu√≠ si prefieres que NO se calcule precio
         '        ' si no hay red, pero generalmente es mejor dejar que intente cobrar con lo que tiene.
         '    End Try
         'End If
@@ -2595,16 +2618,16 @@ Public Class FrVenta
         Dim AplicaPrecioOferta As Boolean = False
 
         If TipoOferta > 0 Then
-            ' CASO A: Oferta Ilimitada (-1) -> SIEMPRE APLICA o Oferta Limitada (> 0) -> APLICA SOLO SI...  1. El contador es v·lido (Diferente de -1)  2. Y estamos dentro del rango permitido
+            ' CASO A: Oferta Ilimitada (-1) -> SIEMPRE APLICA o Oferta Limitada (> 0) -> APLICA SOLO SI...  1. El contador es v√°lido (Diferente de -1)  2. Y estamos dentro del rango permitido
             If CantidadDisponible = -1 OrElse (CantidadDisponible > 0 AndAlso CantidadCobradas <> -1 AndAlso CantidadCobradas <= CantidadDisponible) Then
                 AplicaPrecioOferta = True
             Else
-                ' Caso C: Se acabÛ la oferta o el contador es inv·lido
+                ' Caso C: Se acab√≥ la oferta o el contador es inv√°lido
                 AplicaPrecioOferta = False
             End If
         End If
 
-        ' B) SelecciÛn de Precio 
+        ' B) Selecci√≥n de Precio 
         Select Case TIPOVENTA
             Case 1 ' MOSTRADOR
                 If AplicaPrecioOferta Then
@@ -2637,14 +2660,14 @@ Public Class FrVenta
         End Select
 
         ' =============================================================================================
-        ' PASO 4: APLICAR PRECIO AL renglÛn ACTUAL
+        ' PASO 4: APLICAR PRECIO AL rengl√≥n ACTUAL
         ' =============================================================================================
-        ' Actualizamos visualmente el renglÛn que acabamos de escanear o modificar.
+        ' Actualizamos visualmente el rengl√≥n que acabamos de escanear o modificar.
         With FpArticulos.ActiveSheet
             If FactorCaptura <= 1D Then
                 .Cells(RENGLON, ColVenta.ColPrecio).Value = PrecioFinal
-                ' Recalculamos el total de este renglÛn (Cantidad * Nuevo Precio)
-                ' Usamos CDec para garantizar precisiÛn monetaria.
+                ' Recalculamos el total de este rengl√≥n (Cantidad * Nuevo Precio)
+                ' Usamos CDec para garantizar precisi√≥n monetaria.
                 Dim CantidadRenglon As Decimal = CDec(.Cells(RENGLON, ColVenta.ColCantidad).Value)
                 .Cells(RENGLON, ColVenta.ColTotal).Value = CantidadRenglon * PrecioFinal
             End If
@@ -2654,11 +2677,11 @@ Public Class FrVenta
         ' =============================================================================================
         ' PASO 5: PEINAR A LOS HERMANOS (RECALCULA)
         ' =============================================================================================
-        ' Ahora que sabemos que el precio bajÛ (o subiÛ), debemos actualizar todos los 
-        ' renglones anteriores que pertenezcan a la misma promociÛn.
+        ' Ahora que sabemos que el precio baj√≥ (o subi√≥), debemos actualizar todos los 
+        ' renglones anteriores que pertenezcan a la misma promoci√≥n.
 
-        ' LÛgica de B˙squeda para RECALCULA:
-        ' - Si es Oferta Tipo 1 (UPC EspecÌfico): Buscamos por el cÛdigo de Barras (UPCUPC).
+        ' L√≥gica de B√∫squeda para RECALCULA:
+        ' - Si es Oferta Tipo 1 (UPC Espec√≠fico): Buscamos por el c√≥digo de Barras (UPCUPC).
         ' - Si es Oferta General o Mayoreo: Buscamos por la Familia/Clave (ArtClave).
 
         Dim ClaveParaBuscar As String
@@ -2669,7 +2692,7 @@ Public Class FrVenta
         End If
 
         ' Llamamos a la rutina optimizada (En Memoria) que definimos antes.
-        ' Nota: RECALCULA al final ejecuta 'sumaSpread()', aSÌ que los totales generales se actualizar·n ahÌ.
+        ' Nota: RECALCULA al final ejecuta 'sumaSpread()', aS√≠ que los totales generales se actualizar√°n ah√≠.
         RECALCULA(ClaveParaBuscar, PrecioFinal, TipoOferta)
 
     End Sub
@@ -2677,7 +2700,7 @@ Public Class FrVenta
         ' Optimizada para no hacer consultas SQL dentro del ciclo
 
         Dim I As Integer
-        ' Variables para lectura r·pido
+        ' Variables para lectura r√°pido
         Dim GridUpc As String
         Dim GridClave As String
         Dim GridTipoOferta As Integer
@@ -2688,9 +2711,9 @@ Public Class FrVenta
 
                 ' 1. Leemos datos de memoria (Grid)
                 GridUpc = .Cells(I, ColVenta.ColUPCInv).Text.Trim
-                GridClave = .Cells(I, ColVenta.ColArtClave).Text.Trim ' <--- AquÌ est· EL TRUCO. Usamos la clave que ya tenemos.
+                GridClave = .Cells(I, ColVenta.ColArtClave).Text.Trim ' <--- Aqu√≠ est√° EL TRUCO. Usamos la clave que ya tenemos.
 
-                ' VALIDACI”N de seguridad por si la celda est· vacÌa
+                ' VALIDACI√ìN de seguridad por si la celda est√° vac√≠a
                 Dim valOferta As String = .Cells(I, ColVenta.ColTipoOferta).Text.Trim
                 GridTipoOferta = IIf(IsNumeric(valOferta), CInt(valOferta), 0)
 
@@ -2698,16 +2721,16 @@ Public Class FrVenta
 
                 Dim AplicaCambio As Boolean = False
 
-                ' 2. LÛgica de Coincidencia (Match)
+                ' 2. L√≥gica de Coincidencia (Match)
                 If TipoOferta = 1 Then
-                    ' CASO A: Oferta EspecÌfica por UPC (Ej. Solo Coca Cola Light)
-                    ' Solo cambiamos si el renglÛn tambiÈn es TipoOferta 1 y el UPC es idÈntico
+                    ' CASO A: Oferta Espec√≠fica por UPC (Ej. Solo Coca Cola Light)
+                    ' Solo cambiamos si el rengl√≥n tambi√©n es TipoOferta 1 y el UPC es id√©ntico
                     If GridTipoOferta = 1 AndAlso GridUpc = ArtCLave Then
                         AplicaCambio = True
                     End If
                 Else
                     ' CASO B: Oferta por Familia/Clave (Ej. Cualquier Refresco Coca Cola)
-                    ' Solo cambiamos si el renglÛn NO es una oferta especial (Tipo 1)
+                    ' Solo cambiamos si el rengl√≥n NO es una oferta especial (Tipo 1)
                     If GridTipoOferta <> 1 Then
                         ' En lugar de ir a SQL, comparamos la Clave del Grid con la Clave que recibimos
                         If GridClave = ArtCLave Then
@@ -2716,7 +2739,7 @@ Public Class FrVenta
                     End If
                 End If
 
-                ' 3. EjecuciÛn del Cambio
+                ' 3. Ejecuci√≥n del Cambio
                 If AplicaCambio Then
                     .Cells(I, ColVenta.ColPrecio).Value = PRECIO
                     .Cells(I, ColVenta.ColTotal).Value = GridCantidad * PRECIO
@@ -2811,7 +2834,7 @@ Public Class FrVenta
                             Base.Ejecuta(SQL, sCadenaConexionSQL)
                             Exit Do
                         Catch ex As Exception
-                            Res = MsgBox("Error al actualizar Tabla " & Globales.caja & Chr(13) & Chr(13) & "øDesea intentar nuevamente?", MsgBoxStyle.YesNo, "Punto de Venta")
+                            Res = MsgBox("Error al actualizar Tabla " & Globales.caja & Chr(13) & Chr(13) & "¬øDesea intentar nuevamente?", MsgBoxStyle.YesNo, "Punto de Venta")
                             If Res = MsgBoxResult.No Then Stop
                             'Registrar step en base de datos
                         End Try
@@ -2833,10 +2856,10 @@ Public Class FrVenta
             Dim Prec As Double
             Select Case TIPOVENTA
                 Case 1
-                    'Validar cuantos van cobrados por clave, y cuantos por upc, y como existe oferta, definir cu·les para cu·l
+                    'Validar cuantos van cobrados por clave, y cuantos por upc, y como existe oferta, definir cu√°les para cu√°l
                     'Si lo cobrado por upc excede el tope, o si el articulo excede el tope
 
-                    'Buscar en TmpAuxVta2 con el usuario (caja) en cuestiÛn, y validar
+                    'Buscar en TmpAuxVta2 con el usuario (caja) en cuesti√≥n, y validar
 
                     If CantidadEnTicket >= TOPE Then 'Si la cantidad cobrada en ticket por clave
                         Prec = PrecioOferta2
@@ -2857,7 +2880,7 @@ Public Class FrVenta
                     Precio1APeinar = Prec
             End Select
             FpArticulos.ActiveSheet.Cells(RENGLON, ColVenta.ColPrecio).Value = Prec
-        Else 'Si no hubo oferta o ya no se alcanzÛ la cantidad
+        Else 'Si no hubo oferta o ya no se alcanz√≥ la cantidad
             If (TIPOVENTA = 1 AndAlso CantidadEnTicket >= TOPE) OrElse TIPOVENTA = 2 Then
                 FpArticulos.ActiveSheet.Cells(RENGLON, ColVenta.ColPrecio).Value = DPRECIO2
                 Precio2APeinar = DPRECIO2
@@ -2875,7 +2898,7 @@ Public Class FrVenta
         FpArticulos.ActiveSheet.Cells(RENGLON, ColVenta.ColTotal).Value = FpArticulos.ActiveSheet.Cells(RENGLON, ColVenta.ColPrecio).Value * FpArticulos.ActiveSheet.Cells(RENGLON, ColVenta.ColCantidad).Value
         RECALCULA(IIf(TipoOferta <> 1, ArtClave, UPCUPC), IIf(Precio1APeinar <> -1, Precio1APeinar, Precio2APeinar), TipoOferta)
 
-        'If (tx_cantidad.Visible AndAlso tx_cantidad.Text <> "") OrElse (CantidadEnTicket >= TOPE AndAlso Not YaEstoyTipo2) OrElse (CantidadEnTicket < TOPE AndAlso YaEstoyTipo2) Then 'Si excedo el tope con lo actualmente cobrado o con lo que estoy cobrando ya me regreSÌ a menos del tope
+        'If (tx_cantidad.Visible AndAlso tx_cantidad.Text <> "") OrElse (CantidadEnTicket >= TOPE AndAlso Not YaEstoyTipo2) OrElse (CantidadEnTicket < TOPE AndAlso YaEstoyTipo2) Then 'Si excedo el tope con lo actualmente cobrado o con lo que estoy cobrando ya me regreS√≠ a menos del tope
         '    If YaEstoyTipo2 Then
         '        RECALCULA(IIf(TipoOferta <> 1, ArtClave, UPCUPC), IIf(Precio1APeinar <> -1, Precio1APeinar, Precio2APeinar), TipoOferta)
         '        'RECALCULA(ArtClave, Precio1APeinar)
@@ -2926,7 +2949,7 @@ Public Class FrVenta
     End Sub
     Private Sub RECALCULA(ByVal ClaveBusqueda As String, ByVal NuevoPrecio As Decimal, ByVal TipoOferta As Integer)
 
-        ' ClaveBusqueda: Puede ser el UPC (si es oferta EspecÌfica) o la Clave de ArtÌculo (si es mayoreo general).
+        ' ClaveBusqueda: Puede ser el UPC (si es oferta Espec√≠fica) o la Clave de Art√≠culo (si es mayoreo general).
         ' NuevoPrecio: El precio barato que acaba de calcular ControlPrecios.
 
         With FpArticulos.ActiveSheet
@@ -2947,14 +2970,14 @@ Public Class FrVenta
                 ' Dependiendo del tipo de oferta, la hermandad se define diferente.
 
                 If TipoOferta = 1 Then
-                    ' CASO A: Oferta por UPC EspecÌfico (Ej. 3x2 en Sabritas Sal)
+                    ' CASO A: Oferta por UPC Espec√≠fico (Ej. 3x2 en Sabritas Sal)
                     ' Solo actualizamos los que tengan EXACTAMENTE el mismo UPC.
                     If .Cells(i, ColVenta.ColUPCInv).Text.Trim = ClaveBusqueda Then
                         EsHermano = True
                     End If
                 Else
                     ' CASO B: Mayoreo General (Ej. A partir de 6 piezas de Refrescos Familia Coca-Cola)
-                    ' Actualizamos todos los que compartan la CLAVE DE ArtÌculo (Familia).
+                    ' Actualizamos todos los que compartan la CLAVE DE Art√≠culo (Familia).
                     ' Esto permite que si llevas 3 Cocas y 3 Sprites, ambos bajen de precio.
                     If .Cells(i, ColVenta.ColArtClave).Text.Trim = ClaveBusqueda Then
                         EsHermano = True
@@ -2969,11 +2992,11 @@ Public Class FrVenta
                     ' Actualizamos Precio Unitario
                     .Cells(i, ColVenta.ColPrecio).Value = NuevoPrecio
 
-                    ' Recalculamos el Total de ese renglÛn
+                    ' Recalculamos el Total de ese rengl√≥n
                     Dim CantidadRenglon As Decimal = CDec(.Cells(i, ColVenta.ColCantidad).Value)
                     .Cells(i, ColVenta.ColTotal).Value = CantidadRenglon * NuevoPrecio
 
-                    ' Opcional: Feedback visual (Azul si bajÛ a oferta)
+                    ' Opcional: Feedback visual (Azul si baj√≥ a oferta)
                     If NuevoPrecio < CDec(.Cells(i, ColVenta.ColPrecio1).Value) AndAlso CDec(.Cells(i, ColVenta.ColCantidad).Value) > 0 Then
                         If TipoOferta > 0 Then
                             .Rows(i).ForeColor = Color.Blue
@@ -3028,7 +3051,7 @@ Public Class FrVenta
                     dTotal += CDec(valTotal)
                 End If
 
-                ' B) C¡LCULO DIFERENCIA (ComisiÛn / Ahorro)
+                ' B) C√ÅLCULO DIFERENCIA (Comisi√≥n / Ahorro)
                 ' (Precio1 - PrecioCobrado) * Cantidad
                 If IsNumeric(valP1) AndAlso IsNumeric(valPReal) AndAlso IsNumeric(valCant) Then
                     dTotalDifP1 += (CDec(valP1) - CDec(valPReal)) * CDec(valCant)
@@ -3036,7 +3059,7 @@ Public Class FrVenta
             Next
         End With
 
-        ' 2. actualizaciÛn UI Y GLOBALES
+        ' 2. actualizaci√≥n UI Y GLOBALES
         ' Usamos .ToString("N2") para asegurar 2 decimales visuales siempre
         TotalVenta = dTotal
         LbTotal.Text = dTotal.ToString("C2") ' Formato Moneda ($1,234.50)
@@ -3045,20 +3068,20 @@ Public Class FrVenta
         totalote = dTotal
         MontoMaximoComision = dTotalDifP1
 
-        ' 3. SCROLL autom·ticO AL FINAL
+        ' 3. SCROLL autom√°ticO AL FINAL
         FpArticulos.ShowActiveCell(FarPoint.Win.Spread.VerticalPosition.Bottom, FarPoint.Win.Spread.HorizontalPosition.Left)
 
     End Sub
 
     Private Sub TimerReloj_Tick(sender As Object, e As EventArgs) Handles TimerReloj.Tick
         ' Actualizamos la etiqueta cada segundo
-        ' Usamos StrConv para poner la primera letra del mes en May˙scula (Diciembre, no diciembre)
+        ' Usamos StrConv para poner la primera letra del mes en May√∫scula (Diciembre, no diciembre)
 
         Dim Fecha As String = Now.ToString("dd \de MMMM \de\l yyyy")
         Dim Hora As String = Now.ToString("HH:mm:ss")
 
         ' "16 de Diciembre del 2023 | Hora: 10:25:30"
-        ' StrConv(..., VbStrConv.ProperCase) pone May˙sculas bonitas al mes
+        ' StrConv(..., VbStrConv.ProperCase) pone May√∫sculas bonitas al mes
         Label11.Text = StrConv(Fecha, VbStrConv.ProperCase) & " | Hora: " & Hora
 
     End Sub
@@ -3067,958 +3090,958 @@ Public Class FrVenta
         Try
             Base.Ejecuta("insert into TicketsClientes (ClienteID,FolioTicket) Values (" & ClienteID & "," & Ticket & ")", sCadenaConexionSQL)
         Catch ex As Exception
-            MsgBox("No se registrÛ el ticket en tabla de TicketsClientes.", MsgBoxStyle.Critical, "Punto de Venta")
+            MsgBox("No se registr√≥ el ticket en tabla de TicketsClientes.", MsgBoxStyle.Critical, "Punto de Venta")
         End Try
     End Sub
 
-    Public Function guardaTicket(FolioCaja As String)
-        Dim iRen As Integer = 0
-        Dim sSql As String = ""
-        Dim xsql As String = ""
-        Dim dsc As New DataSet
-        Dim dsc1 As New DataSet
-        Dim iID As Integer
-        Dim iva, IEPS As Double
-        Dim familia As String
-        Dim costo As Double
-        Dim precio As Double
-        Dim cant As Double
-        Dim DATO As String
-        Dim sql As String
-        Dim dsc2 As New DataSet
-        Dim dsc3 As New DataSet
-        Dim dsc4 As New DataSet
-        'Dim cap1 As Double
-        'Dim cap2 As Double
-        'Dim uni1 As String
-        'Dim uni2 As String
-        Dim xrenglon As Integer
+    'Public Function guardaTicket(FolioCaja As String)
+    '    Dim iRen As Integer = 0
+    '    Dim sSql As String = ""
+    '    Dim xsql As String = ""
+    '    Dim dsc As New DataSet
+    '    Dim dsc1 As New DataSet
+    '    Dim iID As Integer
+    '    Dim iva, IEPS As Double
+    '    Dim familia As String
+    '    Dim costo As Double
+    '    Dim precio As Double
+    '    Dim cant As Double
+    '    Dim DATO As String
+    '    Dim sql As String
+    '    Dim dsc2 As New DataSet
+    '    Dim dsc3 As New DataSet
+    '    Dim dsc4 As New DataSet
+    '    'Dim cap1 As Double
+    '    'Dim cap2 As Double
+    '    'Dim uni1 As String
+    '    'Dim uni2 As String
+    '    Dim xrenglon As Integer
 
 
-        'xven = 0
-        'sql = "select isnull(folio,0)+1 maximo from eccontrolventa"
-        'Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
-        'xven = dsc.Tables("tabla").Rows(0)("maximo")
-        'Base.Ejecuta("update eccontrolventa set folio=folio+1", sCadenaConexionSQL)
+    '    'xven = 0
+    '    'sql = "select isnull(folio,0)+1 maximo from eccontrolventa"
+    '    'Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
+    '    'xven = dsc.Tables("tabla").Rows(0)("maximo")
+    '    'Base.Ejecuta("update eccontrolventa set folio=folio+1", sCadenaConexionSQL)
 
 
-        DATO = "000" & Globales.caja.Substring(Len(Globales.caja) - 1, 1)
+    '    DATO = "000" & Globales.caja.Substring(Len(Globales.caja) - 1, 1)
 
-        'Para generar el consolidado del ticket
-        Try
-            Base.Ejecuta("DELETE FROM TMPAUXVTA WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
-        Catch ex As Exception
-            'Aqui no pasa nada, solo abortar toda la mision.
-            MsgBox("Error al borrar los datos de tabla TmpAuxVta", MsgBoxStyle.Critical, "Punto de Venta")
-            Return False
-        End Try
+    '    'Para generar el consolidado del ticket
+    '    Try
+    '        Base.Ejecuta("DELETE FROM TMPAUXVTA WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
+    '    Catch ex As Exception
+    '        'Aqui no pasa nada, solo abortar toda la mision.
+    '        MsgBox("Error al borrar los datos de tabla TmpAuxVta", MsgBoxStyle.Critical, "Punto de Venta")
+    '        Return False
+    '    End Try
 
-        With FpArticulos.ActiveSheet
-            'REGISTRA LOS MOVIMIENTOS 
-            For i As Integer = 0 To .RowCount - 1
-                'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .Cells(i, 4).Text.Trim & "'"
-                'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
-                'If dsc3.Tables("codart").Rows.Count > 0 Then
-                'sql = "select * from tmpauxvta where tmp_articulo='" & dsc3.Tables("codart").Rows(0)("upc_cveart") & "' and tmp_usuario='" & Globales.caja & "'"
-                sql = "select * from tmpauxvta where tmp_articulo='" & .Cells(i, 11).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Try
-                    Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
-                Catch ex As Exception
-                    Try
-                        Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                        MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    Catch ex2 As Exception
-                        MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    End Try
-                End Try
+    '    With FpArticulos.ActiveSheet
+    '        'REGISTRA LOS MOVIMIENTOS 
+    '        For i As Integer = 0 To .RowCount - 1
+    '            'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .Cells(i, 4).Text.Trim & "'"
+    '            'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
+    '            'If dsc3.Tables("codart").Rows.Count > 0 Then
+    '            'sql = "select * from tmpauxvta where tmp_articulo='" & dsc3.Tables("codart").Rows(0)("upc_cveart") & "' and tmp_usuario='" & Globales.caja & "'"
+    '            sql = "select * from tmpauxvta where tmp_articulo='" & .Cells(i, 11).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Try
+    '                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
+    '            Catch ex As Exception
+    '                Try
+    '                    Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                    MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                Catch ex2 As Exception
+    '                    MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                End Try
+    '            End Try
 
-                If dsc2.Tables("impri").Rows.Count > 0 Then
-                    sql = "UPDATE TMPAUXVTA SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, 0).Value &
-                                " ,TMP_TOTAL=(tmp_cantidad+" & .Cells(i, 0).Value & ")*" & .Cells(i, 2).Value & " where tmp_articulo='" & .Cells(i, 11).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Else
-                    sql = "INSERT INTO TMPAUXVTA SELECT '" & Globales.caja & "'," & .Cells(i, 0).Value & ",'" & .Cells(i, 11).Text.Trim &
-                            "','" & .Cells(i, 12).Text.Trim & "'," & .Cells(i, 2).Value & "," & .Cells(i, 3).Value
-                End If
-                Try
-                    Base.Ejecuta(sql, sCadenaConexionSQL)
-                Catch ex As Exception
-                    dsc2.Tables.Remove("impri")
-                    Try
-                        Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                        MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    Catch ex2 As Exception
-                        MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    End Try
-                End Try
-                dsc2.Tables.Remove("impri")
-                'End If
-                'dsc3.Tables.Remove("codart")
-            Next i
-        End With
-
-
-        'PARA GENERAR UN CONSOLIDADO DE VENTAS SIN LAS CANCELACIONES QUE SE REGISTRARON
-
-        Try
-            Base.Ejecuta("DELETE FROM TMPAUXVTA1 WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
-        Catch ex As Exception
-            Try
-                Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                MsgBox("Error al borrar los datos de tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                Return False
-            Catch ex2 As Exception
-                MsgBox("Error al borrar los datos de tabla TmpAuxVta1. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                Return False
-            End Try
-        End Try
-
-        With FpArticulos.ActiveSheet
-            'REGISTRA LOS MOVIMIENTOS 
-            For i As Integer = 0 To .RowCount - 1
-                'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .Cells(i, 4).Text.Trim & "'"
-                'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
-                'If dsc3.Tables("codart").Rows.Count > 0 Then
-                sql = "select * from tmpauxvta1 where tmp_articulo='" & .Cells(i, 11).Text.Trim & "'" &
-                    " AND TMP_UPC='" & .Cells(i, 4).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Try
-                    Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
-                Catch ex As Exception
-                    Try
-                        Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                        MsgBox("Error al traer los datos de tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return (True, False, False, False, False, False)
-                    Catch ex2 As Exception
-                        MsgBox("Error al traer los datos de tabla TmpAuxVta1. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return (False, False, False, False, False, False)
-                    End Try
-                End Try
-
-                If dsc2.Tables("impri").Rows.Count > 0 Then
-                    sql = "UPDATE TMPAUXVTA1 SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, 0).Value &
-                        " ,TMP_TOTAL=(tmp_cantidad+" & .Cells(i, 0).Value & ")*" & .Cells(i, 2).Value &
-                        IIf(.Cells(i, 7).Value = dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=FueConF1", IIf(.Cells(i, 7).Value > dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=" & .Cells(i, 7).Value, "")) &
-                        IIf(.Cells(i, 8).Value = dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=FueConF2", IIf(.Cells(i, 8).Value > dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=" & .Cells(i, 8).Value, "")) &
-                        IIf(.Cells(i, 9).Value = dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=FueConF3", IIf(.Cells(i, 9).Value > dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=" & .Cells(i, 9).Value, "")) &
-                        " where tmp_articulo='" & .Cells(i, 11).Text.Trim & "'" &
-                        " AND TMP_UPC='" & .Cells(i, 4).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Else
-                    sql = "INSERT INTO TMPAUXVTA1 SELECT '" & Globales.caja & "'," & .Cells(i, 0).Value & ",'" & .Cells(i, 11).Text.Trim &
-                    "','" & .Cells(i, 12).Text.Trim & "'," & .Cells(i, 2).Value & "," & .Cells(i, 3).Value & ",'" & .Cells(i, 4).Text.Trim & "'," &
-                     .Cells(i, 6).Text.Trim & ",0,'" &
-                        .Cells(i, 13).Text.Trim & "'," & .Cells(i, 7).Value & "," & .Cells(i, 8).Value & "," & .Cells(i, 9).Value & "," & .Cells(i, 10).Text.Trim & ",0," & .Cells(i, 14).Text.Trim
-                End If
-                Try
-                    Base.Ejecuta(sql, sCadenaConexionSQL)
-                Catch ex As Exception
-                    dsc2.Tables.Remove("impri")
-                    Try
-                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                        Try
-                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                            MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                            Return (False, False, False, False, False, False)
-                        Catch ex2 As Exception
-                            MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
-                            Return False
-                        End Try
-                    Catch ex3 As Exception
-                        MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    End Try
-                End Try
-                dsc2.Tables.Remove("impri")
-                'End If
-                'dsc3.Tables.Remove("codart")
-            Next i
-        End With
-
-        'MOFICACION PARA CAJAS FIJAS
-        'PARA INSERTAR TOTALES EN ECVENTA
-        Dim RestaCancelacionUPC As Double
-        Dim TraeVale As Boolean
-        TraeVale = False
-        With FpArticulos.ActiveSheet
-            For i As Integer = 0 To .RowCount - 1
-                RestaCancelacionUPC = 0
-                If .Cells(i, 5).Text = "*" Then
-                    For k As Integer = 0 To .RowCount - 1
-                        If k <> i Then
-                            If .Cells(i, 4).Text.Trim = .Cells(k, 4).Text.Trim Then
-                                If .Cells(k, 0).Text <> "" Then
-                                    If IsNumeric(.Cells(k, 0).Value) Then
-                                        If CDbl(.Cells(k, 0).Value) < 0 Then
-                                            RestaCancelacionUPC += CDbl(.Cells(k, 0).Value)
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        End If
-                    Next k
-
-                    If .Cells(i, 0).Text <> "" Then
-                        If IsNumeric(.Cells(i, 0).Value) Then
-                            If CDbl(.Cells(i, 0).Value) + RestaCancelacionUPC > 0 Then
-                                TraeVale = True
-                                Exit For
-                            End If
-                        End If
-                    End If
-                End If
-            Next i
-        End With
-
-        sSql = "insert into ecventa (ven_id,ven_usuario,ven_fecha,ven_status,ven_total,ven_turno,ven_tipov,CORTE, NombreCajera, TraeVale) " 'Serie
-        sSql &= "values (" & xven & ",'" & DATO & "',getDate(),1," & LbTotal.Text.Replace(",", "").Replace("$", "") + "," & Globales.iTurnoActivo & "," & TIPOVENTA & ",0,'" & Globales.NombreEmpleado & "','" & IIf(TraeVale, "*", "") & "')" 'Serie
-
-        Try
-            Base.Ejecuta(sSql, sCadenaConexionSQL)
-            'sSql = "select max(ven_id) from ecventa where ven_usuario='" & DATO & "'"
-            'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "maximo")
-            iID = xven
-            numt = iID
-
-            Try
-                Base.Ejecuta("insert into LigasFolios values(" & xven & ",'" & FolioCaja & "')", sCadenaConexionSQL)
-            Catch ex As Exception
-                Try
-                    Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
-                    Try
-                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                        Try
-                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                            MsgBox("Error al registrar la informaciÛn en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                            Return False
-                        Catch ex4 As Exception
-                            MsgBox("Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1 y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                            Return False
-                        End Try
-                    Catch ex3 As Exception
-                        MsgBox("Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta, sÛlo de ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    End Try
-                Catch ex2 As Exception
-                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                    Return False
-                End Try
-            End Try
+    '            If dsc2.Tables("impri").Rows.Count > 0 Then
+    '                sql = "UPDATE TMPAUXVTA SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, 0).Value &
+    '                            " ,TMP_TOTAL=(tmp_cantidad+" & .Cells(i, 0).Value & ")*" & .Cells(i, 2).Value & " where tmp_articulo='" & .Cells(i, 11).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Else
+    '                sql = "INSERT INTO TMPAUXVTA SELECT '" & Globales.caja & "'," & .Cells(i, 0).Value & ",'" & .Cells(i, 11).Text.Trim &
+    '                        "','" & .Cells(i, 12).Text.Trim & "'," & .Cells(i, 2).Value & "," & .Cells(i, 3).Value
+    '            End If
+    '            Try
+    '                Base.Ejecuta(sql, sCadenaConexionSQL)
+    '            Catch ex As Exception
+    '                dsc2.Tables.Remove("impri")
+    '                Try
+    '                    Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                    MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                Catch ex2 As Exception
+    '                    MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                End Try
+    '            End Try
+    '            dsc2.Tables.Remove("impri")
+    '            'End If
+    '            'dsc3.Tables.Remove("codart")
+    '        Next i
+    '    End With
 
 
-            If estiempoaire Then
-                sSql = "insert into ecdetventatel (dve_venta,dve_telefono,dve_fecha,dve_folio) "
-                sSql &= "values (" & iID & ",'" & txt_ctel1.Text & "-" & txt_ctel2.Text & "-" & txt_ctel3.Text & "-" & txt_ctel4.Text & "',getdate(),0)" 'serie
-                Base.Ejecuta(sSql, sCadenaConexionSQL)
-            End If
+    '    'PARA GENERAR UN CONSOLIDADO DE VENTAS SIN LAS CANCELACIONES QUE SE REGISTRARON
 
-            '-----------------------------------------------------------------------------
-            'PARA REGISTRAR DATOS EN LA TABLA DE VENTASTICKET ECDETVENTA
+    '    Try
+    '        Base.Ejecuta("DELETE FROM TMPAUXVTA1 WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
+    '    Catch ex As Exception
+    '        Try
+    '            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '            MsgBox("Error al borrar los datos de tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '            Return False
+    '        Catch ex2 As Exception
+    '            MsgBox("Error al borrar los datos de tabla TmpAuxVta1. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '            Return False
+    '        End Try
+    '    End Try
 
-            With FpArticulos.ActiveSheet
-                'REGISTRA LOS MOVIMIENTOS 
-                For i As Integer = 0 To .RowCount - 1
-                    RestaCancelacionUPC = 0
-                    If .Cells(i, 5).Text = "*" Then
-                        For k As Integer = 0 To FpArticulos.ActiveSheet.Rows.Count - 1
-                            If k <> i Then
-                                If .Cells(i, 4).Text.Trim = .Cells(k, 4).Text.Trim Then
-                                    If .Cells(k, 0).Text <> "" Then
-                                        If IsNumeric(.Cells(k, 0).Value) Then
-                                            If CDbl(.Cells(k, 0).Value) < 0 Then
-                                                RestaCancelacionUPC += CDbl(.Cells(k, 0).Value)
-                                            End If
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        Next k
-                        If .Cells(i, 0).Text <> "" Then
-                            If IsNumeric(.Cells(i, 0).Value) Then
-                                If CDbl(.Cells(i, 0).Value) > 0 Then
-                                    'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .Cells(i, 4).Text.Trim & "'"
-                                    'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart1")
-                                    'If dsc3.Tables("codart1").Rows.Count > 0 Then
-                                    If CDbl(.Cells(i, 0).Value) + RestaCancelacionUPC > 0 Then
-                                        sql = "INSERT INTO ECVENTADETE SELECT " & iID & ",'" & 'Serie
-                                            .Cells(i, 11).Text.Trim & "','" & .Cells(i, 4).Text.Trim & "'," & .Cells(i, 0).Value + RestaCancelacionUPC & "," &
-                                        .Cells(i, 2).Value & "," & .Cells(i, 3).Value
-                                        Try
-                                            Base.Ejecuta(sql, sCadenaConexionSQL)
-                                        Catch ex As Exception
-                                            Try
-                                                Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
-                                                Try
-                                                    Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
-                                                    Try
-                                                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                                        Try
-                                                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                                            MsgBox("Error al registrar la informaciÛn en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                            Return False
-                                                        Catch ex5 As Exception
-                                                            MsgBox("Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                            Return False
-                                                        End Try
-                                                    Catch ex4 As Exception
-                                                        MsgBox("Error al registrar la informaciÛn en ECVenta. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta, sÛlo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                        Return False
-                                                    End Try
-                                                Catch ex3 As Exception
-                                                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDete. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                    Return False
-                                                End Try
-                                            Catch ex2 As Exception
-                                                MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDete. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                Return False
-                                            End Try
-                                        End Try
-                                    End If
-                                    'End If
-                                    'dsc3.Tables.Remove("codart1")
-                                End If
-                            End If
-                        End If
-                    End If
-                Next i
-            End With
+    '    With FpArticulos.ActiveSheet
+    '        'REGISTRA LOS MOVIMIENTOS 
+    '        For i As Integer = 0 To .RowCount - 1
+    '            'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .Cells(i, 4).Text.Trim & "'"
+    '            'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
+    '            'If dsc3.Tables("codart").Rows.Count > 0 Then
+    '            sql = "select * from tmpauxvta1 where tmp_articulo='" & .Cells(i, 11).Text.Trim & "'" &
+    '                " AND TMP_UPC='" & .Cells(i, 4).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Try
+    '                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
+    '            Catch ex As Exception
+    '                Try
+    '                    Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                    MsgBox("Error al traer los datos de tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return (True, False, False, False, False, False)
+    '                Catch ex2 As Exception
+    '                    MsgBox("Error al traer los datos de tabla TmpAuxVta1. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return (False, False, False, False, False, False)
+    '                End Try
+    '            End Try
 
-            Try
-                sql = "Select * from tmpauxvta where tmp_usuario='" & Globales.caja & "'"
-                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
-            Catch ex As Exception
-                Try
-                    Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
-                    Try
-                        Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
-                        Try
-                            Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                            Try
-                                Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                                Return False
-                            Catch ex5 As Exception
-                                MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                                Return False
-                            End Try
-                        Catch ex4 As Exception
-                            MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                            Return False
-                        End Try
-                    Catch ex3 As Exception
-                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    End Try
-                Catch ex2 As Exception
-                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                    Return False
-                End Try
-            End Try
+    '            If dsc2.Tables("impri").Rows.Count > 0 Then
+    '                sql = "UPDATE TMPAUXVTA1 SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, 0).Value &
+    '                    " ,TMP_TOTAL=(tmp_cantidad+" & .Cells(i, 0).Value & ")*" & .Cells(i, 2).Value &
+    '                    IIf(.Cells(i, 7).Value = dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=FueConF1", IIf(.Cells(i, 7).Value > dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=" & .Cells(i, 7).Value, "")) &
+    '                    IIf(.Cells(i, 8).Value = dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=FueConF2", IIf(.Cells(i, 8).Value > dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=" & .Cells(i, 8).Value, "")) &
+    '                    IIf(.Cells(i, 9).Value = dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=FueConF3", IIf(.Cells(i, 9).Value > dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=" & .Cells(i, 9).Value, "")) &
+    '                    " where tmp_articulo='" & .Cells(i, 11).Text.Trim & "'" &
+    '                    " AND TMP_UPC='" & .Cells(i, 4).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Else
+    '                sql = "INSERT INTO TMPAUXVTA1 SELECT '" & Globales.caja & "'," & .Cells(i, 0).Value & ",'" & .Cells(i, 11).Text.Trim &
+    '                "','" & .Cells(i, 12).Text.Trim & "'," & .Cells(i, 2).Value & "," & .Cells(i, 3).Value & ",'" & .Cells(i, 4).Text.Trim & "'," &
+    '                 .Cells(i, 6).Text.Trim & ",0,'" &
+    '                    .Cells(i, 13).Text.Trim & "'," & .Cells(i, 7).Value & "," & .Cells(i, 8).Value & "," & .Cells(i, 9).Value & "," & .Cells(i, 10).Text.Trim & ",0," & .Cells(i, 14).Text.Trim
+    '            End If
+    '            Try
+    '                Base.Ejecuta(sql, sCadenaConexionSQL)
+    '            Catch ex As Exception
+    '                dsc2.Tables.Remove("impri")
+    '                Try
+    '                    Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                    Try
+    '                        Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                        MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                        Return (False, False, False, False, False, False)
+    '                    Catch ex2 As Exception
+    '                        MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                        Return False
+    '                    End Try
+    '                Catch ex3 As Exception
+    '                    MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                End Try
+    '            End Try
+    '            dsc2.Tables.Remove("impri")
+    '            'End If
+    '            'dsc3.Tables.Remove("codart")
+    '        Next i
+    '    End With
 
+    '    'MOFICACION PARA CAJAS FIJAS
+    '    'PARA INSERTAR TOTALES EN ECVENTA
+    '    Dim RestaCancelacionUPC As Double
+    '    Dim TraeVale As Boolean
+    '    TraeVale = False
+    '    With FpArticulos.ActiveSheet
+    '        For i As Integer = 0 To .RowCount - 1
+    '            RestaCancelacionUPC = 0
+    '            If .Cells(i, 5).Text = "*" Then
+    '                For k As Integer = 0 To .RowCount - 1
+    '                    If k <> i Then
+    '                        If .Cells(i, 4).Text.Trim = .Cells(k, 4).Text.Trim Then
+    '                            If .Cells(k, 0).Text <> "" Then
+    '                                If IsNumeric(.Cells(k, 0).Value) Then
+    '                                    If CDbl(.Cells(k, 0).Value) < 0 Then
+    '                                        RestaCancelacionUPC += CDbl(.Cells(k, 0).Value)
+    '                                    End If
+    '                                End If
+    '                            End If
+    '                        End If
+    '                    End If
+    '                Next k
 
-            xrenglon = 1
-            If dsc2.Tables("detventa").Rows.Count > 0 Then
+    '                If .Cells(i, 0).Text <> "" Then
+    '                    If IsNumeric(.Cells(i, 0).Value) Then
+    '                        If CDbl(.Cells(i, 0).Value) + RestaCancelacionUPC > 0 Then
+    '                            TraeVale = True
+    '                            Exit For
+    '                        End If
+    '                    End If
+    '                End If
+    '            End If
+    '        Next i
+    '    End With
 
-                For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
-                    With FpArticulos.ActiveSheet
-                        'xsql = "Select art_iva,art_ieps,art_costocap2,art_familia,art_cap1,art_uni1,art_cap2,art_uni2 from articulo where art_clave='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
-                        'Base.daQuery(xsql, sCadenaConexionSQL, dsc1, "precios")
-                        If .Cells(iRen, 11).Text.Trim <> "" Then
-                            iva = .Cells(iRen, 6).Text.Trim
-                            IEPS = .Cells(iRen, 10).Text.Trim
-                            costo = .Cells(iRen, 14).Text.Trim
-                            familia = .Cells(iRen, 13).Text.Trim
-                            'cap1 = dsc1.Tables("precios").Rows(0)("art_cap1")
-                            'cap2 = dsc1.Tables("precios").Rows(0)("art_cap2")
-                            'uni1 = dsc1.Tables("precios").Rows(0)("art_uni1")
-                            'uni2 = dsc1.Tables("precios").Rows(0)("art_uni2")
-                        Else
-                            iva = 0
-                            IEPS = 0
-                            costo = 0
-                            familia = 0
-                            'cap1 = 1
-                            'cap2 = 1
-                            'uni1 = "PZ"
-                            'uni2 = "PZ"
-                        End If
-                        'dsc1.Tables.Remove("precios")
-                        precio = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_precio"))
-                        cant = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_cantidad"))
+    '    sSql = "insert into ecventa (ven_id,ven_usuario,ven_fecha,ven_status,ven_total,ven_turno,ven_tipov,CORTE, NombreCajera, TraeVale) " 'Serie
+    '    sSql &= "values (" & xven & ",'" & DATO & "',getDate(),1," & LbTotal.Text.Replace(",", "").Replace("$", "") + "," & Globales.iTurnoActivo & "," & TIPOVENTA & ",0,'" & Globales.NombreEmpleado & "','" & IIf(TraeVale, "*", "") & "')" 'Serie
 
+    '    Try
+    '        Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '        'sSql = "select max(ven_id) from ecventa where ven_usuario='" & DATO & "'"
+    '        'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "maximo")
+    '        iID = xven
+    '        numt = iID
 
-                        sSql = "insert into ecdetventa (dve_venta,dve_articulo,dve_precio,dve_cantidad,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon, DVE_PORIEPS, DVE_IEPS) "
-                        sSql &= "values (" & iID & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & precio & "," & cant & "," & 'serie
-                         iva & "," & ((precio * cant) / (1 + (iva / 100))) * iva / 100 & "," & costo & "," & cant * costo & ",'" & familia & "'," & iRen + 1 & "," & IEPS & "," & ((precio * cant) / (1 + (IEPS / 100))) * IEPS / 100 & ")"
-                        Try
-                            Base.Ejecuta(sSql, sCadenaConexionSQL)
-                        Catch ex As Exception
-                            dsc2.Tables.Remove("detventa")
-                            Try
-                                Base.Ejecuta("delete from ecdetventa where dve_venta=" & xven, sCadenaConexionSQL)
-                                Try
-                                    Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
-                                    Try
-                                        Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
-                                        Try
-                                            Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                            Try
-                                                Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                                MsgBox("Error al insertar datos en ECDetVenta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                Return False
-                                            Catch ex6 As Exception
-                                                MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                Return False
-                                            End Try
-                                        Catch ex5 As Exception
-                                            MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                                            Return False
-                                        End Try
-                                    Catch ex4 As Exception
-                                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                                        Return False
-                                    End Try
-                                Catch ex3 As Exception
-                                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                                    Return False
-                                End Try
-                            Catch ex2 As Exception
-                                MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                                Return False
-                            End Try
-                        End Try
+    '        Try
+    '            Base.Ejecuta("insert into LigasFolios values(" & xven & ",'" & FolioCaja & "')", sCadenaConexionSQL)
+    '        Catch ex As Exception
+    '            Try
+    '                Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
+    '                Try
+    '                    Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                    Try
+    '                        Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                        MsgBox("Error al registrar la informaci√≥n en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                        Return False
+    '                    Catch ex4 As Exception
+    '                        MsgBox("Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1 y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                        Return False
+    '                    End Try
+    '                Catch ex3 As Exception
+    '                    MsgBox("Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta, s√≥lo de ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                End Try
+    '            Catch ex2 As Exception
+    '                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                Return False
+    '            End Try
+    '        End Try
 
 
+    '        If estiempoaire Then
+    '            sSql = "insert into ecdetventatel (dve_venta,dve_telefono,dve_fecha,dve_folio) "
+    '            sSql &= "values (" & iID & ",'" & txt_ctel1.Text & "-" & txt_ctel2.Text & "-" & txt_ctel3.Text & "-" & txt_ctel4.Text & "',getdate(),0)" 'serie
+    '            Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '        End If
 
-                        'sSql = "select * from ecpromopuntos where prom_articulo='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
-                        'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "promo")
-                        'If dsc.Tables("promo").Rows.Count > 0 Then
-                        '    sSql = "insert into eccanjepuntos (canje_ticket,canje_fecha,canje_renglon,canje_articulo,canje_cantidad,canje_puntos,canje_usados,canje_saldo) " &
-                        '        " values (" & iID & ",getdate()," & xrenglon & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & cant & "," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ",0," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ")" 'serie
-                        '    sipuntos = True
-                        '    Base.Ejecuta(sSql, sCadenaConexionSQL)
-                        '    xrenglon = xrenglon + 1
+    '        '-----------------------------------------------------------------------------
+    '        'PARA REGISTRAR DATOS EN LA TABLA DE VENTASTICKET ECDETVENTA
 
-                        'End If
-                        'dsc.Tables.Remove("promo")
-                    End With
-                Next iRen
-            End If
+    '        With FpArticulos.ActiveSheet
+    '            'REGISTRA LOS MOVIMIENTOS 
+    '            For i As Integer = 0 To .RowCount - 1
+    '                RestaCancelacionUPC = 0
+    '                If .Cells(i, 5).Text = "*" Then
+    '                    For k As Integer = 0 To FpArticulos.ActiveSheet.Rows.Count - 1
+    '                        If k <> i Then
+    '                            If .Cells(i, 4).Text.Trim = .Cells(k, 4).Text.Trim Then
+    '                                If .Cells(k, 0).Text <> "" Then
+    '                                    If IsNumeric(.Cells(k, 0).Value) Then
+    '                                        If CDbl(.Cells(k, 0).Value) < 0 Then
+    '                                            RestaCancelacionUPC += CDbl(.Cells(k, 0).Value)
+    '                                        End If
+    '                                    End If
+    '                                End If
+    '                            End If
+    '                        End If
+    '                    Next k
+    '                    If .Cells(i, 0).Text <> "" Then
+    '                        If IsNumeric(.Cells(i, 0).Value) Then
+    '                            If CDbl(.Cells(i, 0).Value) > 0 Then
+    '                                'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .Cells(i, 4).Text.Trim & "'"
+    '                                'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart1")
+    '                                'If dsc3.Tables("codart1").Rows.Count > 0 Then
+    '                                If CDbl(.Cells(i, 0).Value) + RestaCancelacionUPC > 0 Then
+    '                                    sql = "INSERT INTO ECVENTADETE SELECT " & iID & ",'" & 'Serie
+    '                                        .Cells(i, 11).Text.Trim & "','" & .Cells(i, 4).Text.Trim & "'," & .Cells(i, 0).Value + RestaCancelacionUPC & "," &
+    '                                    .Cells(i, 2).Value & "," & .Cells(i, 3).Value
+    '                                    Try
+    '                                        Base.Ejecuta(sql, sCadenaConexionSQL)
+    '                                    Catch ex As Exception
+    '                                        Try
+    '                                            Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
+    '                                            Try
+    '                                                Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
+    '                                                Try
+    '                                                    Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                                                    Try
+    '                                                        Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                                                        MsgBox("Error al registrar la informaci√≥n en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                                        Return False
+    '                                                    Catch ex5 As Exception
+    '                                                        MsgBox("Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                                        Return False
+    '                                                    End Try
+    '                                                Catch ex4 As Exception
+    '                                                    MsgBox("Error al registrar la informaci√≥n en ECVenta. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta, s√≥lo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                                    Return False
+    '                                                End Try
+    '                                            Catch ex3 As Exception
+    '                                                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDete. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                                Return False
+    '                                            End Try
+    '                                        Catch ex2 As Exception
+    '                                            MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDete. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                            Return False
+    '                                        End Try
+    '                                    End Try
+    '                                End If
+    '                                'End If
+    '                                'dsc3.Tables.Remove("codart1")
+    '                            End If
+    '                        End If
+    '                    End If
+    '                End If
+    '            Next i
+    '        End With
 
-            dsc2.Tables.Remove("detventa")
+    '        Try
+    '            sql = "Select * from tmpauxvta where tmp_usuario='" & Globales.caja & "'"
+    '            Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
+    '        Catch ex As Exception
+    '            Try
+    '                Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
+    '                Try
+    '                    Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
+    '                    Try
+    '                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                        Try
+    '                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                            MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                            Return False
+    '                        Catch ex5 As Exception
+    '                            MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                            Return False
+    '                        End Try
+    '                    Catch ex4 As Exception
+    '                        MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                        Return False
+    '                    End Try
+    '                Catch ex3 As Exception
+    '                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                End Try
+    '            Catch ex2 As Exception
+    '                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                Return False
+    '            End Try
+    '        End Try
 
 
-            '-----------------------------------------------------------------------------
-            'PARA REGISTRAR DATOS EN LA TABLA DE VENTASDETALLADAS ECVENTADET
-            sql = "SELECT * FROM TMPAUXVTA1  where tmp_usuario='" & Globales.caja & "'"
-            Try
-                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
-            Catch ex As Exception
-                Try
-                    Base.Ejecuta("delete from ecdetventa where dve_venta=" & xven, sCadenaConexionSQL)
-                    Try
-                        Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
-                        Try
-                            Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
-                            Try
-                                Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                Try
-                                    Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                    MsgBox("Error al traer los datos de TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                                    Return False
-                                Catch ex6 As Exception
-                                    MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
-                                    Return False
-                                End Try
-                            Catch ex5 As Exception
-                                MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                                Return False
-                            End Try
-                        Catch ex4 As Exception
-                            MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                            Return False
-                        End Try
-                    Catch ex3 As Exception
-                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                        Return False
-                    End Try
-                Catch ex2 As Exception
-                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                    Return False
-                End Try
-            End Try
+    '        xrenglon = 1
+    '        If dsc2.Tables("detventa").Rows.Count > 0 Then
+
+    '            For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
+    '                With FpArticulos.ActiveSheet
+    '                    'xsql = "Select art_iva,art_ieps,art_costocap2,art_familia,art_cap1,art_uni1,art_cap2,art_uni2 from articulo where art_clave='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
+    '                    'Base.daQuery(xsql, sCadenaConexionSQL, dsc1, "precios")
+    '                    If .Cells(iRen, 11).Text.Trim <> "" Then
+    '                        iva = .Cells(iRen, 6).Text.Trim
+    '                        IEPS = .Cells(iRen, 10).Text.Trim
+    '                        costo = .Cells(iRen, 14).Text.Trim
+    '                        familia = .Cells(iRen, 13).Text.Trim
+    '                        'cap1 = dsc1.Tables("precios").Rows(0)("art_cap1")
+    '                        'cap2 = dsc1.Tables("precios").Rows(0)("art_cap2")
+    '                        'uni1 = dsc1.Tables("precios").Rows(0)("art_uni1")
+    '                        'uni2 = dsc1.Tables("precios").Rows(0)("art_uni2")
+    '                    Else
+    '                        iva = 0
+    '                        IEPS = 0
+    '                        costo = 0
+    '                        familia = 0
+    '                        'cap1 = 1
+    '                        'cap2 = 1
+    '                        'uni1 = "PZ"
+    '                        'uni2 = "PZ"
+    '                    End If
+    '                    'dsc1.Tables.Remove("precios")
+    '                    precio = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_precio"))
+    '                    cant = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_cantidad"))
 
 
-            If dsc2.Tables("detventa").Rows.Count > 0 Then
-                For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
-                    sSql = "insert into ecventadet (dve_venta,dve_articulo,dve_upc,dve_precio,dve_cantidad,dve_total,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon,DVE_FALTINV,FueConF1,FueConF2,FueConF3, DVE_PORIEPS, DVE_IEPS) "
-                    sSql &= "values (" & iID & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" & 'serie
-                    dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) & "," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & "," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) &
-                     "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) & "," &
-                     ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0 &
-                    "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) & "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_FAMILIA") & "'," & iRen + 1 & ",0," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF1") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF2") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF3") & '")" &
-                    "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) & "," &
-                    ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0 &
-                    ")"
-                    Try
-                        Base.Ejecuta(sSql, sCadenaConexionSQL)
-                    Catch ex As Exception
-                        Try
-                            Base.Ejecuta("delete from ecventadet where dve_venta=" & xven, sCadenaConexionSQL)
-                            Try
-                                Base.Ejecuta("delete from ecdetventa where dve_venta=" & xven, sCadenaConexionSQL)
-                                Try
-                                    Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
-                                    Try
-                                        Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
-                                        Try
-                                            Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                            Try
-                                                Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                                                MsgBox("Error al registrar la informaciÛn en ECVentaDet. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                Return False
-                                            Catch ex7 As Exception
-                                                MsgBox("Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
-                                                Return False
-                                            End Try
-                                        Catch ex6 As Exception
-                                            MsgBox("Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                                            Return False
-                                        End Try
-                                    Catch ex5 As Exception
-                                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
-                                        Return False
-                                    End Try
-                                Catch ex4 As Exception
-                                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
-                                    Return False
-                                End Try
-                            Catch ex3 As Exception
-                                MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECVentaDet.", MsgBoxStyle.Critical, "Punto de Venta")
-                                Return False
-                            End Try
-                        Catch ex2 As Exception
-                            MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                            Return False
-                        End Try
-                    End Try
+    '                    sSql = "insert into ecdetventa (dve_venta,dve_articulo,dve_precio,dve_cantidad,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon, DVE_PORIEPS, DVE_IEPS) "
+    '                    sSql &= "values (" & iID & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & precio & "," & cant & "," & 'serie
+    '                     iva & "," & ((precio * cant) / (1 + (iva / 100))) * iva / 100 & "," & costo & "," & cant * costo & ",'" & familia & "'," & iRen + 1 & "," & IEPS & "," & ((precio * cant) / (1 + (IEPS / 100))) * IEPS / 100 & ")"
+    '                    Try
+    '                        Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                    Catch ex As Exception
+    '                        dsc2.Tables.Remove("detventa")
+    '                        Try
+    '                            Base.Ejecuta("delete from ecdetventa where dve_venta=" & xven, sCadenaConexionSQL)
+    '                            Try
+    '                                Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
+    '                                Try
+    '                                    Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
+    '                                    Try
+    '                                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                                        Try
+    '                                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                                            MsgBox("Error al insertar datos en ECDetVenta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                            Return False
+    '                                        Catch ex6 As Exception
+    '                                            MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                            Return False
+    '                                        End Try
+    '                                    Catch ex5 As Exception
+    '                                        MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                        Return False
+    '                                    End Try
+    '                                Catch ex4 As Exception
+    '                                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                    Return False
+    '                                End Try
+    '                            Catch ex3 As Exception
+    '                                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                Return False
+    '                            End Try
+    '                        Catch ex2 As Exception
+    '                            MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                            Return False
+    '                        End Try
+    '                    End Try
 
 
 
-                    sSql = "EXEC CARGAEST  " & "'" &
-                    dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" &
-                    dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))
+    '                    'sSql = "select * from ecpromopuntos where prom_articulo='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
+    '                    'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "promo")
+    '                    'If dsc.Tables("promo").Rows.Count > 0 Then
+    '                    '    sSql = "insert into eccanjepuntos (canje_ticket,canje_fecha,canje_renglon,canje_articulo,canje_cantidad,canje_puntos,canje_usados,canje_saldo) " &
+    '                    '        " values (" & iID & ",getdate()," & xrenglon & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & cant & "," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ",0," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ")" 'serie
+    '                    '    sipuntos = True
+    '                    '    Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                    '    xrenglon = xrenglon + 1
 
-                    'Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                    'End If
+    '                    'dsc.Tables.Remove("promo")
+    '                End With
+    '            Next iRen
+    '        End If
 
-                Next iRen
-
-            End If
-            dsc2.Tables.Remove("DETVENTA")           '----------------------------------------------------------------------------
-
-            sql = "exec aplicaventainventario " & iID & ",1" 'serie
-            Try
-                Base.Ejecuta(sql, sCadenaConexionSQL)
-            Catch ex As Exception
-                MsgBox("Error en Procedimiento AplicaVentaInventario. Se requerir· rec·lculo.", MsgBoxStyle.Critical, "Punto de Venta")
-            End Try
+    '        dsc2.Tables.Remove("detventa")
 
 
-            'dsc.Tables.Remove("maximo")
-        Catch ex As Exception
-            'Esto es m·s relevante, no se pudo insertar en ECVenta, aun aSÌ, no hay gravedad. Solo reintentar.
-            Try
-                Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                Try
-                    Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
-                    MsgBox("Error al registrar la informaciÛn en ECVenta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
-                    Return False
-                Catch ex2 As Exception
-                    MsgBox("Error al registrar la informaciÛn en ECVenta. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
-                    Return False
-                End Try
-            Catch ex3 As Exception
-                MsgBox("Error al registrar la informaciÛn en ECVenta. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
-                Return False
-            End Try
-        End Try
-        Return True
-    End Function
+    '        '-----------------------------------------------------------------------------
+    '        'PARA REGISTRAR DATOS EN LA TABLA DE VENTASDETALLADAS ECVENTADET
+    '        sql = "SELECT * FROM TMPAUXVTA1  where tmp_usuario='" & Globales.caja & "'"
+    '        Try
+    '            Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
+    '        Catch ex As Exception
+    '            Try
+    '                Base.Ejecuta("delete from ecdetventa where dve_venta=" & xven, sCadenaConexionSQL)
+    '                Try
+    '                    Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
+    '                    Try
+    '                        Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
+    '                        Try
+    '                            Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                            Try
+    '                                Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                                MsgBox("Error al traer los datos de TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                Return False
+    '                            Catch ex6 As Exception
+    '                                MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                Return False
+    '                            End Try
+    '                        Catch ex5 As Exception
+    '                            MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                            Return False
+    '                        End Try
+    '                    Catch ex4 As Exception
+    '                        MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                        Return False
+    '                    End Try
+    '                Catch ex3 As Exception
+    '                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                    Return False
+    '                End Try
+    '            Catch ex2 As Exception
+    '                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                Return False
+    '            End Try
+    '        End Try
+
+
+    '        If dsc2.Tables("detventa").Rows.Count > 0 Then
+    '            For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
+    '                sSql = "insert into ecventadet (dve_venta,dve_articulo,dve_upc,dve_precio,dve_cantidad,dve_total,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon,DVE_FALTINV,FueConF1,FueConF2,FueConF3, DVE_PORIEPS, DVE_IEPS) "
+    '                sSql &= "values (" & iID & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" & 'serie
+    '                dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) & "," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & "," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) &
+    '                 "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) & "," &
+    '                 ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0 &
+    '                "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) & "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_FAMILIA") & "'," & iRen + 1 & ",0," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF1") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF2") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF3") & '")" &
+    '                "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) & "," &
+    '                ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0 &
+    '                ")"
+    '                Try
+    '                    Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                Catch ex As Exception
+    '                    Try
+    '                        Base.Ejecuta("delete from ecventadet where dve_venta=" & xven, sCadenaConexionSQL)
+    '                        Try
+    '                            Base.Ejecuta("delete from ecdetventa where dve_venta=" & xven, sCadenaConexionSQL)
+    '                            Try
+    '                                Base.Ejecuta("delete from ecventadete where dve_venta=" & xven, sCadenaConexionSQL)
+    '                                Try
+    '                                    Base.Ejecuta("delete from ecventa where ven_id=" & xven & " and ven_usuario='" & DATO & "'", sCadenaConexionSQL)
+    '                                    Try
+    '                                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                                        Try
+    '                                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                                            MsgBox("Error al registrar la informaci√≥n en ECVentaDet. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                            Return False
+    '                                        Catch ex7 As Exception
+    '                                            MsgBox("Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                            Return False
+    '                                        End Try
+    '                                    Catch ex6 As Exception
+    '                                        MsgBox("Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                        Return False
+    '                                    End Try
+    '                                Catch ex5 As Exception
+    '                                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                    Return False
+    '                                End Try
+    '                            Catch ex4 As Exception
+    '                                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                                Return False
+    '                            End Try
+    '                        Catch ex3 As Exception
+    '                            MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECVentaDet.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                            Return False
+    '                        End Try
+    '                    Catch ex2 As Exception
+    '                        MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                        Return False
+    '                    End Try
+    '                End Try
+
+
+
+    '                sSql = "EXEC CARGAEST  " & "'" &
+    '                dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" &
+    '                dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))
+
+    '                'Base.Ejecuta(sSql, sCadenaConexionSQL)
+
+    '            Next iRen
+
+    '        End If
+    '        dsc2.Tables.Remove("DETVENTA")           '----------------------------------------------------------------------------
+
+    '        sql = "exec aplicaventainventario " & iID & ",1" 'serie
+    '        Try
+    '            Base.Ejecuta(sql, sCadenaConexionSQL)
+    '        Catch ex As Exception
+    '            MsgBox("Error en Procedimiento AplicaVentaInventario. Se requerir√° rec√°lculo.", MsgBoxStyle.Critical, "Punto de Venta")
+    '        End Try
+
+
+    '        'dsc.Tables.Remove("maximo")
+    '    Catch ex As Exception
+    '        'Esto es m√°s relevante, no se pudo insertar en ECVenta, aun aS√≠, no hay gravedad. Solo reintentar.
+    '        Try
+    '            Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '            Try
+    '                Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", sCadenaConexionSQL)
+    '                MsgBox("Error al registrar la informaci√≥n en ECVenta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                Return False
+    '            Catch ex2 As Exception
+    '                MsgBox("Error al registrar la informaci√≥n en ECVenta. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+    '                Return False
+    '            End Try
+    '        Catch ex3 As Exception
+    '            MsgBox("Error al registrar la informaci√≥n en ECVenta. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+    '            Return False
+    '        End Try
+    '    End Try
+    '    Return True
+    'End Function
 
     Public Structure ResultadoTicket
         Public Exito As Boolean
         Public Mensaje As String
 
-        ' Banderas de fallo para depuraciÛn
+        ' Banderas de fallo para depuraci√≥n
         Public FalloTmp As Boolean
         Public FalloHeader As Boolean
         Public FalloDetalle As Boolean
     End Structure
 
-    Public Function GuardaTicketConHandler(FolioCaja As String) As (Mensaje As String, TmpAuxVta As Boolean, TmpAuxVta1 As Boolean, ECVenta As Boolean, LigasFolios As Boolean, ECVentaDete As Boolean, ECVentaDet As Boolean, ECDetVenta As Boolean)
-        Dim iRen As Integer = 0
-        Dim sSql As String = ""
-        Dim xsql As String = ""
-        Dim dsc As New DataSet
-        Dim dsc1 As New DataSet
-        Dim iID As Integer
-        Dim iva, IEPS As Double
-        Dim familia As String
-        Dim costo As Double
-        Dim precio As Double
-        Dim cant As Double
-        Dim DATO As String
-        Dim sql As String
-        Dim dsc2 As New DataSet
-        Dim dsc3 As New DataSet
-        Dim dsc4 As New DataSet
-        'Dim cap1 As Double
-        'Dim cap2 As Double
-        'Dim uni1 As String
-        'Dim uni2 As String
-        Dim xrenglon As Integer
+    'Public Function GuardaTicketConHandler(FolioCaja As String) As (Mensaje As String, TmpAuxVta As Boolean, TmpAuxVta1 As Boolean, ECVenta As Boolean, LigasFolios As Boolean, ECVentaDete As Boolean, ECVentaDet As Boolean, ECDetVenta As Boolean)
+    '    Dim iRen As Integer = 0
+    '    Dim sSql As String = ""
+    '    Dim xsql As String = ""
+    '    Dim dsc As New DataSet
+    '    Dim dsc1 As New DataSet
+    '    Dim iID As Integer
+    '    Dim iva, IEPS As Double
+    '    Dim familia As String
+    '    Dim costo As Double
+    '    Dim precio As Double
+    '    Dim cant As Double
+    '    Dim DATO As String
+    '    Dim sql As String
+    '    Dim dsc2 As New DataSet
+    '    Dim dsc3 As New DataSet
+    '    Dim dsc4 As New DataSet
+    '    'Dim cap1 As Double
+    '    'Dim cap2 As Double
+    '    'Dim uni1 As String
+    '    'Dim uni2 As String
+    '    Dim xrenglon As Integer
 
 
-        'xven = 0
-        'sql = "select isnull(folio,0)+1 maximo from eccontrolventa"
-        'Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
-        'xven = dsc.Tables("tabla").Rows(0)("maximo")
-        'Base.Ejecuta("update eccontrolventa set folio=folio+1", sCadenaConexionSQL)
+    '    'xven = 0
+    '    'sql = "select isnull(folio,0)+1 maximo from eccontrolventa"
+    '    'Base.daQuery(sql, sCadenaConexionSQL, dsc, "tabla")
+    '    'xven = dsc.Tables("tabla").Rows(0)("maximo")
+    '    'Base.Ejecuta("update eccontrolventa set folio=folio+1", sCadenaConexionSQL)
 
 
-        DATO = "000" & Globales.caja.Substring(Len(Globales.caja) - 1, 1)
+    '    DATO = "000" & Globales.caja.Substring(Len(Globales.caja) - 1, 1)
 
-        'Para generar el consolidado del ticket
-        Try
-            Base.Ejecuta("DELETE FROM TMPAUXVTA WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
-        Catch ex As Exception
-            Return ("Error al borrar los datos de tabla TmpAuxVta" & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), False, False, False, False, False, False, False)
-        End Try
+    '    'Para generar el consolidado del ticket
+    '    Try
+    '        Base.Ejecuta("DELETE FROM TMPAUXVTA WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
+    '    Catch ex As Exception
+    '        Return ("Error al borrar los datos de tabla TmpAuxVta" & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), False, False, False, False, False, False, False)
+    '    End Try
 
-        With FpArticulos.ActiveSheet
-            'REGISTRA LOS MOVIMIENTOS 
-            For i As Integer = 0 To .RowCount - 1
-                'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .cells(i, colupcinv).Text.Trim & "'"
-                'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
-                'If dsc3.Tables("codart").Rows.Count > 0 Then
-                'sql = "select * from tmpauxvta where tmp_articulo='" & dsc3.Tables("codart").Rows(0)("upc_cveart") & "' and tmp_usuario='" & Globales.caja & "'"
-                sql = "select * from tmpauxvta where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Try
-                    Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
-                Catch ex As Exception
-                    Return ("Error al traer los datos de tabla TmpAuxVta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
-                End Try
+    '    With FpArticulos.ActiveSheet
+    '        'REGISTRA LOS MOVIMIENTOS 
+    '        For i As Integer = 0 To .RowCount - 1
+    '            'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .cells(i, colupcinv).Text.Trim & "'"
+    '            'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
+    '            'If dsc3.Tables("codart").Rows.Count > 0 Then
+    '            'sql = "select * from tmpauxvta where tmp_articulo='" & dsc3.Tables("codart").Rows(0)("upc_cveart") & "' and tmp_usuario='" & Globales.caja & "'"
+    '            sql = "select * from tmpauxvta where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Try
+    '                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
+    '            Catch ex As Exception
+    '                Return ("Error al traer los datos de tabla TmpAuxVta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
+    '            End Try
 
-                If dsc2.Tables("impri").Rows.Count > 0 Then
-                    sql = "UPDATE TMPAUXVTA SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, ColVenta.ColCantidad).Value &
-                                " ,TMP_TOTAL=TMP_TOTAL+" & .Cells(i, ColVenta.ColTotal).Value & " where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Else
-                    sql = "INSERT INTO TMPAUXVTA SELECT '" & Globales.caja & "'," & .Cells(i, ColVenta.ColCantidad).Value & ",'" & .Cells(i, ColVenta.ColArtClave).Text.Trim &
-                            "','" & .Cells(i, ColVenta.ColNomLargo).Text.Trim & "'," & .Cells(i, ColVenta.ColPrecio).Value & "," & .Cells(i, ColVenta.ColTotal).Value & "," & .Cells(i, ColVenta.ColFIVA).Value & "," & .Cells(i, ColVenta.ColFIEPS).Value & ",'" & .Cells(i, ColVenta.ColFamilia).Value & "'," & .Cells(i, ColVenta.ColCostoCap).Value '& "," & .Cells(i, ColVenta.ColPrecio1).Value
-                End If
-                Try
-                    Base.Ejecuta(sql, sCadenaConexionSQL)
-                Catch ex As Exception
-                    dsc2.Tables.Remove("impri")
-                    Return ("Error al registrar la informaciÛn en tabla TmpAuxVta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
-                End Try
-                dsc2.Tables.Remove("impri")
-                'End If
-                'dsc3.Tables.Remove("codart")
-            Next i
-        End With
-
-
-        'PARA GENERAR UN CONSOLIDADO DE VENTAS SIN LAS CANCELACIONES QUE SE REGISTRARON
-
-        Try
-            Base.Ejecuta("DELETE FROM TMPAUXVTA1 WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
-        Catch ex As Exception
-            Return ("Error al borrar los datos de tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
-        End Try
-
-        With FpArticulos.ActiveSheet
-            'REGISTRA LOS MOVIMIENTOS 
-            For i As Integer = 0 To .RowCount - 1
-                'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .cells(i, colupcinv).Text.Trim & "'"
-                'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
-                'If dsc3.Tables("codart").Rows.Count > 0 Then
-                sql = "select * from tmpauxvta1 where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "'" &
-                    " AND TMP_UPC='" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Try
-                    Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
-                Catch ex As Exception
-                    Return ("Error al traer los datos de tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
-                End Try
-
-                If dsc2.Tables("impri").Rows.Count > 0 Then
-                    sql = "UPDATE TMPAUXVTA1 SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, ColVenta.ColCantidad).Value &
-                        " ,TMP_TOTAL=TMP_TOTAL+" & .Cells(i, ColVenta.ColTotal).Value &
-                        IIf(.Cells(i, ColVenta.ColF1).Value = dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=FueConF1", IIf(.Cells(i, ColVenta.ColF1).Value > dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=" & .Cells(i, ColVenta.ColF1).Value, "")) &
-                        IIf(.Cells(i, ColVenta.ColF2).Value = dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=FueConF2", IIf(.Cells(i, ColVenta.ColF2).Value > dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=" & .Cells(i, ColVenta.ColF2).Value, "")) &
-                        IIf(.Cells(i, ColVenta.ColF3).Value = dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=FueConF3", IIf(.Cells(i, ColVenta.ColF3).Value > dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=" & .Cells(i, ColVenta.ColF3).Value, "")) &
-                        " where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "'" &
-                        " AND TMP_UPC='" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
-                Else
-                    sql = "INSERT INTO TMPAUXVTA1 SELECT '" & Globales.caja & "'," & .Cells(i, ColVenta.ColCantidad).Value & ",'" & .Cells(i, ColVenta.ColArtClave).Text.Trim &
-                    "','" & .Cells(i, ColVenta.ColNomLargo).Text.Trim & "'," & .Cells(i, ColVenta.ColPrecio).Value & "," & .Cells(i, ColVenta.ColTotal).Value & ",'" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "'," &
-                     .Cells(i, ColVenta.ColFIVA).Text.Trim & ",0,'" &
-                        .Cells(i, ColVenta.ColFamilia).Text.Trim & "'," & .Cells(i, ColVenta.ColF1).Value & "," & .Cells(i, ColVenta.ColF2).Value & "," & .Cells(i, ColVenta.ColF3).Value & "," & .Cells(i, ColVenta.ColFIEPS).Value & ",0," & .Cells(i, ColVenta.ColCostoCap).Value
-                End If
-                Try
-                    Base.Ejecuta(sql, sCadenaConexionSQL)
-                Catch ex As Exception
-                    dsc2.Tables.Remove("impri")
-                    Return ("Error al registrar la informaciÛn en tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
-                End Try
-                dsc2.Tables.Remove("impri")
-                'End If
-                'dsc3.Tables.Remove("codart")
-            Next i
-        End With
-
-        If HayTarjeta Then
-            SacaProporcionP1P2(xven)
-        End If
-
-        'MOFICACION PARA CAJAS FIJAS
-        'PARA INSERTAR TOTALES EN ECVENTA
-        Dim RestaCancelacionUPC As Double
-        Dim TraeVale As Boolean
-        TraeVale = False
-        With FpArticulos.ActiveSheet
-            For i As Integer = 0 To .RowCount - 1
-                RestaCancelacionUPC = 0
-                If .Cells(i, ColVenta.ColVale).Text = "*" Then
-                    For k As Integer = 0 To .RowCount - 1
-                        If k <> i Then
-                            If .Cells(i, ColVenta.ColUPCInv).Text.Trim = .Cells(k, ColVenta.ColUPCInv).Text.Trim Then
-                                If .Cells(k, ColVenta.ColCantidad).Text <> "" Then
-                                    If IsNumeric(.Cells(k, ColVenta.ColCantidad).Value) Then
-                                        If CDbl(.Cells(k, ColVenta.ColCantidad).Value) < 0 Then
-                                            RestaCancelacionUPC += CDbl(.Cells(k, ColVenta.ColCantidad).Value)
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        End If
-                    Next k
-
-                    If .Cells(i, ColVenta.ColCantidad).Text <> "" Then
-                        If IsNumeric(.Cells(i, ColVenta.ColCantidad).Value) Then
-                            If CDbl(.Cells(i, ColVenta.ColCantidad).Value) + RestaCancelacionUPC > 0 Then
-                                TraeVale = True
-                                Exit For
-                            End If
-                        End If
-                    End If
-                End If
-            Next i
-        End With
-
-        sSql = "insert into ecventa (ven_id,ven_usuario,ven_fecha,ven_status,ven_total,ven_turno,ven_tipov,CORTE, NombreCajera, TraeVale) " 'Serie
-        sSql &= "values (" & xven & ",'" & DATO & "',getDate(),1," & LbTotal.Text.Replace(",", "").Replace("$", "") + "," & Globales.iTurnoActivo & "," & TIPOVENTA & ",0,'" & Globales.NombreEmpleado & "','" & IIf(TraeVale, "*", "") & "')" 'Serie
-
-        Try
-            Base.Ejecuta(sSql, sCadenaConexionSQL)
-            'sSql = "select max(ven_id) from ecventa where ven_usuario='" & DATO & "'"
-            'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "maximo")
-            iID = xven
-            numt = iID
-
-            Try
-                Base.Ejecuta("insert into LigasFolios values(" & xven & ",'" & FolioCaja & "')", sCadenaConexionSQL)
-            Catch ex As Exception
-                Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en LigasFolios.", True, True, True, False, False, False, False)
-            End Try
+    '            If dsc2.Tables("impri").Rows.Count > 0 Then
+    '                sql = "UPDATE TMPAUXVTA SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, ColVenta.ColCantidad).Value &
+    '                            " ,TMP_TOTAL=TMP_TOTAL+" & .Cells(i, ColVenta.ColTotal).Value & " where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Else
+    '                sql = "INSERT INTO TMPAUXVTA SELECT '" & Globales.caja & "'," & .Cells(i, ColVenta.ColCantidad).Value & ",'" & .Cells(i, ColVenta.ColArtClave).Text.Trim &
+    '                        "','" & .Cells(i, ColVenta.ColNomLargo).Text.Trim & "'," & .Cells(i, ColVenta.ColPrecio).Value & "," & .Cells(i, ColVenta.ColTotal).Value & "," & .Cells(i, ColVenta.ColFIVA).Value & "," & .Cells(i, ColVenta.ColFIEPS).Value & ",'" & .Cells(i, ColVenta.ColFamilia).Value & "'," & .Cells(i, ColVenta.ColCostoCap).Value '& "," & .Cells(i, ColVenta.ColPrecio1).Value
+    '            End If
+    '            Try
+    '                Base.Ejecuta(sql, sCadenaConexionSQL)
+    '            Catch ex As Exception
+    '                dsc2.Tables.Remove("impri")
+    '                Return ("Error al registrar la informaci√≥n en tabla TmpAuxVta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
+    '            End Try
+    '            dsc2.Tables.Remove("impri")
+    '            'End If
+    '            'dsc3.Tables.Remove("codart")
+    '        Next i
+    '    End With
 
 
-            If estiempoaire Then
-                sSql = "insert into ecdetventatel (dve_venta,dve_telefono,dve_fecha,dve_folio) "
-                sSql &= "values (" & iID & ",'" & txt_ctel1.Text & "-" & txt_ctel2.Text & "-" & txt_ctel3.Text & "-" & txt_ctel4.Text & "',getdate(),0)" 'serie
-                Base.Ejecuta(sSql, sCadenaConexionSQL)
-            End If
+    '    'PARA GENERAR UN CONSOLIDADO DE VENTAS SIN LAS CANCELACIONES QUE SE REGISTRARON
 
-            '-----------------------------------------------------------------------------
-            'PARA REGISTRAR DATOS EN LA TABLA DE VENTASTICKET ECDETVENTA
+    '    Try
+    '        Base.Ejecuta("DELETE FROM TMPAUXVTA1 WHERE TMP_USUARIO='" & Globales.caja & "'", sCadenaConexionSQL)
+    '    Catch ex As Exception
+    '        Return ("Error al borrar los datos de tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
+    '    End Try
 
-            With FpArticulos.ActiveSheet
-                'REGISTRA LOS MOVIMIENTOS 
-                For i As Integer = 0 To .RowCount - 1
-                    RestaCancelacionUPC = 0
-                    If .Cells(i, ColVenta.ColVale).Text = "*" Then
-                        For k As Integer = 0 To FpArticulos.ActiveSheet.Rows.Count - 1
-                            If k <> i Then
-                                If .Cells(i, ColVenta.ColUPCInv).Text.Trim = .Cells(k, ColVenta.ColUPCInv).Text.Trim Then
-                                    If .Cells(k, ColVenta.ColCantidad).Text <> "" Then
-                                        If IsNumeric(.Cells(k, ColVenta.ColCantidad).Value) Then
-                                            If CDbl(.Cells(k, ColVenta.ColCantidad).Value) < 0 Then
-                                                RestaCancelacionUPC += CDbl(.Cells(k, ColVenta.ColCantidad).Value)
-                                            End If
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        Next k
-                        If .Cells(i, ColVenta.ColCantidad).Text <> "" Then
-                            If IsNumeric(.Cells(i, ColVenta.ColCantidad).Value) Then
-                                If CDbl(.Cells(i, ColVenta.ColCantidad).Value) > 0 Then
-                                    'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .cells(i, colupcinv).Text.Trim & "'"
-                                    'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart1")
-                                    'If dsc3.Tables("codart1").Rows.Count > 0 Then
-                                    If CDbl(.Cells(i, ColVenta.ColCantidad).Value) + RestaCancelacionUPC > 0 Then
-                                        sql = "INSERT INTO ECVENTADETE SELECT " & iID & ",'" & 'Serie
-                                            .Cells(i, ColVenta.ColArtClave).Text.Trim & "','" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "'," & .Cells(i, ColVenta.ColCantidad).Value + RestaCancelacionUPC & "," &
-                                        .Cells(i, ColVenta.ColPrecio).Value & "," & .Cells(i, ColVenta.ColTotal).Value
-                                        Try
-                                            Base.Ejecuta(sql, sCadenaConexionSQL)
-                                        Catch ex As Exception
-                                            Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDete.", True, True, True, True, True, False, False)
-                                        End Try
-                                    End If
-                                    'End If
-                                    'dsc3.Tables.Remove("codart1")
-                                End If
-                            End If
-                        End If
-                    End If
-                Next i
-            End With
+    '    With FpArticulos.ActiveSheet
+    '        'REGISTRA LOS MOVIMIENTOS 
+    '        For i As Integer = 0 To .RowCount - 1
+    '            'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .cells(i, colupcinv).Text.Trim & "'"
+    '            'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart")
+    '            'If dsc3.Tables("codart").Rows.Count > 0 Then
+    '            sql = "select * from tmpauxvta1 where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "'" &
+    '                " AND TMP_UPC='" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Try
+    '                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "impri")
+    '            Catch ex As Exception
+    '                Return ("Error al traer los datos de tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
+    '            End Try
 
-            Try
-                sql = "Select * from tmpauxvta where tmp_usuario='" & Globales.caja & "'"
-                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
-            Catch ex As Exception
-                Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta.", True, True, True, True, True, False, False)
-            End Try
+    '            If dsc2.Tables("impri").Rows.Count > 0 Then
+    '                sql = "UPDATE TMPAUXVTA1 SET TMP_CANTIDAD=TMP_CANTIDAD+" & .Cells(i, ColVenta.ColCantidad).Value &
+    '                    " ,TMP_TOTAL=TMP_TOTAL+" & .Cells(i, ColVenta.ColTotal).Value &
+    '                    IIf(.Cells(i, ColVenta.ColF1).Value = dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=FueConF1", IIf(.Cells(i, ColVenta.ColF1).Value > dsc2.Tables("impri").Rows(0)("FueConF1"), ",FueConF1=" & .Cells(i, ColVenta.ColF1).Value, "")) &
+    '                    IIf(.Cells(i, ColVenta.ColF2).Value = dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=FueConF2", IIf(.Cells(i, ColVenta.ColF2).Value > dsc2.Tables("impri").Rows(0)("FueConF2"), ",FueConF2=" & .Cells(i, ColVenta.ColF2).Value, "")) &
+    '                    IIf(.Cells(i, ColVenta.ColF3).Value = dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=FueConF3", IIf(.Cells(i, ColVenta.ColF3).Value > dsc2.Tables("impri").Rows(0)("FueConF3"), ",FueConF3=" & .Cells(i, ColVenta.ColF3).Value, "")) &
+    '                    " where tmp_articulo='" & .Cells(i, ColVenta.ColArtClave).Text.Trim & "'" &
+    '                    " AND TMP_UPC='" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "' and tmp_usuario='" & Globales.caja & "'"
+    '            Else
+    '                sql = "INSERT INTO TMPAUXVTA1 SELECT '" & Globales.caja & "'," & .Cells(i, ColVenta.ColCantidad).Value & ",'" & .Cells(i, ColVenta.ColArtClave).Text.Trim &
+    '                "','" & .Cells(i, ColVenta.ColNomLargo).Text.Trim & "'," & .Cells(i, ColVenta.ColPrecio).Value & "," & .Cells(i, ColVenta.ColTotal).Value & ",'" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "'," &
+    '                 .Cells(i, ColVenta.ColFIVA).Text.Trim & ",0,'" &
+    '                    .Cells(i, ColVenta.ColFamilia).Text.Trim & "'," & .Cells(i, ColVenta.ColF1).Value & "," & .Cells(i, ColVenta.ColF2).Value & "," & .Cells(i, ColVenta.ColF3).Value & "," & .Cells(i, ColVenta.ColFIEPS).Value & ",0," & .Cells(i, ColVenta.ColCostoCap).Value
+    '            End If
+    '            Try
+    '                Base.Ejecuta(sql, sCadenaConexionSQL)
+    '            Catch ex As Exception
+    '                dsc2.Tables.Remove("impri")
+    '                Return ("Error al registrar la informaci√≥n en tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
+    '            End Try
+    '            dsc2.Tables.Remove("impri")
+    '            'End If
+    '            'dsc3.Tables.Remove("codart")
+    '        Next i
+    '    End With
 
+    '    If HayTarjeta Then
+    '        SacaProporcionP1P2(xven)
+    '    End If
 
-            xrenglon = 1
-            If dsc2.Tables("detventa").Rows.Count > 0 Then
+    '    'MOFICACION PARA CAJAS FIJAS
+    '    'PARA INSERTAR TOTALES EN ECVENTA
+    '    Dim RestaCancelacionUPC As Double
+    '    Dim TraeVale As Boolean
+    '    TraeVale = False
+    '    With FpArticulos.ActiveSheet
+    '        For i As Integer = 0 To .RowCount - 1
+    '            RestaCancelacionUPC = 0
+    '            If .Cells(i, ColVenta.ColVale).Text = "*" Then
+    '                For k As Integer = 0 To .RowCount - 1
+    '                    If k <> i Then
+    '                        If .Cells(i, ColVenta.ColUPCInv).Text.Trim = .Cells(k, ColVenta.ColUPCInv).Text.Trim Then
+    '                            If .Cells(k, ColVenta.ColCantidad).Text <> "" Then
+    '                                If IsNumeric(.Cells(k, ColVenta.ColCantidad).Value) Then
+    '                                    If CDbl(.Cells(k, ColVenta.ColCantidad).Value) < 0 Then
+    '                                        RestaCancelacionUPC += CDbl(.Cells(k, ColVenta.ColCantidad).Value)
+    '                                    End If
+    '                                End If
+    '                            End If
+    '                        End If
+    '                    End If
+    '                Next k
 
-                For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
-                    With FpArticulos.ActiveSheet
-                        'xsql = "Select art_iva,art_ieps,art_costocap2,art_familia,art_cap1,art_uni1,art_cap2,art_uni2 from articulo where art_clave='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
-                        'Base.daQuery(xsql, sCadenaConexionSQL, dsc1, "precios")
-                        If .Cells(iRen, ColVenta.ColArtClave).Text.Trim <> "" Then
-                            iva = dsc2.Tables("detventa").Rows(iRen)("tmp_iva")
-                            IEPS = dsc2.Tables("detventa").Rows(iRen)("tmp_ieps")
-                            costo = dsc2.Tables("detventa").Rows(iRen)("tmp_costo")
-                            familia = dsc2.Tables("detventa").Rows(iRen)("tmp_familia")
-                            'cap1 = dsc1.Tables("precios").Rows(0)("art_cap1")
-                            'cap2 = dsc1.Tables("precios").Rows(0)("art_cap2")
-                            'uni1 = dsc1.Tables("precios").Rows(0)("art_uni1")
-                            'uni2 = dsc1.Tables("precios").Rows(0)("art_uni2")
-                        Else
-                            iva = 0
-                            IEPS = 0
-                            costo = 0
-                            familia = 0
-                            'cap1 = 1
-                            'cap2 = 1
-                            'uni1 = "PZ"
-                            'uni2 = "PZ"
-                        End If
-                        'dsc1.Tables.Remove("precios")
-                        precio = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_precio"))
-                        cant = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_cantidad"))
+    '                If .Cells(i, ColVenta.ColCantidad).Text <> "" Then
+    '                    If IsNumeric(.Cells(i, ColVenta.ColCantidad).Value) Then
+    '                        If CDbl(.Cells(i, ColVenta.ColCantidad).Value) + RestaCancelacionUPC > 0 Then
+    '                            TraeVale = True
+    '                            Exit For
+    '                        End If
+    '                    End If
+    '                End If
+    '            End If
+    '        Next i
+    '    End With
 
+    '    sSql = "insert into ecventa (ven_id,ven_usuario,ven_fecha,ven_status,ven_total,ven_turno,ven_tipov,CORTE, NombreCajera, TraeVale) " 'Serie
+    '    sSql &= "values (" & xven & ",'" & DATO & "',getDate(),1," & LbTotal.Text.Replace(",", "").Replace("$", "") + "," & Globales.iTurnoActivo & "," & TIPOVENTA & ",0,'" & Globales.NombreEmpleado & "','" & IIf(TraeVale, "*", "") & "')" 'Serie
 
-                        sSql = "insert into ecdetventa (dve_venta,dve_articulo,dve_precio,dve_cantidad,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon, DVE_PORIEPS, DVE_IEPS) "
-                        sSql &= "values (" & iID & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & precio & "," & cant & "," & 'serie
-                         iva & "," & ((precio * cant) / (1 + (iva / 100.0))) * iva / 100 & "," & costo & "," & cant * costo & ",'" & familia & "'," & iRen + 1 & "," & IEPS & "," & ((precio * cant) / (1 + (IEPS / 100))) * IEPS / 100 & ")"
-                        Try
-                            Base.Ejecuta(sSql, sCadenaConexionSQL)
-                        Catch ex As Exception
-                            dsc2.Tables.Remove("detventa")
-                            Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta.", True, True, True, True, True, True, False)
-                        End Try
+    '    Try
+    '        Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '        'sSql = "select max(ven_id) from ecventa where ven_usuario='" & DATO & "'"
+    '        'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "maximo")
+    '        iID = xven
+    '        numt = iID
 
-
-
-                        'sSql = "select * from ecpromopuntos where prom_articulo='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
-                        'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "promo")
-                        'If dsc.Tables("promo").Rows.Count > 0 Then
-                        '    sSql = "insert into eccanjepuntos (canje_ticket,canje_fecha,canje_renglon,canje_articulo,canje_cantidad,canje_puntos,canje_usados,canje_saldo) " &
-                        '        " values (" & iID & ",getdate()," & xrenglon & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & cant & "," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ",0," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ")" 'serie
-                        '    sipuntos = True
-                        '    Base.Ejecuta(sSql, sCadenaConexionSQL)
-                        '    xrenglon = xrenglon + 1
-
-                        'End If
-                        'dsc.Tables.Remove("promo")
-                    End With
-                Next iRen
-            End If
-
-            dsc2.Tables.Remove("detventa")
+    '        Try
+    '            Base.Ejecuta("insert into LigasFolios values(" & xven & ",'" & FolioCaja & "')", sCadenaConexionSQL)
+    '        Catch ex As Exception
+    '            Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en LigasFolios.", True, True, True, False, False, False, False)
+    '        End Try
 
 
-            '-----------------------------------------------------------------------------
-            'PARA REGISTRAR DATOS EN LA TABLA DE VENTASDETALLADAS ECVENTADET
-            sql = "SELECT * FROM TMPAUXVTA1  where tmp_usuario='" & Globales.caja & "'"
-            Try
-                Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
-            Catch ex As Exception
-                Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1.", True, True, True, True, True, True, False)
-            End Try
+    '        If estiempoaire Then
+    '            sSql = "insert into ecdetventatel (dve_venta,dve_telefono,dve_fecha,dve_folio) "
+    '            sSql &= "values (" & iID & ",'" & txt_ctel1.Text & "-" & txt_ctel2.Text & "-" & txt_ctel3.Text & "-" & txt_ctel4.Text & "',getdate(),0)" 'serie
+    '            Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '        End If
+
+    '        '-----------------------------------------------------------------------------
+    '        'PARA REGISTRAR DATOS EN LA TABLA DE VENTASTICKET ECDETVENTA
+
+    '        With FpArticulos.ActiveSheet
+    '            'REGISTRA LOS MOVIMIENTOS 
+    '            For i As Integer = 0 To .RowCount - 1
+    '                RestaCancelacionUPC = 0
+    '                If .Cells(i, ColVenta.ColVale).Text = "*" Then
+    '                    For k As Integer = 0 To FpArticulos.ActiveSheet.Rows.Count - 1
+    '                        If k <> i Then
+    '                            If .Cells(i, ColVenta.ColUPCInv).Text.Trim = .Cells(k, ColVenta.ColUPCInv).Text.Trim Then
+    '                                If .Cells(k, ColVenta.ColCantidad).Text <> "" Then
+    '                                    If IsNumeric(.Cells(k, ColVenta.ColCantidad).Value) Then
+    '                                        If CDbl(.Cells(k, ColVenta.ColCantidad).Value) < 0 Then
+    '                                            RestaCancelacionUPC += CDbl(.Cells(k, ColVenta.ColCantidad).Value)
+    '                                        End If
+    '                                    End If
+    '                                End If
+    '                            End If
+    '                        End If
+    '                    Next k
+    '                    If .Cells(i, ColVenta.ColCantidad).Text <> "" Then
+    '                        If IsNumeric(.Cells(i, ColVenta.ColCantidad).Value) Then
+    '                            If CDbl(.Cells(i, ColVenta.ColCantidad).Value) > 0 Then
+    '                                'sql = "Select * from xupc inner join articulo on art_clave=upc_cveart where upc_upc='" & .cells(i, colupcinv).Text.Trim & "'"
+    '                                'Base.daQuery(sql, sCadenaConexionSQL, dsc3, "codart1")
+    '                                'If dsc3.Tables("codart1").Rows.Count > 0 Then
+    '                                If CDbl(.Cells(i, ColVenta.ColCantidad).Value) + RestaCancelacionUPC > 0 Then
+    '                                    sql = "INSERT INTO ECVENTADETE SELECT " & iID & ",'" & 'Serie
+    '                                        .Cells(i, ColVenta.ColArtClave).Text.Trim & "','" & .Cells(i, ColVenta.ColUPCInv).Text.Trim & "'," & .Cells(i, ColVenta.ColCantidad).Value + RestaCancelacionUPC & "," &
+    '                                    .Cells(i, ColVenta.ColPrecio).Value & "," & .Cells(i, ColVenta.ColTotal).Value
+    '                                    Try
+    '                                        Base.Ejecuta(sql, sCadenaConexionSQL)
+    '                                    Catch ex As Exception
+    '                                        Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDete.", True, True, True, True, True, False, False)
+    '                                    End Try
+    '                                End If
+    '                                'End If
+    '                                'dsc3.Tables.Remove("codart1")
+    '                            End If
+    '                        End If
+    '                    End If
+    '                End If
+    '            Next i
+    '        End With
+
+    '        Try
+    '            sql = "Select * from tmpauxvta where tmp_usuario='" & Globales.caja & "'"
+    '            Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
+    '        Catch ex As Exception
+    '            Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta.", True, True, True, True, True, False, False)
+    '        End Try
 
 
-            If dsc2.Tables("detventa").Rows.Count > 0 Then
-                For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
-                    sSql = "insert into ecventadet (dve_venta,dve_articulo,dve_upc,dve_precio,dve_cantidad,dve_total,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon,DVE_FALTINV,FueConF1,FueConF2,FueConF3, DVE_PORIEPS, DVE_IEPS) "
-                    sSql &= "values (" & iID & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" & 'serie
-                    dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) & "," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & "," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_TOTAL")) &
-                     "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) & "," &
-                     ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0 &
-                    "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) & "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_FAMILIA") & "'," & iRen + 1 & ",0," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF1") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF2") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF3") & '")" &
-                    "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) & "," &
-                    ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0 &
-                    ")"
-                    Try
-                        Base.Ejecuta(sSql, sCadenaConexionSQL)
-                    Catch ex As Exception
-                        Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet.", True, True, True, True, True, True, True)
-                    End Try
+    '        xrenglon = 1
+    '        If dsc2.Tables("detventa").Rows.Count > 0 Then
+
+    '            For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
+    '                With FpArticulos.ActiveSheet
+    '                    'xsql = "Select art_iva,art_ieps,art_costocap2,art_familia,art_cap1,art_uni1,art_cap2,art_uni2 from articulo where art_clave='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
+    '                    'Base.daQuery(xsql, sCadenaConexionSQL, dsc1, "precios")
+    '                    If .Cells(iRen, ColVenta.ColArtClave).Text.Trim <> "" Then
+    '                        iva = dsc2.Tables("detventa").Rows(iRen)("tmp_iva")
+    '                        IEPS = dsc2.Tables("detventa").Rows(iRen)("tmp_ieps")
+    '                        costo = dsc2.Tables("detventa").Rows(iRen)("tmp_costo")
+    '                        familia = dsc2.Tables("detventa").Rows(iRen)("tmp_familia")
+    '                        'cap1 = dsc1.Tables("precios").Rows(0)("art_cap1")
+    '                        'cap2 = dsc1.Tables("precios").Rows(0)("art_cap2")
+    '                        'uni1 = dsc1.Tables("precios").Rows(0)("art_uni1")
+    '                        'uni2 = dsc1.Tables("precios").Rows(0)("art_uni2")
+    '                    Else
+    '                        iva = 0
+    '                        IEPS = 0
+    '                        costo = 0
+    '                        familia = 0
+    '                        'cap1 = 1
+    '                        'cap2 = 1
+    '                        'uni1 = "PZ"
+    '                        'uni2 = "PZ"
+    '                    End If
+    '                    'dsc1.Tables.Remove("precios")
+    '                    precio = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_precio"))
+    '                    cant = CDbl(dsc2.Tables("detventa").Rows(iRen)("tmp_cantidad"))
+
+
+    '                    sSql = "insert into ecdetventa (dve_venta,dve_articulo,dve_precio,dve_cantidad,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon, DVE_PORIEPS, DVE_IEPS) "
+    '                    sSql &= "values (" & iID & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & precio & "," & cant & "," & 'serie
+    '                     iva & "," & ((precio * cant) / (1 + (iva / 100.0))) * iva / 100 & "," & costo & "," & cant * costo & ",'" & familia & "'," & iRen + 1 & "," & IEPS & "," & ((precio * cant) / (1 + (IEPS / 100))) * IEPS / 100 & ")"
+    '                    Try
+    '                        Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                    Catch ex As Exception
+    '                        dsc2.Tables.Remove("detventa")
+    '                        Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta.", True, True, True, True, True, True, False)
+    '                    End Try
 
 
 
-                    sSql = "EXEC CARGAEST  " & "'" &
-                    dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" &
-                    dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
-                    CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))
+    '                    'sSql = "select * from ecpromopuntos where prom_articulo='" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'"
+    '                    'Base.daQuery(sSql, sCadenaConexionSQL, dsc, "promo")
+    '                    'If dsc.Tables("promo").Rows.Count > 0 Then
+    '                    '    sSql = "insert into eccanjepuntos (canje_ticket,canje_fecha,canje_renglon,canje_articulo,canje_cantidad,canje_puntos,canje_usados,canje_saldo) " &
+    '                    '        " values (" & iID & ",getdate()," & xrenglon & ",'" & dsc2.Tables("detventa").Rows(iRen)("tmp_articulo") & "'," & cant & "," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ",0," & CDbl(dsc.Tables("promo").Rows(0)("prom_puntos")) * cant & ")" 'serie
+    '                    '    sipuntos = True
+    '                    '    Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                    '    xrenglon = xrenglon + 1
 
-                    'Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                    'End If
+    '                    'dsc.Tables.Remove("promo")
+    '                End With
+    '            Next iRen
+    '        End If
 
-                Next iRen
-
-            End If
-            dsc2.Tables.Remove("DETVENTA")           '----------------------------------------------------------------------------
-
-
-            Try
-                sql = "exec aplicaventainventario " & iID & ",1" 'serie
-                Base.Ejecuta(sql, sCadenaConexionSQL)
-            Catch ex As Exception
-                MsgBox("Error en Procedimiento AplicaVentaInventario." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Se requerir· rec·lculo.", MsgBoxStyle.Critical, "Punto de Venta")
-            End Try
+    '        dsc2.Tables.Remove("detventa")
 
 
-            'dsc.Tables.Remove("maximo")
-        Catch ex As Exception
-            'Esto es m·s relevante, no se pudo insertar en ECVenta, aun aSÌ, no hay gravedad. Solo reintentar.
-            Return ("Error al registrar la informaciÛn en ECVenta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
-        End Try
-        Return ("OK", False, False, False, False, False, False, False)
-    End Function
+    '        '-----------------------------------------------------------------------------
+    '        'PARA REGISTRAR DATOS EN LA TABLA DE VENTASDETALLADAS ECVENTADET
+    '        sql = "SELECT * FROM TMPAUXVTA1  where tmp_usuario='" & Globales.caja & "'"
+    '        Try
+    '            Base.daQuery(sql, sCadenaConexionSQL, dsc2, "detventa")
+    '        Catch ex As Exception
+    '            Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1.", True, True, True, True, True, True, False)
+    '        End Try
+
+
+    '        If dsc2.Tables("detventa").Rows.Count > 0 Then
+    '            For iRen = 0 To dsc2.Tables("detventa").Rows.Count - 1
+    '                sSql = "insert into ecventadet (dve_venta,dve_articulo,dve_upc,dve_precio,dve_cantidad,dve_total,dve_poriva,dve_iva,dve_costou,dve_costo,dve_familia,dve_renglon,DVE_FALTINV,FueConF1,FueConF2,FueConF3, DVE_PORIEPS, DVE_IEPS) "
+    '                sSql &= "values (" & iID & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" & 'serie
+    '                dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) & "," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & "," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_TOTAL")) &
+    '                 "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) & "," &
+    '                 ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIVA")) / 100.0 &
+    '                "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) & "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_COSTOU")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD")) & ",'" & dsc2.Tables("DETVENTA").Rows(iRen)("TMP_FAMILIA") & "'," & iRen + 1 & ",0," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF1") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF2") & "," & dsc2.Tables("DETVENTA").Rows(iRen)("FueConF3") & '")" &
+    '                "," & CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) & "," &
+    '                ((CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PRECIO")) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))) / (1 + (CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0))) * CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_PORIEPS")) / 100.0 &
+    '                ")"
+    '                Try
+    '                    Base.Ejecuta(sSql, sCadenaConexionSQL)
+    '                Catch ex As Exception
+    '                    Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet.", True, True, True, True, True, True, True)
+    '                End Try
+
+
+
+    '                sSql = "EXEC CARGAEST  " & "'" &
+    '                dsc2.Tables("DETVENTA").Rows(iRen)("TMP_ARTICULO") & "','" &
+    '                dsc2.Tables("DETVENTA").Rows(iRen)("TMP_UPC") & "'," &
+    '                CDbl(dsc2.Tables("DETVENTA").Rows(iRen)("TMP_CANTIDAD"))
+
+    '                'Base.Ejecuta(sSql, sCadenaConexionSQL)
+
+    '            Next iRen
+
+    '        End If
+    '        dsc2.Tables.Remove("DETVENTA")           '----------------------------------------------------------------------------
+
+
+    '        Try
+    '            sql = "exec aplicaventainventario " & iID & ",1" 'serie
+    '            Base.Ejecuta(sql, sCadenaConexionSQL)
+    '        Catch ex As Exception
+    '            MsgBox("Error en Procedimiento AplicaVentaInventario." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Se requerir√° rec√°lculo.", MsgBoxStyle.Critical, "Punto de Venta")
+    '        End Try
+
+
+    '        'dsc.Tables.Remove("maximo")
+    '    Catch ex As Exception
+    '        'Esto es m√°s relevante, no se pudo insertar en ECVenta, aun aS√≠, no hay gravedad. Solo reintentar.
+    '        Return ("Error al registrar la informaci√≥n en ECVenta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
+    '    End Try
+    '    Return ("OK", False, False, False, False, False, False, False)
+    'End Function
 
     Public Sub imprimeTicket(ByRef pre As Collection, ByVal FolioTicket As String)
         Dim oImpresion As Impresion
@@ -4050,7 +4073,7 @@ Public Class FrVenta
         End With
 
         TxtControl.Text = "0"
-        LbClienteTicket.Text = "Cliente: P˙blico en General"
+        LbClienteTicket.Text = "Cliente: P√∫blico en General"
         Me.pBoxF1.BackgroundImage = Global.ECVENTA4.My.Resources.Resources._1485477097_avatar_78580
         LbF1.Text = "F1 - Ligar Venta a Cliente"
 
@@ -4135,7 +4158,7 @@ Public Class FrVenta
         Dim sql2 As String
         Dim errorcode As Integer
         Dim iva As Integer
-        Dim VENT As New VENTANITA("øDesea cancelar el Articulo?", "BORRAR")
+        Dim VENT As New VENTANITA("¬øDesea cancelar el Articulo?", "BORRAR")
         Dim xcve As String
 
         If ModifierKeys <> ModifierKeys.None Then
@@ -4156,10 +4179,10 @@ Public Class FrVenta
         If e.KeyCode = Keys.Home Then
             If FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.RowCount - 1, ColVenta.ColCantidad).Value > 0 Then
                 If FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value = "*" Then
-                    MsgBox("Se Registro el ArtÌculo como entregado en caja", MsgBoxStyle.Information)
+                    MsgBox("Se Registro el Art√≠culo como entregado en caja", MsgBoxStyle.Information)
                     FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value = ""
                 Else
-                    MsgBox("Se Registro el ArtÌculo para entrega de Producto", MsgBoxStyle.Information)
+                    MsgBox("Se Registro el Art√≠culo para entrega de Producto", MsgBoxStyle.Information)
                     FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value = "*"
                 End If
                 sql = "update TMPAUXVTA2 set TraeVale='" & FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value & "' where usuario='" & Globales.caja & "' and Renglon=" & FpArticulos.ActiveSheet.RowCount - 1
@@ -4190,7 +4213,7 @@ Public Class FrVenta
             If FpArticulos.ActiveSheet.RowCount = 0 Then
                 Me.txt_tipoventa.Enabled = True
                 TxtControl.Text = "0"
-                LbClienteTicket.Text = "Cliente: P˙blico en General"
+                LbClienteTicket.Text = "Cliente: P√∫blico en General"
                 Me.pBoxF1.BackgroundImage = Global.ECVENTA4.My.Resources.Resources._1485477097_avatar_78580
                 LbF1.Text = "F1 - Ligar Venta a Cliente"
                 Me.txt_tipoventa.Focus()
@@ -4319,7 +4342,7 @@ Public Class FrVenta
 
         'pago credito
         If e.KeyCode = Keys.F8 And formaspago Then
-            Me.LFORPAG.Text = "CrÈdito"
+            Me.LFORPAG.Text = "Cr√©dito"
             Me.LFORPAG.Visible = True
             tx_cantidad.Text = ""
             txb_credito.Text = ""
@@ -4366,11 +4389,11 @@ Public Class FrVenta
             Else
                 Dim motivos = ObtenerMotivosAutorizacion()
                 If motivos.Count > 0 Then
-                    'SÌ hay motivos: llenar panel/listbox
+                    'S√≠ hay motivos: llenar panel/listbox
                     Using xConLocal As New SqlConnection(Globales.sCadenaConexionSQL)
                         Dim auth As FingerprintAuthResult = AutorizacionConHuella.PromptFingerprint(xConLocal, "Supervisor", -1, Me, motivos:=motivos)
                         If auth.Approved Then
-                            RegistroHistorial.HistorialAutorizaciones(xConLocal, My.Computer.Name, auth.UserName, -1, "DevoluciÛn", "DevoluciÛn de MercancÌa")
+                            RegistroHistorial.HistorialAutorizaciones(xConLocal, My.Computer.Name, auth.UserName, -1, "Devoluci√≥n", "Devoluci√≥n de Mercanc√≠a")
                         Else
                             Exit Sub
                         End If
@@ -4381,7 +4404,7 @@ Public Class FrVenta
                     If FpFormasPago.ActiveSheet.Cells(iren, 0).Value Is Nothing Then Continue For
                     Dim TipoPago As String = LTrim(RTrim(FpFormasPago.ActiveSheet.Cells(iren, 0).Text))
                     Dim TipoTarjetaStr As String = LTrim(RTrim(FpFormasPago.ActiveSheet.Cells(iren, 3).Text.ToUpper))
-                    If TipoPago = "Tarjeta" AndAlso Not (TipoTarjetaStr <> "CrÈdito" OrElse TipoTarjetaStr <> "DÈbito") Then
+                    If TipoPago = "Tarjeta" AndAlso Not (TipoTarjetaStr <> "Cr√©dito" OrElse TipoTarjetaStr <> "D√©bito") Then
                         MsgBox("Debe seleccionar el tipo de tarjeta.", vbExclamation, "Tipo Tarjeta")
                         FpFormasPago.ActiveSheet.RemoveRows(iren, 1)
                         sumapagos()
@@ -4466,20 +4489,20 @@ Public Class FrVenta
 
     Private Function RecorreSpread(ByVal UPCUPC As String, ByVal cantidad As Decimal, ByVal CancelandoConF3 As Boolean) As Boolean
 
-        ' 1. SI ES UNA VENTA (Cantidad Positiva) -> °SIEMPRE PASE USTED!
-        ' No nos importa si el grid est· vacÌo o lleno. Si est·s vendiendo, 
-        ' RecorreSpread no debe estorbar. El trabajo de juntar repetidos lo har· agregaArticulo.
+        ' 1. SI ES UNA VENTA (Cantidad Positiva) -> ¬°SIEMPRE PASE USTED!
+        ' No nos importa si el grid est√° vac√≠o o lleno. Si est√°s vendiendo, 
+        ' RecorreSpread no debe estorbar. El trabajo de juntar repetidos lo har√° agregaArticulo.
         If cantidad >= 0 Then
             Return True
         End If
 
         ' =========================================================
-        ' A PARTIR DE AquÌ, SOLO LÛgica DE CancelaciÛn (Cantidad Negativa)
+        ' A PARTIR DE Aqu√≠, SOLO L√≥gica DE Cancelaci√≥n (Cantidad Negativa)
         ' =========================================================
 
-        ' Si el carro est· vacÌo y quieres cancelar -> BLOQUEO
+        ' Si el carro est√° vac√≠o y quieres cancelar -> BLOQUEO
         If FpArticulos.ActiveSheet.RowCount = 0 Then
-            MsgBox("No puede cancelar productos de una venta vacÌa.", vbExclamation, "Error")
+            MsgBox("No puede cancelar productos de una venta vac√≠a.", vbExclamation, "Error")
             Return False
         End If
 
@@ -4490,12 +4513,12 @@ Public Class FrVenta
         With FpArticulos.ActiveSheet
             For i As Integer = 0 To .RowCount - 1
 
-                ' Si editamos con F3, ignoramos el renglÛn actual para no contar lo que estamos borrando
+                ' Si editamos con F3, ignoramos el rengl√≥n actual para no contar lo que estamos borrando
                 If CancelandoConF3 AndAlso i = (.RowCount - 1) Then
                     Continue For
                 End If
 
-                ' Sumamos inventario histÛrico
+                ' Sumamos inventario hist√≥rico
                 If .Cells(i, ColVenta.ColUPCInv).Text.Trim = UPCUPC Then
                     totpzas += CDec(.Cells(i, ColVenta.ColCantidad).Value)
                     Encontrado = True
@@ -4506,17 +4529,17 @@ Public Class FrVenta
         'cancelacion = False
         'Me.l_cancelacion.Visible = False
 
-        ' VALIDACI”N: øAlcanza el saldo para cubrir la CancelaciÛn?
+        ' VALIDACI√ìN: ¬øAlcanza el saldo para cubrir la Cancelaci√≥n?
         If (totpzas - CantidadAbsoluta) >= 0 Then
             Return True
         Else
             ' Mensajes de Error (Solo salen porque cantidad es negativa)
             If CancelandoConF3 Then
-                MsgBox("No puede devolver m·s cantidad de la que ha vendido.", vbExclamation, "Cantidad Inv·lida")
+                MsgBox("No puede devolver m√°s cantidad de la que ha vendido.", vbExclamation, "Cantidad Inv√°lida")
             ElseIf Encontrado Then
                 MsgBox("La cantidad a cancelar excede lo vendido.", vbExclamation, "Cancelar")
             Else
-                MsgBox("El producto no se encuentra registrado para CancelaciÛn.", vbExclamation, "Cancelar")
+                MsgBox("El producto no se encuentra registrado para Cancelaci√≥n.", vbExclamation, "Cancelar")
             End If
 
             Return False
@@ -4526,22 +4549,22 @@ Public Class FrVenta
 
     Private Sub tx_cantidad_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles tx_cantidad.KeyDown
 
-        ' 1. ESCAPE: Cancelar operaciÛn y limpiar
+        ' 1. ESCAPE: Cancelar operaci√≥n y limpiar
         If e.KeyCode = Keys.Escape Then
             If Lkilos.Visible Then
 
                 With FpArticulos.ActiveSheet
                     Dim iRow As Integer = .RowCount - 1
 
-                    ' Verificamos si el ˙ltimo renglÛn est· en 0 (Esperando peso)
+                    ' Verificamos si el √∫ltimo rengl√≥n est√° en 0 (Esperando peso)
                     If iRow >= 0 Then
                         Dim CantidadActual As Decimal = CDec(.Cells(iRow, ColVenta.ColCantidad).Value)
 
                         If CantidadActual = 0 Then
-                            ' °SÌ! Es el renglÛn fantasma. Lo borramos.
+                            ' ¬°S√≠! Es el rengl√≥n fantasma. Lo borramos.
                             .RemoveRows(iRow, 1)
 
-                            ' tambiÈn borramos de BD si agregaArticulo ya hizo el INSERT de 0
+                            ' tambi√©n borramos de BD si agregaArticulo ya hizo el INSERT de 0
                             Dim SQLDel As String = "DELETE FROM tmpauxvta2 WHERE renglon=" & iRow & " AND usuario='" & Globales.caja & "'"
                             Base.Ejecuta(SQLDel, sCadenaConexionSQL)
                         End If
@@ -4568,28 +4591,28 @@ Public Class FrVenta
             Exit Sub
         End If
 
-        ' 2. ENTER: Procesar la acciÛn
+        ' 2. ENTER: Procesar la acci√≥n
         If e.KeyCode = Keys.Enter Then
 
-            ' VALIDACI”N b·sicade N˙mero (evita crashes)
-            ' Permitimos operaciones matem·ticas simples solo si NO es pago
+            ' VALIDACI√ìN b√°sicade N√∫mero (evita crashes)
+            ' Permitimos operaciones matem√°ticas simples solo si NO es pago
             If Not formaspago AndAlso Not IsNumeric(tx_cantidad.Text) Then
-                ' Intentar resolver operaciÛn matem·tica (ej. "2*5")
+                ' Intentar resolver operaci√≥n matem√°tica (ej. "2*5")
                 Try
                     Dim dt As New DataTable()
                     Dim result As Object = dt.Compute(tx_cantidad.Text, "")
                     tx_cantidad.Text = Convert.ToDecimal(result).ToString()
                 Catch
-                    MsgBox("Ingrese un valor numÈrico v·lido.", vbExclamation, "AtenciÛn")
+                    MsgBox("Ingrese un valor num√©rico v√°lido.", vbExclamation, "Atenci√≥n")
                     tx_cantidad.SelectAll()
                     Exit Sub
                 End Try
             ElseIf Not IsNumeric(tx_cantidad.Text) Then
-                MsgBox("Ingrese un valor numÈrico.", vbExclamation, "AtenciÛn")
+                MsgBox("Ingrese un valor num√©rico.", vbExclamation, "Atenci√≥n")
                 Exit Sub
             End If
 
-            ' === DIVISI”N DE CAMINOS ===
+            ' === DIVISI√ìN DE CAMINOS ===
             If formaspago Then
                 ProcesarPago()
             Else
@@ -4617,7 +4640,7 @@ Public Class FrVenta
             Case Else : NombrePago = "Devolucion"
         End Select
 
-        ' 2. Validaciones de Tope (No pagar m·s de lo que se debe)
+        ' 2. Validaciones de Tope (No pagar m√°s de lo que se debe)
         ' Solo validamos sobrepago si NO es efectivo (el efectivo da cambio)
         If fpago <> 1 Then
             Dim TotalPagado As Decimal = 0
@@ -4635,19 +4658,19 @@ Public Class FrVenta
                 End If
             Next
 
-            ' VALIDACI”N matem·tica
+            ' VALIDACI√ìN matem√°tica
             Dim SaldoPendiente As Decimal = totalote - TotalPagado - TotalEfectivo
-            ' Nota: Usamos una pequeÒa tolerancia de 0.01 por redondeos
+            ' Nota: Usamos una peque√±a tolerancia de 0.01 por redondeos
             If (MontoPagar) > (SaldoPendiente + 0.05D) Then
                 Dim Autorizado As Boolean = False
 
                 ' 1. Preguntamos antes de bloquear
-                If MsgBox("El pago excede el saldo pendiente. øDesea autorizarlo con clave de supervisor?",
+                If MsgBox("El pago excede el saldo pendiente. ¬øDesea autorizarlo con clave de supervisor?",
                           vbQuestion + vbYesNo, "Pago Excedente") = MsgBoxResult.Yes Then
 
-                    ' 2. Llamamos a tu ventana de AutorizaciÛn
+                    ' 2. Llamamos a tu ventana de Autorizaci√≥n
                     AutorizaCierreCambioVentana = False
-                    ' Nota: Si no has agregado 'PagoExcedente' al New, quÌtalo y usa solo (Me, Nothing)
+                    ' Nota: Si no has agregado 'PagoExcedente' al New, qu√≠talo y usa solo (Me, Nothing)
                     Using oforma1 As New paraautorizarSALIDA(Me, Nothing, PagandoExcedente:=True)
                         oforma1.StartPosition = FormStartPosition.CenterScreen
                         oforma1.ShowDialog()
@@ -4658,8 +4681,8 @@ Public Class FrVenta
                     End If
                 End If
 
-                ' 3. Si NO est· autorizado (ya sea porque dijo No, o porque fallÛ la clave)
-                ' EJECUTAMOS TU LÛgica ORIGINAL DE BLOQUEO
+                ' 3. Si NO est√° autorizado (ya sea porque dijo No, o porque fall√≥ la clave)
+                ' EJECUTAMOS TU L√≥gica ORIGINAL DE BLOQUEO
                 If Not Autorizado Then
                     MsgBox("Con formas de pago distintas al efectivo, no puede exceder el monto del ticket.", vbExclamation, "Monto Incorrecto")
                     LimpiarYSalir()
@@ -4678,10 +4701,10 @@ Public Class FrVenta
             Referencia = TXB_BANCO.Text
         End If
 
-        ' 4. Validaciones de CrÈdito
+        ' 4. Validaciones de Cr√©dito
         If fpago = 4 Then
             If MontoPagar > acredito Then
-                Dim f As New VENTANITA("LÌmite de CrÈdito insuficiente.", "CrÈdito Inv·lido")
+                Dim f As New VENTANITA("L√≠mite de Cr√©dito insuficiente.", "Cr√©dito Inv√°lido")
                 f.ShowDialog()
                 LimpiarYSalir()
                 Exit Sub
@@ -4697,7 +4720,7 @@ Public Class FrVenta
             .Cells(iRow, 1).Value = MontoPagar
             .Cells(iRow, 2).Value = Referencia
 
-            ' LÛgica de ComisiÛn (Vales / Tarjeta)
+            ' L√≥gica de Comisi√≥n (Vales / Tarjeta)
             If NombrePago = "Vales" AndAlso (TIPOVENTA = 2 Or TIPOVENTA = 3) Then
                 .RowCount += 1
                 .Cells(.RowCount - 1, 0).Value = "Comision Vales"
@@ -4732,8 +4755,8 @@ Public Class FrVenta
             Dim FactorCaptura As Decimal = CDec(Val(.Cells(iRen, ColVenta.ColFactor).Value))
             If FactorCaptura <= 0D Then FactorCaptura = 1D
 
-            ' 1. VALIDACI”N DE SALDO (RecorreSpread)
-            ' Antes de mover nada, verificamos si es una CancelaciÛn v·lida (-1)
+            ' 1. VALIDACI√ìN DE SALDO (RecorreSpread)
+            ' Antes de mover nada, verificamos si es una Cancelaci√≥n v√°lida (-1)
             If NuevaCantidad < 0 Then
                 If Not RecorreSpread(UPC, NuevaCantidad, True) Then
                     LimpiarYSalir()
@@ -4741,7 +4764,7 @@ Public Class FrVenta
                 End If
             End If
 
-            ' 2. actualizaciÛn VISUAL Y BANDERAS
+            ' 2. actualizaci√≥n VISUAL Y BANDERAS
             .Cells(iRen, ColVenta.ColF3).Value = 1
             F3Cantidad = True
             .Cells(iRen, ColVenta.ColCantidad).Value = NuevaCantidad
@@ -4753,7 +4776,7 @@ Public Class FrVenta
             ' =========================================================
             ' 3. GUARDADO DIRECTO EN BD (UPDATE)
             ' =========================================================
-            ' AquÌ aseguramos que el cambio se guarde en tmpauxvta2
+            ' Aqu√≠ aseguramos que el cambio se guarde en tmpauxvta2
             Dim SQLUpdate As String = "UPDATE tmpauxvta2 SET cantidad=" & NuevaCantidad &
                                   ", FueConF3=1 WHERE renglon=" & iRen &
                                   " AND usuario='" & Globales.caja & "'"
@@ -4802,13 +4825,13 @@ Public Class FrVenta
                 End If
 
                 ' =========================================================
-                ' LÛgica DE COLORES F3
+                ' L√≥gica DE COLORES F3
                 ' =========================================================
-                ' 1. CancelaciÛn o Cero -> ROJO
+                ' 1. Cancelaci√≥n o Cero -> ROJO
                 If NuevaCantidad <= 0 Then
                     .Rows(iRen).ForeColor = Color.Red
 
-                    ' 2. Si bajÛ de precio (Precio actual vs Precio 1) -> VERDE
+                    ' 2. Si baj√≥ de precio (Precio actual vs Precio 1) -> VERDE
                     ' Nota: Comparamos contra BD_P1 que acabamos de traer de la base de datos
                 ElseIf CDec(.Cells(iRen, ColVenta.ColPrecio).Value) < BD_P1 AndAlso TIPOVENTA = 1 Then
                     .Rows(iRen).ForeColor = Color.Green
@@ -4822,7 +4845,7 @@ Public Class FrVenta
                     .Rows(iRen).ForeColor = Color.Black
                 End If
             Else
-                MsgBox("El ArtÌculo ya no se encuentra en el cat·logo.", vbCritical)
+                MsgBox("El Art√≠culo ya no se encuentra en el cat√°logo.", vbCritical)
                 Exit Sub
             End If
 
@@ -4831,8 +4854,8 @@ Public Class FrVenta
             ' =========================================================
             ' TRUCO IMPORTANTE: Pasamos SCANT y SCANTANT con el MISMO VALOR (NuevaCantidad).
             ' Esto hace que la "Diferencia" sea 0 dentro de ControlPrecios.
-            ' ASÌ, ControlPrecios NO intenta hacer otro UPDATE sumando cosas, 
-            ' pero SÌ ejecuta toda la LÛgica de VALIDACI”N de ofertas y peinado.
+            ' AS√≠, ControlPrecios NO intenta hacer otro UPDATE sumando cosas, 
+            ' pero S√≠ ejecuta toda la L√≥gica de VALIDACI√ìN de ofertas y peinado.
 
             CONTROLPRECIOS(UPCUPC:=UPC,
                DPRECIO1:=BD_P1,
@@ -4942,7 +4965,7 @@ Public Class FrVenta
                             'If TotalPagosEsp + CDbl(tx_cantidad.Text) > (Math.Round(totalote * IIf((TIPOVENTA = 2 Or TIPOVENTA = 3), 1.02, 1), 2)) Then
                             If Math.Round(TotalPagosEsp + (CDbl(tx_cantidad.Text) - ComTmp - TotalComision), 2) > totalote Then
 
-                                MsgBox("Con Formas de Pago distintas al efectivo, la cantidad m·xima a pagar es el monto del ticket.", vbExclamation, "Monto Incorrecto")
+                                MsgBox("Con Formas de Pago distintas al efectivo, la cantidad m√°xima a pagar es el monto del ticket.", vbExclamation, "Monto Incorrecto")
                                 LFORPAG.Visible = False
                                 tx_cantidad.Text = ""
                                 tx_cantidad.Visible = False
@@ -4967,7 +4990,7 @@ Public Class FrVenta
                         End If
                         If CDbl(Me.tx_cantidad.Text) > acredito And fpago = 4 Then
                             Dim forma As Form
-                            forma = New VENTANITA("LÌmite de CrÈdito insuficiente.", "CrÈdito Inv·lido")
+                            forma = New VENTANITA("L√≠mite de Cr√©dito insuficiente.", "Cr√©dito Inv√°lido")
                             forma.BringToFront()
                             forma.ShowDialog()
                             tx_cantidad.Text = ""
@@ -4981,7 +5004,7 @@ Public Class FrVenta
                         End If
                         If CDbl(Me.tx_cantidad.Text) > (Math.Round(totalote, 2) - Math.Round(totalpagos, 2)) And fpago = 4 Then
                             Dim forma As Form
-                            forma = New VENTANITA("La cantidad de CrÈdito no puede ser mayor a la cantidad pendiente de pago.", "CrÈdito Inv·lido")
+                            forma = New VENTANITA("La cantidad de Cr√©dito no puede ser mayor a la cantidad pendiente de pago.", "Cr√©dito Inv√°lido")
                             forma.BringToFront()
                             forma.ShowDialog()
                             tx_cantidad.Text = ""
@@ -5022,13 +5045,13 @@ Public Class FrVenta
 
                         Me.LFORPAG.Text = ""
                     Else
-                        MsgBox("Introduzca una cantidad menor, y/o que no sea cÛdigo de barras.", vbExclamation, "Punto de Venta")
+                        MsgBox("Introduzca una cantidad menor, y/o que no sea c√≥digo de barras.", vbExclamation, "Punto de Venta")
                         tx_cantidad.Text = ""
                         Me.tx_cantidad.Focus()
                         Exit Sub
                     End If
                 Else
-                    MsgBox("Introduzca un valor numÈrico.", vbExclamation, "Punto de Venta")
+                    MsgBox("Introduzca un valor num√©rico.", vbExclamation, "Punto de Venta")
                     tx_cantidad.Text = ""
                     Me.tx_cantidad.Focus()
                     Exit Sub
@@ -5041,7 +5064,7 @@ Public Class FrVenta
                             Dim result As Object = dataTable.Compute(tx_cantidad.Text, "")
                             Cantidad = Convert.ToDouble(result)
                         Catch ex As Exception
-                            MsgBox("Ingrese operaciÛn matem·tica correcta.", vbExclamation, "Punto de Venta")
+                            MsgBox("Ingrese operaci√≥n matem√°tica correcta.", vbExclamation, "Punto de Venta")
                             tx_cantidad.Focus()
                             Exit Sub
                         End Try
@@ -5110,7 +5133,7 @@ Public Class FrVenta
                                     End If
                                 End If
                             Else
-                                'Debo activarbloqueo? asumo que si est· el renglÛn es porque existe el producto, no veo caso
+                                'Debo activarbloqueo? asumo que si est√° el rengl√≥n es porque existe el producto, no veo caso
                             End If
                             DSC.Tables.Remove("ARTICULO")
                         End With
@@ -5226,11 +5249,11 @@ Public Class FrVenta
                 Dim PrecioCobrado As Decimal = CDec(Val(.Cells(i, ColVenta.ColPrecio).Value))
                 Dim TotalLinea As Decimal = CDec(Val(.Cells(i, ColVenta.ColTotal).Value))
 
-                ' Solo calculamos ahorro en renglones v·lidos (Cantidad > 0)
+                ' Solo calculamos ahorro en renglones v√°lidos (Cantidad > 0)
                 ' y donde realmente hubo un descuento (PrecioCobrado < PrecioPublico)
                 If Cantidad > 0 AndAlso PrecioCobrado < PrecioPublico Then
 
-                    ' C¡LCULO preciso del ahorro: (Lo que debiÛ costar) - (Lo que costÛ)
+                    ' C√ÅLCULO preciso del ahorro: (Lo que debi√≥ costar) - (Lo que cost√≥)
                     Dim AhorroEnRenglon As Decimal = (Cantidad * PrecioPublico) - TotalLinea
                     AhorroTotalCliente += AhorroEnRenglon
                 End If
@@ -5238,18 +5261,18 @@ Public Class FrVenta
         End With
 
         ' =========================================================
-        ' 3. DECISI”N FINAL (TOPE VS OBJETIVO)
+        ' 3. DECISI√ìN FINAL (TOPE VS OBJETIVO)
         ' =========================================================
 
         If AhorroTotalCliente <= 0 Then
-            ' Si no hubo ahorro, no hay margen para cobrar ComisiÛn bajo esta regla.
+            ' Si no hubo ahorro, no hay margen para cobrar Comisi√≥n bajo esta regla.
             Return 0
         ElseIf MontoComisionObjetivo > AhorroTotalCliente Then
-            ' Si la ComisiÛn del banco excede lo que se ahorrÛ el cliente,
-            ' topamos la ComisiÛn al ahorro (para que no salga perdiendo).
+            ' Si la Comisi√≥n del banco excede lo que se ahorr√≥ el cliente,
+            ' topamos la Comisi√≥n al ahorro (para que no salga perdiendo).
             Return AhorroTotalCliente
         Else
-            ' Si la ComisiÛn cabe dentro del ahorro, cobramos la ComisiÛn completa.
+            ' Si la Comisi√≥n cabe dentro del ahorro, cobramos la Comisi√≥n completa.
             Return MontoComisionObjetivo
         End If
     End Function
@@ -5278,14 +5301,14 @@ Public Class FrVenta
             For iRen As Integer = 0 To .RowCount - 1
 
                 ' 1. LECTURA SEGURA
-                ' ToUpper asegura que no importen May˙sculas/min˙sculas
+                ' ToUpper asegura que no importen May√∫sculas/min√∫sculas
                 Concepto = .Cells(iRen, 0).Text.Trim.ToUpper()
 
-                ' Val() evita que truene si la celda est· vacÌa
+                ' Val() evita que truene si la celda est√° vac√≠a
                 ImporteRenglon = CDec(Val(.Cells(iRen, 1).Value))
 
-                ' 2. LÛgica DE SIGNOS (ComisiÛn vs Pago Real)
-                ' InterpretaciÛn: La ComisiÛn est· en el grid pero NO cuenta como dinero que baja la deuda,
+                ' 2. L√≥gica DE SIGNOS (Comisi√≥n vs Pago Real)
+                ' Interpretaci√≥n: La Comisi√≥n est√° en el grid pero NO cuenta como dinero que baja la deuda,
                 ' por eso la restamos (o no la sumamos) al poder de pago.
 
                 If Concepto = "COMISION VALES" Or Concepto = "COMIS TAR" Then
@@ -5296,26 +5319,26 @@ Public Class FrVenta
             Next
         End With
 
-        ' 3. actualizaciÛn DE GLOBALES Y UI
+        ' 3. actualizaci√≥n DE GLOBALES Y UI
         totalpagos = dTotalPagado ' Actualizamos la variable global
 
         TotalPago = dTotalPagado
         TX_TOTALPAGO.Text = dTotalPagado.ToString("C2")  ' Formato Moneda ($1,234.50)
 
-        ' 4. C¡LCULO DE SALDO / CAMBIO
+        ' 4. C√ÅLCULO DE SALDO / CAMBIO
         ' totalote = Deuda Total
         ' totalpagos = Lo que ya dieron
         Dim Diferencia As Decimal = totalote - dTotalPagado
 
         If Diferencia <= 0 Then
-            ' CASO A: Ya cubriÛ el importe (o dio de m·s)
-            ' Tu LÛgica original muestra $0.00 AquÌ (indicando que "Ya no debe nada").
-            ' Si quisieras mostrar el CAMBIO A ENTREGAR, usarÌas: Math.Abs(Diferencia).ToString("C2")
+            ' CASO A: Ya cubri√≥ el importe (o dio de m√°s)
+            ' Tu L√≥gica original muestra $0.00 Aqu√≠ (indicando que "Ya no debe nada").
+            ' Si quisieras mostrar el CAMBIO A ENTREGAR, usar√≠as: Math.Abs(Diferencia).ToString("C2")
 
             lcambio.Text = "$0.00"
 
         Else
-            ' CASO B: todavÌa debe dinero (Saldo Pendiente)
+            ' CASO B: todav√≠a debe dinero (Saldo Pendiente)
             lcambio.Text = Diferencia.ToString("C2")
 
             ' Opcional: Color de alerta
@@ -5452,12 +5475,12 @@ Public Class FrVenta
             Select Case FpFormasPago.ActiveSheet.Cells(i, 0).Value.ToString.ToUpper.Trim
                 Case "TRANSFER" : StrPago = "   Pago con Transferencia"
                 Case "CHEQUE" : StrPago = "   Pago con Cheque"
-                Case "CREDITO" : StrPago = "   Pago con CrÈdito de Cliente"
+                Case "CREDITO" : StrPago = "   Pago con Cr√©dito de Cliente"
             End Select
 
             If StrPago <> "" Then
                 If Not agregoPagoHeader Then
-                    lines.Add("**Autorizaciones Por MÈtodo de Pago**")
+                    lines.Add("**Autorizaciones Por M√©todo de Pago**")
                     agregoPagoHeader = True
                 End If
                 lines.Add(StrPago)
@@ -5474,7 +5497,7 @@ Public Class FrVenta
             If cant <= 0D Then
                 If Not agregoCancelHeader Then
                     If lines.Count > 0 Then lines.Add("")
-                    lines.Add("**Autorizaciones Por Cancelaciones de ArtÌculos**")
+                    lines.Add("**Autorizaciones Por Cancelaciones de Art√≠culos**")
                     agregoCancelHeader = True
                 End If
 
@@ -5500,7 +5523,7 @@ Public Class FrVenta
 
             If ValidaTipoVenta() Then
                 'TxtControl.Text = 0
-                'LbClienteTicket.Text = "Cliente: P˙blico en General"
+                'LbClienteTicket.Text = "Cliente: P√∫blico en General"
                 Dim ClienteOrig As Integer = CInt(TxtControl.Text)
                 Dim ClienteOrigStr As String = LbClienteTicket.Text
 
@@ -5522,14 +5545,14 @@ Public Class FrVenta
                         End If
                     Case Else
 
-                        MsgBox("Tipo de Venta Inv·lida.", vbExclamation, "Punto de Venta")
+                        MsgBox("Tipo de Venta Inv√°lida.", vbExclamation, "Punto de Venta")
                         txt_tipoventa.Enabled = True
                         txt_tipoventa.Text = "1"
                         txt_tipoventa.Focus()
                         Exit Sub
                 End Select
                 Me.pBoxF1.BackgroundImage = Global.ECVENTA4.My.Resources.Resources._1485477207_magnifier_786081
-                LbF1.Text = "F1 - Buscar ArtÌculo"
+                LbF1.Text = "F1 - Buscar Art√≠culo"
                 txt_tipoventa.Enabled = False
                 Me.TX_UPC.Focus()
             End If
@@ -5557,16 +5580,35 @@ Public Class FrVenta
                 SQL = "INSERT INTO tmpauxvta2 (" &
                       "renglon, usuario, articulo, cantidad, tipo, " &
                       "FueConF1, FueConF2, FueConF3, FueConF6, " &
-                      "ClienteID, ArtClave, TraeVale, Factor) " & ' <--- AquÌ definimos el orden explÌcito
+                      "ClienteID, ArtClave, TraeVale, Factor, FactorFactura) " &
                       "SELECT " &
-                      "dcot_renglon-1, '" & Globales.caja & "', dcot_articulo, dcot_cantidad*dcot_cap1*dcot_cap2, tipo, " &
-                      "1, 0, 0, 0, " & ' <--- AquÌ mandamos el 0 a F6 (y 1 a F1 porque viene de cotizaciÛn)
-                      "ClienteID, art_clave, '', 1 " & ' <--- AgreguÈ Factor 1 al final para prevenir errores
+                      "dcot_renglon - 1, " &
+                      "'" & Globales.caja & "', " &
+                      "dcot_articulo, " &
+                      "dcot_cantidad, " &
+                      "tipo, " &
+                      "1, " &
+                      "0, " &
+                      "0, " &
+                      "ISNULL(FueConF6, 0), " &
+                      "ClienteID, " &
+                      "art_clave, " &
+                      "'', " &
+                      "CASE " &
+                      "WHEN ISNULL(dcot_factoraplicado, 0) > 1 THEN dcot_factoraplicado " &
+                      "WHEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) > 1 THEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) " &
+                      "ELSE 1 END " &
+                                            ", " &
+                      "CASE " &
+                      "WHEN ISNULL(dcot_factoraplicado, 0) > 1 THEN dcot_factoraplicado " &
+                      "WHEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) > 1 THEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) " &
+                      "ELSE 1 END " &
                       "FROM ecdetcotiza " &
-                      "JOIN eccotizaciones ON dcot_compra=cot_id " &
-                      "JOIN xupc ON upc_upc=dcot_articulo " &
-                      "JOIN articulo ON upc_cveart=art_clave " &
-                      "WHERE dcot_articulo<>'' AND dcot_compra=" & TxtControl.Text
+                      "JOIN eccotizaciones ON dcot_compra = cot_id " &
+                      "JOIN xupc ON upc_upc = dcot_articulo " &
+                      "JOIN articulo ON upc_cveart = art_clave " &
+                      "WHERE dcot_articulo <> '' AND dcot_compra = " & TxtControl.Text
+
 
                 Base.Ejecuta(SQL, sCadenaConexionSQL)
 
@@ -5583,7 +5625,20 @@ Public Class FrVenta
                     Base.daQuery(SQL, sCadenaConexionSQL, DSC, "Ticket")
                     For i = 0 To DSC.Tables("Ticket").Rows.Count - 1
                         TX_UPC.Text = DSC.Tables("Ticket").Rows(i)("articulo").ToString.Trim
-                        ProcAgregaArticulo(True, DSC.Tables("Ticket").Rows(i)("Cantidad"), DSC.Tables("Ticket").Rows(i)("FueConF1"), DSC.Tables("Ticket").Rows(i)("FueConF2"), DSC.Tables("Ticket").Rows(i)("FueConF3"), DSC.Tables("Ticket").Rows(i)("TraeVale"))
+                        Dim fueConF6 As Integer = DSC.Tables("Ticket").Rows(i).Field(Of Integer?)("FueConF6").GetValueOrDefault(0)
+                        Dim factor As Decimal = CDec(Val(DSC.Tables("Ticket").Rows(i)("Factor")))
+
+                        VentaCajaVirtual = (fueConF6 = 1)
+                        ToggleCajaVirtual()
+
+                        ProcAgregaArticulo(True,
+                           DSC.Tables("Ticket").Rows(i)("Cantidad"),
+                           DSC.Tables("Ticket").Rows(i)("FueConF1"),
+                           DSC.Tables("Ticket").Rows(i)("FueConF2"),
+                           DSC.Tables("Ticket").Rows(i)("FueConF3"),
+                           DSC.Tables("Ticket").Rows(i)("TraeVale"),
+                           fueConF6,
+                           factor, CDec(Val(DSC.Tables("Ticket").Rows(i)("FactorFactura"))))
                     Next
                     DSC.Tables.Remove("Ticket")
                     Me.pBoxF1.BackgroundImage = Global.ECVENTA4.My.Resources.Resources._1485477097_avatar_78580
@@ -5597,7 +5652,7 @@ Public Class FrVenta
                 txt_tipoventa.Enabled = False
                 txt_tipoventa.Text = TipoVentaOrig
                 Me.pBoxF1.BackgroundImage = Global.ECVENTA4.My.Resources.Resources._1485477207_magnifier_786081
-                LbF1.Text = "F1 - Buscar ArtÌculo"
+                LbF1.Text = "F1 - Buscar Art√≠culo"
                 TX_UPC.Focus()
             End If
         ElseIf e.KeyCode = Keys.F1 Then
@@ -5610,7 +5665,7 @@ Public Class FrVenta
 
             CambiaCliente(TxtControl.Text, LbClienteTicket.Text, RequiereAutorizacion:=False)
         ElseIf e.KeyCode = Keys.Escape Then
-            LbClienteTicket.Text = "Cliente: P˙blico en General"
+            LbClienteTicket.Text = "Cliente: P√∫blico en General"
             TxtControl.Text = 0
             TIPOVENTA = 1
             txt_tipoventa.Text = 1
@@ -5629,7 +5684,7 @@ Public Class FrVenta
             Return True
         End If
 
-        MsgBox("Tipo de Venta Inv·lido. sÛlo se permite 1, 2 o 3.", MsgBoxStyle.Exclamation)
+        MsgBox("Tipo de Venta Inv√°lido. s√≥lo se permite 1, 2 o 3.", MsgBoxStyle.Exclamation)
         txt_tipoventa.Text = "1"
         txt_tipoventa.Focus()
         txt_tipoventa.SelectAll()
@@ -5709,10 +5764,10 @@ Public Class FrVenta
             If e.KeyCode = (Keys.F1) Then
                 If FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.ActiveRowIndex, ColVenta.ColCantidad).Value > 0 Then
                     If FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.ActiveRowIndex, ColVenta.ColVale).Value = "*" Then
-                        MsgBox("Se Registro el ArtÌculo como entregado en caja", MsgBoxStyle.Information)
+                        MsgBox("Se Registro el Art√≠culo como entregado en caja", MsgBoxStyle.Information)
                         FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.ActiveRowIndex, ColVenta.ColVale).Value = ""
                     Else
-                        MsgBox("Se Registro el ArtÌculo para entrega de Producto", MsgBoxStyle.Information)
+                        MsgBox("Se Registro el Art√≠culo para entrega de Producto", MsgBoxStyle.Information)
                         FpArticulos.ActiveSheet.Cells(FpArticulos.ActiveSheet.ActiveRowIndex, ColVenta.ColVale).Value = "*"
                     End If
                     Dim SQL As String
@@ -5745,7 +5800,7 @@ Public Class FrVenta
             SQL = "select * from ecusuariosx where emp_tipo='Supervisor' and emp_password='" & txt_panelofe.Text & "'"
             Base.daQuery(SQL, sCadenaConexionSQL, dsc, "Autoriza")
             If dsc.Tables("Autoriza").Rows.Count > 0 Then
-                If MsgBox("øYa retirÛ todas las etiquetas de la oferta expirada?", vbYesNo, "Oferta Expirada") = MsgBoxResult.Yes Then
+                If MsgBox("¬øYa retir√≥ todas las etiquetas de la oferta expirada?", vbYesNo, "Oferta Expirada") = MsgBoxResult.Yes Then
                     Base.Ejecuta("update ecboletinofer set EtiqCamb=0, Activo=0, Supervisor='" & dsc.Tables("Autoriza").Rows(0)("emp_nombre") & "' where ID=" & CInt(LbIDOferta.Text), sCadenaConexionSQL)
                     MsgBox("Oferta desactivada correctamente.", vbInformation, "Oferta Expirada")
                 End If
@@ -5757,7 +5812,7 @@ Public Class FrVenta
             End If
             dsc.Tables.Remove("Autoriza")
         Else
-            MsgBox("Ingrese cÛdigo de supervisor.", vbInformation, "Oferta Expirada")
+            MsgBox("Ingrese c√≥digo de supervisor.", vbInformation, "Oferta Expirada")
             txt_panelofe.Focus()
         End If
     End Sub
@@ -5781,7 +5836,7 @@ Public Class FrVenta
         End If
 
         If Not valido Then
-            MsgBox("Los datos del N˙mero de TelÈfono son inv·lidos, corrija ", MsgBoxStyle.Exclamation)
+            MsgBox("Los datos del N√∫mero de Tel√©fono son inv√°lidos, corrija ", MsgBoxStyle.Exclamation)
             txt_ctel1.Text = ""
             txt_ctel2.Text = ""
             txt_ctel3.Text = ""
@@ -5852,7 +5907,8 @@ Public Class FrVenta
                              ByRef cancelacion As Boolean,
                              ByVal FueConF3 As Boolean,
                              ByVal PendFueConF6 As Integer,
-                             ByVal PendFactor As Decimal)
+                             ByVal PendFactor As Decimal,
+                             ByVal PendFactorFactura As Decimal)
 
         ' 1. LLENADO BASE DEL OBJETO
         Dim NuevoItem As New ArticuloVenta()
@@ -5871,7 +5927,7 @@ Public Class FrVenta
             .TipoVenta = TIPOVENTA
 
             ' ==========================================================================
-            ' LÛgica DE OFERTA Y DESCRIPCI”N (AHORA CON DECIMALES)
+            ' L√≥gica DE OFERTA Y DESCRIPCI√ìN (AHORA CON DECIMALES)
             ' ==========================================================================
             Dim EnOferta As Boolean = False
 
@@ -5888,9 +5944,11 @@ Public Class FrVenta
             End If
 
             ' ==========================================================================
-            ' LÛgica DE CAJAS (TODO CON DECIMAL)
+            ' L√≥gica DE CAJAS (TODO CON DECIMAL)
             ' ==========================================================================
             .Factor = 1D
+            .FactorFactura = 1D
+
             Dim EsVentaCajaLocal As Boolean = False
             Dim PrecioBaseMayoreo As Decimal = CDec(dsc.Tables("articulo").Rows(0)("ART_PRECIO3"))
 
@@ -5899,6 +5957,10 @@ Public Class FrVenta
                 If PendFactor <= 0D Then PendFactor = 1D
 
                 .Factor = PendFactor
+                If PendFactorFactura <= 0D Then PendFactorFactura = PendFactor
+                If PendFactorFactura <= 0D Then PendFactorFactura = 1D
+                .FactorFactura = PendFactorFactura
+
                 .EsCajaVirtual = (PendFueConF6 = 1)
                 EsVentaCajaLocal = (.Factor > 1D)
 
@@ -5913,32 +5975,42 @@ Public Class FrVenta
                 ' Nota: CDec(1) es seguro, pero CDec del dataset evita el double
                 If VentaCajaVirtual AndAlso CDec(dsc.Tables("articulo").Rows(0)("Factor")) = 1D Then
 
-                    ' MultiplicaciÛn Decimal pura
+                    ' Multiplicaci√≥n Decimal pura
                     Dim Contenido As Decimal = CDec(dsc.Tables("articulo").Rows(0)("art_cap1")) * CDec(dsc.Tables("articulo").Rows(0)("art_cap2"))
 
                     If Contenido > 1D Then
                         EsVentaCajaLocal = True
                         .Factor = Contenido
+                        .FactorFactura = Contenido
                         .Descripcion = "Caja - " & dsc.Tables("articulo").Rows(0)("upc_descripcion").ToString.Trim & " (" & dsc.Tables("articulo").Rows(0)("art_cap1") & dsc.Tables("articulo").Rows(0)("art_uni1") & " / " & dsc.Tables("articulo").Rows(0)("art_cap2") & dsc.Tables("articulo").Rows(0)("art_uni2") & ")"
                     End If
                     .EsCajaVirtual = True
                     TX_UPC.BackColor = Color.White
 
-                    ' Caso B: Caja FÌsica
+                    ' Caso B: Caja F√≠sica
                 ElseIf CDec(dsc.Tables("articulo").Rows(0)("Factor")) > 1D Then
                     EsVentaCajaLocal = True
                     .Factor = CDec(dsc.Tables("articulo").Rows(0)("Factor"))
+                    .FactorFactura = .Factor
                     .Descripcion = dsc.Tables("articulo").Rows(0)("upc_descripcion").ToString.Trim
                 End If
             End If
 
-
+            If Not .EsCajaVirtual AndAlso .Factor <= 1D Then
+                Dim ArtCodRel As String = dsc.Tables("articulo").Rows(0)("art_codrel").ToString.Trim
+                If ArtCodRel <> "" Then
+                    Dim FactorRel As Decimal = CDec(dsc.Tables("articulo").Rows(0)("art_cap1")) * CDec(dsc.Tables("articulo").Rows(0)("art_cap2"))
+                    If FactorRel > 1D Then
+                        .FactorFactura = FactorRel
+                    End If
+                End If
+            End If
 
             ' ==========================================================================
-            ' LÛgica DE PRECIOS
+            ' L√≥gica DE PRECIOS
             ' ==========================================================================
             If EsVentaCajaLocal Then
-                ' AritmÈtica decimal segura
+                ' Aritm√©tica decimal segura
                 .Precio1 = PrecioBaseMayoreo * .Factor
                 .Precio2 = .Precio1
                 .Precio3 = .Precio1
@@ -5974,19 +6046,19 @@ Public Class FrVenta
             .EsCambioCantidad = FueConF3
         End With
         ' ==========================================================================
-        ' 2. DECISI”N DE NEGOCIO (VENTA vs CancelaciÛn vs CARGA PENDIENTE)
+        ' 2. DECISI√ìN DE NEGOCIO (VENTA vs Cancelaci√≥n vs CARGA PENDIENTE)
         ' ==========================================================================
 
         If CargandoPendiente Then
             ' CASO BLINDADO: CARGA PENDIENTE
             ' Si viene de un ticket guardado, RESPETAMOS la cantidad y el signo tal cual vienen.
-            ' Si en la BD decÌa -5, AquÌ entra -5. Si decÌa 0.500, entra 0.500.
+            ' Si en la BD dec√≠a -5, Aqu√≠ entra -5. Si dec√≠a 0.500, entra 0.500.
             NuevoItem.Cantidad = cantidad
 
         Else
-            ' CASO EN VIVO: AquÌ SÌ calculamos signos y validamos pausas
+            ' CASO EN VIVO: Aqu√≠ S√≠ calculamos signos y validamos pausas
             If cancelacion Then
-                ' === CancelaciÛn EN VIVO (F2) ===
+                ' === Cancelaci√≥n EN VIVO (F2) ===
                 If NuevoItem.TipoArticulo = 2 Then
                     ' Si es salchi, invertimos el peso que acabamos de leer
                     NuevoItem.Cantidad = cantidad * -1D
@@ -5996,13 +6068,13 @@ Public Class FrVenta
                 End If
             Else
                 ' === VENTA EN VIVO ===
-                ' Solo AquÌ validamos la pausa para pedir peso manual
+                ' Solo Aqu√≠ validamos la pausa para pedir peso manual
                 If NuevoItem.EsKilos And NuevoItem.TipoArticulo = 1 Then
 
                 Else
                     NuevoItem.Cantidad = 1
                 End If
-                ' Si no hubo pausa, la cantidad se queda positiva tal cual llegÛ (ej. 1 o peso etiqueta)
+                ' Si no hubo pausa, la cantidad se queda positiva tal cual lleg√≥ (ej. 1 o peso etiqueta)
             End If
         End If
 
@@ -6020,10 +6092,10 @@ Public Class FrVenta
 
                 Dim CantCob As Decimal = -1
                 Dim TextoCantidadTemp As Decimal = 0D
-                ' Intenta convertir. Si puede, lo guarda en la variable. Si no (vacÌo o texto), deja el 0.
+                ' Intenta convertir. Si puede, lo guarda en la variable. Si no (vac√≠o o texto), deja el 0.
                 Decimal.TryParse(tx_cantidad.Text, TextoCantidadTemp)
 
-                ' tambiÈn AquÌ usamos CDec para las lecturas de SQL
+                ' tambi√©n Aqu√≠ usamos CDec para las lecturas de SQL
                 If CDec(dsc.Tables("Articulo").Rows(0)("CobradosClave")) <> -1D Then
                     CantCob = CDec(dsc.Tables("Articulo").Rows(0)("CobradosClave")) + IIf(TextoCantidadTemp < 0, Math.Abs(TextoCantidadTemp), 0)
                 ElseIf CDec(dsc.Tables("Articulo").Rows(0)("CobradosUPC")) <> -1D Then
@@ -6031,8 +6103,8 @@ Public Class FrVenta
                 End If
 
                 ' Nota: NuevoItem.CantidadCobradas es Integer en tu clase original, 
-                ' si quieres precisiÛn decimal ahÌ tambiÈn, habrÌa que cambiar la Clase. 
-                ' Por ahora lo casteamos a Integer si tu clase lo pide aSÌ, o lo dejamos pasar si ya lo cambiaste.
+                ' si quieres precisi√≥n decimal ah√≠ tambi√©n, habr√≠a que cambiar la Clase. 
+                ' Por ahora lo casteamos a Integer si tu clase lo pide aS√≠, o lo dejamos pasar si ya lo cambiaste.
                 NuevoItem.CantidadCobradas = CInt(CantCob)
 
                 agregaArticulo(NuevoItem)
@@ -6068,7 +6140,9 @@ Public Class FrVenta
                                    ByVal Optional PendFueConF3 As Integer = 0,
                                    Optional PendTraeVale As String = "",
                                    Optional PendFueConF6 As Integer = 0,
-                                   Optional PendFactor As Decimal = 1D)
+                                   Optional PendFactor As Decimal = 1D,
+                                   Optional PendFactorFactura As Decimal = 1D)
+
         Dim i As Integer
         Dim TOPE As Decimal
         Dim UPCUPC As String
@@ -6092,7 +6166,7 @@ Public Class FrVenta
         Dim TraeVale As Boolean = False
 
         ' =================================================================================
-        ' 1. LIMPIEZA Y B˙squeda F1
+        ' 1. LIMPIEZA Y B√∫squeda F1
         ' =================================================================================
         If Not buscararticulo Then
             Dim TextoLimpio As String = Me.TX_UPC.Text.Trim()
@@ -6110,7 +6184,7 @@ Public Class FrVenta
                 EsEscaneado = False
             End If
             TX_UPC.Text = TextoLimpio
-            ' TIP PRO: AquÌ PodrÌas guardar 'EsEscaneado' en tu objeto ArticuloVenta 
+            ' TIP PRO: Aqu√≠ Podr√≠as guardar 'EsEscaneado' en tu objeto ArticuloVenta 
             ' si agregas esa propiedad a la clase.
         Else
             Using Busca As New FrBuscaArt(Me)
@@ -6129,7 +6203,7 @@ Public Class FrVenta
             Exit Sub
         End If
         ' =================================================================================
-        ' 2. RECUPERACI”N DE BANDERAS
+        ' 2. RECUPERACI√ìN DE BANDERAS
         ' =================================================================================
 
         If CargandoPendiente Then
@@ -6141,7 +6215,7 @@ Public Class FrVenta
 
         End If
         ' =================================================================================
-        ' 3. AN¡LISIS PREVIO (Detectar B·scula)
+        ' 3. AN√ÅLISIS PREVIO (Detectar B√°scula)
         ' =================================================================================
         If Me.TX_UPC.Text.Length = 13 AndAlso Me.TX_UPC.Text.StartsWith("2000") Then
             UPCStr = Me.TX_UPC.Text.Substring(0, 7)
@@ -6165,12 +6239,12 @@ Public Class FrVenta
         ' =================================================================================
         ' 4. CONSULTA SQL "TODO INCLUIDO" (Activos e Inactivos)
         ' =================================================================================
-        ' NOTA: Eliminamos "and art_activo=1" del WHERE para traerlo aunque est· bloqueado
-        ' Agregamos art_activo y upc_activo al SELECT para validarlos en cÛdigo
+        ' NOTA: Eliminamos "and art_activo=1" del WHERE para traerlo aunque est√° bloqueado
+        ' Agregamos art_activo y upc_activo al SELECT para validarlos en c√≥digo
 
         sql = "select xupc.upc_activo, articulo.art_activo, isnull(tipo_ofer,0) Tipo_Ofer, art_clave, isnull(ECBOLETINOFER.ARTICULO,'') Articulo, upc_descripcion, Art_NomLargo, Art_CostoCap2, ART_FAMILIA, isnull(ECBOLETINOFER.DescOferta,'') DescOferta, isnull(CantidadDisponible,-1) CantidadDisponible, ISNULL(ECBOLETINOFER.Cantidad,0) Cantidad, isnull(PorcentajeDescuento,'') PorcentajeDescuento, isnull(ID,'') ID, isnull(Fam_Clave,'') Fam_Clave, isnull(ClaveMarca,-1) ClaveMarca, isnull(t2a.CantidadCobrados,-1) CobradosUPC ,isnull(t2c.CantidadCobrados,-1) CobradosClave," &
           "isnull(ECBOLETINOFER.UPC_CodInv,'') UPCCodInvOferta, xupc.upc_codinv, ART_PRECIO1, isnull(XPRECIO1,art_precio1*(ISNULL(1-PorcentajeDescuento,0))) XPRECIO1, ART_PRECIO2, isnull(XPRECIO2,art_precio2*(ISNULL(1-PorcentajeDescuento,0))) XPRECIO2, ART_PRECIO3,isnull(XPRECIO3,art_precio3*(ISNULL(1-PorcentajeDescuento,0))) XPRECIO3, " &
-          "isnull(art_kilo,0) ART_KILO ,ISNULL(art_entrega,0) ART_ENTREGA, ISNULL(xupc.upc_factor,1) as Factor, art_cap1, art_uni1, art_cap2, art_uni2, art_topemay, art_iva, art_ieps, upc_upc from xupc inner join articulo on upc_cveart=art_Clave " &
+          "isnull(art_kilo,0) ART_KILO ,ISNULL(art_entrega,0) ART_ENTREGA, ISNULL(xupc.upc_factor,1) as Factor, art_cap1, art_uni1, art_cap2, art_uni2, ISNULL(art_codrel, '') AS art_codrel, art_topemay, art_iva, art_ieps, upc_upc from xupc inner join articulo on upc_cveart=art_Clave " &
           "LEFT JOIN ECBOLETINOFER ON ((((ART_CLAVE=ARTICULO and ECBOLETINOFER.UPC_CodInv is null) or (ART_CLAVE=ARTICULO and ECBOLETINOFER.UPC_CodInv=XUPC.UPC_CODINV)) or ART_FAMILIA=Fam_Clave or art_marca=ClaveMarca) AND ((FECHAINI<='" & Format(Today, "yyyyMMdd") & "' AND FECHAFIN>='" & Format(Today, "yyyyMMdd") & "') or (CantidadDisponible>0 and Cantidad>0)) and Activo=1) " &
           "left join (select ARTICULO, isnull(SUM(cantidad),0) CantidadCobrados from tmpauxvta2 group by articulo) t2a on (t2a.ARTICULO=ECBOLETINOFER.UPC_CodInv and TIPO_OFER=1) " &
           "left join (select ArtClave, isnull(SUM(cantidad),0) CantidadCobrados from tmpauxvta2 group by ArtClave) t2c on (t2c.ArtClave=ECBOLETINOFER.ARTICULO and TIPO_OFER=2 ) " &
@@ -6184,11 +6258,11 @@ Public Class FrVenta
         sql = sql & " order by XPRECIO1 asc, CantidadDisponible desc, UPCCodInvOferta desc"
         Base.daQuery(sql, sCadenaConexionSQL, dsc, "articulo")
         ' =================================================================================
-        ' 5. VALIDACI”N INTELIGENTE (EN MEMORIA)
+        ' 5. VALIDACI√ìN INTELIGENTE (EN MEMORIA)
         ' =================================================================================
         If dsc.Tables("articulo").Rows.Count > 0 Then
-            ' A) CHEQUEO DE ACTIVOS (AquÌ REEMPLAZAMOS EL VIAJE EXTRA)
-            ' Revisamos si el ArtÌculo o el cÛdigo est·n dados de baja
+            ' A) CHEQUEO DE ACTIVOS (Aqu√≠ REEMPLAZAMOS EL VIAJE EXTRA)
+            ' Revisamos si el Art√≠culo o el c√≥digo est√°n dados de baja
             ' Convertimos a Boolean de forma segura
             Dim ArtActivo As Boolean = False
             Dim UpcActivo As Boolean = False
@@ -6203,12 +6277,11 @@ Public Class FrVenta
 
             If ArtActivo AndAlso UpcActivo Then
                 ' -> TODO BIEN: PROCESAMOS LA VENTA
-                ProcesarHallazgo(dsc, xtipo, cantidad, CargandoPendiente, TraeVale, FueConF1, cancelacion, FueConF3, PendFueConF6, PendFactor)
-
+                ProcesarHallazgo(dsc, xtipo, cantidad, CargandoPendiente, TraeVale, FueConF1, cancelacion, FueConF3, PendFueConF6, PendFactor, PendFactorFactura)
             Else
-                ' -> EXISTE PERO est· INACTIVO
-                MsgBox("El ArtÌculo se encuentra inactivo.", MsgBoxStyle.Exclamation, "Punto de Venta")
-                Label24.Text = "ArtÌculo INACTIVO"
+                ' -> EXISTE PERO est√° INACTIVO
+                MsgBox("El Art√≠culo se encuentra inactivo.", MsgBoxStyle.Exclamation, "Punto de Venta")
+                Label24.Text = "Art√≠culo INACTIVO"
                 ActivarBloqueoNoEncontrado() ' Llamada al sub de bloqueo visual
             End If
         Else
@@ -6231,8 +6304,8 @@ Public Class FrVenta
     End Sub
 
     Private Sub BtnCambiaVenta_Click(sender As Object, e As EventArgs) Handles BtnCambiaVenta.Click
-        ' 1. ConfirmaciÛn INICIAL
-        If MsgBox("øDesea cambiar el tipo de venta?", vbYesNo + vbQuestion, "Punto de Venta") = MsgBoxResult.No Then
+        ' 1. Confirmaci√≥n INICIAL
+        If MsgBox("¬øDesea cambiar el tipo de venta?", vbYesNo + vbQuestion, "Punto de Venta") = MsgBoxResult.No Then
             Exit Sub
         End If
 
@@ -6250,13 +6323,13 @@ Public Class FrVenta
         Do Until EntradaValida
             ResTxt = InputBox("Indique el nuevo tipo de venta (1, 2 o 3):", "Cambiar Tipo de Venta", "")
 
-            ' Si cancela o deja vacÌo, salimos
+            ' Si cancela o deja vac√≠o, salimos
             If String.IsNullOrWhiteSpace(ResTxt) Then Exit Sub
 
             If IsNumeric(ResTxt) Then
                 NuevoTipoVenta = CInt(ResTxt)
 
-                ' Validaciones b·sicas
+                ' Validaciones b√°sicas
                 If NuevoTipoVenta < 1 Or NuevoTipoVenta > 3 Then
                     MsgBox("El tipo de venta debe ser 1, 2 o 3.", vbExclamation)
 
@@ -6265,26 +6338,26 @@ Public Class FrVenta
                     Exit Sub ' Si es igual, no hacemos nada y salimos
 
                 Else
-                    ' --- AquÌ VIENE LA LÛgica FUERTE DEL TIPO 3 ---
+                    ' --- Aqu√≠ VIENE LA L√≥gica FUERTE DEL TIPO 3 ---
                     If NuevoTipoVenta = 3 Then
                         ' Verificamos si el cliente ACTUAL soporta Precio 3
                         If ClienteSoportaDuarsa(NuevoClienteID) Then
                             EntradaValida = True ' Todo bien, seguimos
                         Else
-                            ' El cliente actual NO soporta Precio 3. Buscamos uno que SÌ.
+                            ' El cliente actual NO soporta Precio 3. Buscamos uno que S√≠.
                             MsgBox("El cliente actual no tiene permiso para Precio Duarsa (3)." & vbCrLf &
                                "Seleccione un cliente autorizado.", vbInformation)
 
                             Dim ResultadoBusqueda As Integer = BuscarClienteDuarsa()
 
                             If ResultadoBusqueda > 0 Then
-                                ' EncontrÛ un cliente v·lido
+                                ' Encontr√≥ un cliente v√°lido
                                 NuevoClienteID = ResultadoBusqueda
-                                ' Actualizamos visualmente el nombre (necesitarÌas traer el nombre del buscador o BD)
-                                ' Para simplificar, asumo que BuscarClienteDuarsa ya actualizÛ TxtControl o retornÛ ID
+                                ' Actualizamos visualmente el nombre (necesitar√≠as traer el nombre del buscador o BD)
+                                ' Para simplificar, asumo que BuscarClienteDuarsa ya actualiz√≥ TxtControl o retorn√≥ ID
                                 EntradaValida = True
                             Else
-                                ' CancelÛ la B˙squeda -> Cancelamos el cambio de venta
+                                ' Cancel√≥ la B√∫squeda -> Cancelamos el cambio de venta
                                 Exit Sub
                             End If
                         End If
@@ -6294,19 +6367,19 @@ Public Class FrVenta
                     End If
                 End If
             Else
-                MsgBox("Debe ingresar un valor numÈrico.", vbExclamation)
+                MsgBox("Debe ingresar un valor num√©rico.", vbExclamation)
             End If
         Loop
 
-        ' 3. LÛgica DE AutorizaciÛn INTELIGENTE
-        ' Regla: Solo pedimos AutorizaciÛn si "Mejora" el precio (Sube de nivel: 1->2, 1->3, 2->3)
-        ' O si bajamos de nivel (3->1), NO pedimos AutorizaciÛn (porque cobramos m·s caro).
+        ' 3. L√≥gica DE Autorizaci√≥n INTELIGENTE
+        ' Regla: Solo pedimos Autorizaci√≥n si "Mejora" el precio (Sube de nivel: 1->2, 1->3, 2->3)
+        ' O si bajamos de nivel (3->1), NO pedimos Autorizaci√≥n (porque cobramos m√°s caro).
 
         Dim RequiereAuth As Boolean = False
 
         If NuevoTipoVenta > VentaOrig Then RequiereAuth = True
 
-        ' Si cambiÛ de cliente a uno VIP, tambiÈn pedimos auth por seguridad
+        ' Si cambi√≥ de cliente a uno VIP, tambi√©n pedimos auth por seguridad
         If ClienteOrig <> NuevoClienteID Then RequiereAuth = True
 
         If RequiereAuth Then
@@ -6317,9 +6390,9 @@ Public Class FrVenta
             End Using
 
             If Not AutorizaCierreCambioVentana Then
-                ' No autorizÛ -> Revertimos y salimos
-                ' (Como no hemos cambiado nada en la UI todavÌa, solo hacemos Exit Sub)
-                ' Pero si cambiamos el TxtControl en la B˙squeda, hay que regresarlo:
+                ' No autoriz√≥ -> Revertimos y salimos
+                ' (Como no hemos cambiado nada en la UI todav√≠a, solo hacemos Exit Sub)
+                ' Pero si cambiamos el TxtControl en la B√∫squeda, hay que regresarlo:
                 If ClienteOrig <> NuevoClienteID Then
                     TxtControl.Text = ClienteOrig.ToString()
                     LbClienteTicket.Text = ClienteOrigStr
@@ -6332,10 +6405,10 @@ Public Class FrVenta
         txt_tipoventa.Text = NuevoTipoVenta.ToString()
         TIPOVENTA = NuevoTipoVenta
 
-        ' Si cambiÛ el cliente en el proceso (por la B˙squeda de Duarsa)
+        ' Si cambi√≥ el cliente en el proceso (por la B√∫squeda de Duarsa)
         If ClienteOrig <> NuevoClienteID Then
             TxtControl.Text = NuevoClienteID.ToString()
-            ' Nota: LbClienteTicket ya deberÌa haberse actualizado en la B˙squeda o AquÌ
+            ' Nota: LbClienteTicket ya deber√≠a haberse actualizado en la B√∫squeda o Aqu√≠
             ObtenerNombreCliente(NuevoClienteID) ' Helper opcional para actualizar el label
         End If
 
@@ -6356,7 +6429,7 @@ Public Class FrVenta
 
         Using frmbuscar As New busqueda
             frmbuscar.TXTCONTROL = Me.txt_foliopago ' Control dummy
-            ' Configuramos la B˙squeda filtrada por PrecioDuarsa=1
+            ' Configuramos la B√∫squeda filtrada por PrecioDuarsa=1
             GENERAL.parametrosbusqueda(frmbuscar, "Precio Duarsa - Clientes Registrados",
                                    "cli_clave,cli_nombre", "ecclientes", "cli_nombre asc", "1",
                                    sCadenaConexionSQL, "Clave,Nombre", "50,500", "A,A", "1,2",
@@ -6367,17 +6440,17 @@ Public Class FrVenta
             frmbuscar.ShowDialog()
         End Using
 
-        ' Validamos si seleccionÛ algo
+        ' Validamos si seleccion√≥ algo
         If TxtControl.Text.Trim <> "" AndAlso TxtControl.Text.Contains(",") Then
             ' El buscador suele devolver "ID, Nombre" o similar en el TxtControl
             Dim TmpStr() As String = TxtControl.Text.Trim.Split(",")
             IDEncontrado = CInt(Val(TmpStr(0)))
 
-            ' Actualizamos Labels AquÌ mismo para no perder el dato del nombre
+            ' Actualizamos Labels Aqu√≠ mismo para no perder el dato del nombre
             TxtControl.Text = IDEncontrado.ToString()
             LbClienteTicket.Text = "Cliente: " & TmpStr(1).Trim
         Else
-            ' Si CancelÛ o el formato es raro
+            ' Si Cancel√≥ o el formato es raro
             IDEncontrado = 0
         End If
 
@@ -6385,7 +6458,7 @@ Public Class FrVenta
     End Function
 
     Private Sub ObtenerNombreCliente(ByVal ID As Integer)
-        ' pequeÒa rutina para refrescar el nombre si solo tenemos el ID
+        ' peque√±a rutina para refrescar el nombre si solo tenemos el ID
         Dim SQL As String = "SELECT cli_nombre FROM ECClientes WHERE cli_clave=" & ID
         Using DSC As New DataSet
             Base.daQuery(SQL, sCadenaConexionSQL, DSC, "Nom")
@@ -6437,7 +6510,7 @@ Public Class FrVenta
                 If PanelSeleccionTarjetas.Visible = False Then
                     If sender.name = FpArticulos.Name Then
                         Corriendo = True
-                        If MsgBox("øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
+                        If MsgBox("¬øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
                             borrapagos()
                             SendKeys.Flush()
                         Else
@@ -6477,7 +6550,7 @@ Public Class FrVenta
                 Else
                     If TipoTarj = "" Then
                         Corriendo = True
-                        If MsgBox("No ha seleccionado el tipo de tarjeta, øDesea cerrar ventana de tarjetas?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
+                        If MsgBox("No ha seleccionado el tipo de tarjeta, ¬øDesea cerrar ventana de tarjetas?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
                             borrapagos()
                             CierraPanel()
                             SendKeys.Flush()
@@ -6488,12 +6561,12 @@ Public Class FrVenta
                     Else
                         If sender.name = FpArticulos.Name Then
                             Corriendo = True
-                            If MsgBox("øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
+                            If MsgBox("¬øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
                                 PanelSeleccionTarjetas.Visible = False
                                 borrapagos()
                                 SendKeys.Flush()
                             Else
-                                MsgBox("Debe seleccionar primero el tipo de tarjeta.", vbExclamation, "SelecciÛn de Tarjeta")
+                                MsgBox("Debe seleccionar primero el tipo de tarjeta.", vbExclamation, "Selecci√≥n de Tarjeta")
                                 If TipoTarj = rbTCredito.Tag Then
                                     rbTCredito.Focus()
                                 ElseIf TipoTarj = rbTDebito.Tag Then
@@ -6536,65 +6609,65 @@ Public Class FrVenta
         PanelSeleccionTarjetas.Visible = False
 
         ' 2. Calculamos el saldo base (Lo que falta por pagar)
-        ' Usamos Decimal para precisiÛn financiera
+        ' Usamos Decimal para precisi√≥n financiera
         Dim SaldoPendiente As Decimal = CDec(totalote - totalpagos)
 
-        ' VALIDACI”N de seguridad: Si ya no debe nada, no entramos.
+        ' VALIDACI√ìN de seguridad: Si ya no debe nada, no entramos.
         If SaldoPendiente <= 0 Then
             MsgBox("El Monto pagado hasta el momento ya salda el ticket.", vbExclamation, "Monto Incorrecto")
             LimpiarControlesPago() ' Sugiero encapsular la limpieza en un Sub
             Exit Sub
         End If
 
-        ' 3. C¡LCULO de ComisiÛn (El "Castigo" por pagar con tarjeta en Mayoreo)
+        ' 3. C√ÅLCULO de Comisi√≥n (El "Castigo" por pagar con tarjeta en Mayoreo)
         Dim MontoComision As Decimal = 0D
 
         If TIPOVENTA > 1 Then
             ' CASO A: Venta Mayoreo o Duarsa (2 o 3)
-            ' Se cobra ComisiÛn del 2%.
+            ' Se cobra Comisi√≥n del 2%.
             Dim CalculoTeorico As Decimal = SaldoPendiente * 0.02D
 
-            ' Llamamos a tu funciÛn existente para validar topes
+            ' Llamamos a tu funci√≥n existente para validar topes
             ' Asumo que AlcanzaComision devuelve el importe en Decimal/Double
             MontoComision = CDec(AlcanzaComision(Math.Round(CalculoTeorico, 2), False))
             DistribuyeComConP1(MontoComision)
             ' Actualizamos la variable global para que se guarde luego
             TotalComision = MontoComision
         Else
-            ' CASO B: Venta P˙blico (1)
-            ' No se cobra ComisiÛn.
+            ' CASO B: Venta P√∫blico (1)
+            ' No se cobra Comisi√≥n.
             MontoComision = 0D
             TotalComision = 0D
         End If
 
         ' 4. Determinar Tipo de Tarjeta (Texto informativo)
         If rbTCredito.Checked Then
-            TipoTarj = "CrÈdito"
+            TipoTarj = "Cr√©dito"
         ElseIf rbTDebito.Checked Then
-            TipoTarj = "DÈbito"
+            TipoTarj = "D√©bito"
         Else
             TipoTarj = "Tarjeta" ' Fallback
         End If
 
         ' 5. Preparar UI para cobrar
-        Label18.Text = "No. AutorizaciÛn: " ' "Referencia" es ambiguo, AutorizaciÛn es lo que imprime el voucher
+        Label18.Text = "No. Autorizaci√≥n: " ' "Referencia" es ambiguo, Autorizaci√≥n es lo que imprime el voucher
         LFORPAG.Text = "Tarjeta"
         LFORPAG.Visible = True
 
-        ' 6. El monto a cobrar FINAL (Saldo + ComisiÛn)
+        ' 6. El monto a cobrar FINAL (Saldo + Comisi√≥n)
         Dim TotalACobrar As Decimal = SaldoPendiente + MontoComision
 
         ' Mostramos formateado a 2 decimales
         tx_cantidad.Text = TotalACobrar.ToString("N2")
         tx_cantidad.Visible = True
 
-        ' 7. ConfiguraciÛn de focos y controles
+        ' 7. Configuraci√≥n de focos y controles
         banco.Visible = True
         fpago = 6           ' ID de pago Tarjeta
         TX_UPC.Enabled = False
 
-        ' Foco: Normalmente el flujo es -> Confirmar Monto (Enter) -> Escribir AutorizaciÛn.
-        ' Si prefieres ir directo a AutorizaciÛn:
+        ' Foco: Normalmente el flujo es -> Confirmar Monto (Enter) -> Escribir Autorizaci√≥n.
+        ' Si prefieres ir directo a Autorizaci√≥n:
         Me.TXB_BANCO.Focus()
     End Sub
     ' Helper para limpiar (puedes pegarlo al final de tu form)
@@ -6638,9 +6711,9 @@ Public Class FrVenta
         End Using
 
         ' =========================================================
-        ' 2. VALIDACI”N DEL RESULTADO (Parsing seguro)
+        ' 2. VALIDACI√ìN DEL RESULTADO (Parsing seguro)
         ' =========================================================
-        ' Si el control est· vacÌo o igual al original, no hacemos nada (Cancelaron)
+        ' Si el control est√° vac√≠o o igual al original, no hacemos nada (Cancelaron)
         If TxtControl.Text.Trim = "" OrElse TxtControl.Text.Trim = ClienteOrig.ToString() Then
             TxtControl.Text = ClienteOrig.ToString()
             LbClienteTicket.Text = ClienteOrigStr
@@ -6667,7 +6740,7 @@ Public Class FrVenta
         End If
 
         ' =========================================================
-        ' 3. LÛgica DE TIPO DE VENTA (DUARSA VS NORMAL)
+        ' 3. L√≥gica DE TIPO DE VENTA (DUARSA VS NORMAL)
         ' =========================================================
         Dim NuevoTipoVenta As Integer = VentaOrig
 
@@ -6677,24 +6750,24 @@ Public Class FrVenta
 
         Else
             ' CASO B: Cliente Normal
-            ' Si est·bamos en Venta 3 (Duarsa) y cambiamos a cliente normal, NO podemos seguir en 3.
+            ' Si est√°bamos en Venta 3 (Duarsa) y cambiamos a cliente normal, NO podemos seguir en 3.
             If VentaOrig = 3 Then
-                ' OpciÛn 1: Preguntar (Tu LÛgica original mejorada)
+                ' Opci√≥n 1: Preguntar (Tu L√≥gica original mejorada)
                 Dim ResTxt As String = InputBox("El cliente seleccionado NO tiene precio especial (Duarsa)." & vbCrLf &
                                             "El tipo de venta actual es 3." & vbCrLf & vbCrLf &
-                                            "Ingrese '1' para P˙blico o '2' para Medio Mayoreo:", "Ajuste de Precio", "1")
+                                            "Ingrese '1' para P√∫blico o '2' para Medio Mayoreo:", "Ajuste de Precio", "1")
 
                 If ResTxt.Trim = "1" Or ResTxt.Trim = "2" Then
                     NuevoTipoVenta = CInt(ResTxt)
                 Else
                     ' Si cancela o pone basura, abortamos el cambio de cliente
-                    MsgBox("Cambio de cliente cancelado. Debe definir un tipo de venta v·lido.", vbInformation)
+                    MsgBox("Cambio de cliente cancelado. Debe definir un tipo de venta v√°lido.", vbInformation)
                     RevertirCambios(ClienteOrig, ClienteOrigStr, VentaOrig)
                     Exit Sub
                 End If
-                ' Reactivamos para que pueda cambiarlo manualmente despuÈs
+                ' Reactivamos para que pueda cambiarlo manualmente despu√©s
             Else
-                ' Si no est·bamos en 3, mantenemos la venta que tenÌa (1 o 2)
+                ' Si no est√°bamos en 3, mantenemos la venta que ten√≠a (1 o 2)
                 NuevoTipoVenta = VentaOrig
             End If
         End If
@@ -6705,26 +6778,26 @@ Public Class FrVenta
         TIPOVENTA = NuevoTipoVenta
 
         ' =========================================================
-        ' 4. AutorizaciÛn (Si aplica)
+        ' 4. Autorizaci√≥n (Si aplica)
         ' =========================================================
         Dim DebePedirAutorizacion As Boolean = False
 
         ' REGLA 1: Si pasamos a un "Mejor Nivel de Precio" (Descuento)
-        ' Asumimos: 1=Caro(P˙blico), 2=Medio, 3=Barato(VIP)
+        ' Asumimos: 1=Caro(P√∫blico), 2=Medio, 3=Barato(VIP)
         ' Si el Nuevo es MAYOR que el Viejo (ej. 1 -> 3), estamos dando precio especial.
         If NuevoTipoVenta > VentaOrig Then
             DebePedirAutorizacion = True
         End If
 
-        ' REGLA 2: Si es EspecÌficamente Precio 3 (Duarsa), SIEMPRE pedir (Tu regla actual)
+        ' REGLA 2: Si es Espec√≠ficamente Precio 3 (Duarsa), SIEMPRE pedir (Tu regla actual)
         If NuevoTipoVenta = 3 Then
             DebePedirAutorizacion = True
         End If
 
-        ' EXCEPCIÛN: Si simplemente estamos corrigiendo un error (mismo precio, diferente nombre)
-        ' y no es precio 3, a veces no hace falta, pero dejÈmoslo seguro.
+        ' EXCEPCI√≥N: Si simplemente estamos corrigiendo un error (mismo precio, diferente nombre)
+        ' y no es precio 3, a veces no hace falta, pero dej√©moslo seguro.
 
-        ' REGLA FINAL: Solo si el argumento original era True Y nuestras reglas dicen que SÌ
+        ' REGLA FINAL: Solo si el argumento original era True Y nuestras reglas dicen que S√≠
         If RequiereAutorizacion AndAlso DebePedirAutorizacion AndAlso ClienteOrig <> NuevoClienteID Then
             AutorizaCierreCambioVentana = False
 
@@ -6734,7 +6807,7 @@ Public Class FrVenta
             End Using
 
             If Not AutorizaCierreCambioVentana Then
-                ' No autorizÛ -> Revertimos todo
+                ' No autoriz√≥ -> Revertimos todo
                 RevertirCambios(ClienteOrig, ClienteOrigStr, VentaOrig)
                 Exit Sub
             End If
@@ -6743,24 +6816,24 @@ Public Class FrVenta
         ' =========================================================
         ' 5. FINALIZAR Y RECALCULAR
         ' =========================================================
-        ' Si llegamos AquÌ, el cambio es firme.
+        ' Si llegamos Aqu√≠, el cambio es firme.
         ' Llamamos a tu rutina que actualiza el grid con los nuevos precios
         ActualizaPrecioTipoVenta(NuevoTipoVenta, NuevoClienteID, VentaOrig)
 
         TX_UPC.Focus()
     End Sub
-    ' Helper para no repetir cÛdigo de reversiÛn
+    ' Helper para no repetir c√≥digo de reversi√≥n
     Private Sub RevertirCambios(ByVal ID As Integer, ByVal Nombre As String, ByVal Venta As Integer)
         TxtControl.Text = ID.ToString()
         LbClienteTicket.Text = Nombre
         txt_tipoventa.Text = Venta
         TIPOVENTA = Venta
-        ' Regresamos el estado habilitado original (asumiendo LÛgica est·ndar)
+        ' Regresamos el estado habilitado original (asumiendo L√≥gica est√°ndar)
         If Venta = 3 Then txt_tipoventa.Enabled = False Else txt_tipoventa.Enabled = True
         TX_UPC.Focus()
     End Sub
     Private Sub BtnCambiaCliente_Click(sender As Object, e As EventArgs) Handles BtnCambiaCliente.Click
-        If MsgBox("øDesea cambiar el cliente?", vbYesNo, "Punto de Venta") = MsgBoxResult.Yes Then
+        If MsgBox("¬øDesea cambiar el cliente?", vbYesNo, "Punto de Venta") = MsgBoxResult.Yes Then
             CambiaCliente(TxtControl.Text, LbClienteTicket.Text, True)
         Else
             TX_UPC.Focus()
@@ -6774,7 +6847,7 @@ Public Class FrVenta
         Dim Ratio As Decimal = 0
 
         ' =========================================================
-        ' 1. C¡LCULO DIRECTO (Usando Using para el DataSet)
+        ' 1. C√ÅLCULO DIRECTO (Usando Using para el DataSet)
         ' =========================================================
         Dim SQL As String = "SELECT " &
                         "ISNULL(SUM(CASE WHEN ART_PRECIO1 = TMP_PRECIO THEN 1 ELSE 0 END), 0) AS CuantosMen, " &
@@ -6783,7 +6856,7 @@ Public Class FrVenta
                         "JOIN articulo ON TMP_ARTICULO = ART_CLAVE " &
                         "WHERE TMP_USUARIO = '" & Globales.caja & "'"
 
-        ' EL CAMBIO CLAVE: Using crea, usa y mata el objeto autom·ticamente
+        ' EL CAMBIO CLAVE: Using crea, usa y mata el objeto autom√°ticamente
         Using DSC As New DataSet
             Try
                 Base.daQuery(SQL, sCadenaConexionSQL, DSC, "Proporcion")
@@ -6793,17 +6866,17 @@ Public Class FrVenta
                     CuantosMay = CInt(DSC.Tables("Proporcion").Rows(0)("CuantosMay"))
                 End If
 
-                ' AquÌ YA NO NECESITAS Tables.Remove NI Dispose. 
+                ' Aqu√≠ YA NO NECESITAS Tables.Remove NI Dispose. 
                 ' Al llegar al 'End Using', el dataset muere en paz.
 
             Catch ex As Exception
-                MsgBox("Advertencia: No se pudo calcular la estadÌstica del ticket. " & ex.Message)
+                MsgBox("Advertencia: No se pudo calcular la estad√≠stica del ticket. " & ex.Message)
                 Exit Sub
             End Try
         End Using
 
         ' =========================================================
-        ' 2. C¡LCULO MATEM¡TICO SEGURO
+        ' 2. C√ÅLCULO MATEM√ÅTICO SEGURO
         ' =========================================================
         Dim TotalLineasTicket As Integer = CuantosMen + CuantosMay
 
@@ -6826,48 +6899,49 @@ Public Class FrVenta
             Base.Ejecuta(SQL, sCadenaConexionSQL)
 
         Catch ex As Exception
-            MsgBox("Error al guardar estadÌstica de proporciÛn: " & ex.Message)
+            MsgBox("Error al guardar estad√≠stica de proporci√≥n: " & ex.Message)
         End Try
 
     End Sub
 
     Private Sub FormateaSpread()
-        Dim ColFormatting As New List(Of DiseÒaSpread)
-        ColFormatting.Add(New DiseÒaSpread(Name:="Forma de Pago", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=0, ColAlign:=CellHorizontalAlignment.Left, ColType:=DiseÒaSpread.Texto, ColVisible:=True, ColLocked:=True))
-        ColFormatting.Add(New DiseÒaSpread(Name:="Importe", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=1, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.Dinero, ColVisible:=True, ColLocked:=True))
-        ColFormatting.Add(New DiseÒaSpread(Name:="Referencia", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=310, RowIndex:=0, ColIndex:=2, ColAlign:=CellHorizontalAlignment.Left, ColType:=DiseÒaSpread.Texto, ColVisible:=True, ColLocked:=True))
-        ColFormatting.Add(New DiseÒaSpread(Name:="Tipo Tarjeta", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=90, RowIndex:=0, ColIndex:=3, ColAlign:=CellHorizontalAlignment.Center, ColType:=DiseÒaSpread.Texto, ColVisible:=True, ColLocked:=True))
+        Dim ColFormatting As New List(Of Dise√±aSpread)
+        ColFormatting.Add(New Dise√±aSpread(Name:="Forma de Pago", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=0, ColAlign:=CellHorizontalAlignment.Left, ColType:=Dise√±aSpread.Texto, ColVisible:=True, ColLocked:=True))
+        ColFormatting.Add(New Dise√±aSpread(Name:="Importe", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=1, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.Dinero, ColVisible:=True, ColLocked:=True))
+        ColFormatting.Add(New Dise√±aSpread(Name:="Referencia", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=310, RowIndex:=0, ColIndex:=2, ColAlign:=CellHorizontalAlignment.Left, ColType:=Dise√±aSpread.Texto, ColVisible:=True, ColLocked:=True))
+        ColFormatting.Add(New Dise√±aSpread(Name:="Tipo Tarjeta", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=90, RowIndex:=0, ColIndex:=3, ColAlign:=CellHorizontalAlignment.Center, ColType:=Dise√±aSpread.Texto, ColVisible:=True, ColLocked:=True))
 
 
-        Dim ColFormatting1 As New List(Of DiseÒaSpread)
-        ColFormatting1.Add(New DiseÒaSpread(Name:="Cantidad", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=120, RowIndex:=0, ColIndex:=0, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.NumeroCon4Decimal, ColVisible:=True, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="ArtÌculo", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=500, RowIndex:=0, ColIndex:=1, ColAlign:=CellHorizontalAlignment.Left, ColType:=DiseÒaSpread.Texto, ColVisible:=True, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="Precio", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=114, RowIndex:=0, ColIndex:=2, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.Dinero, ColVisible:=True, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="Total", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=170, RowIndex:=0, ColIndex:=3, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.Dinero, ColVisible:=True, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="UPC CodInv", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=60, RowIndex:=0, ColIndex:=4, ColAlign:=CellHorizontalAlignment.Left, ColType:=DiseÒaSpread.Texto, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="Vale", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=5, ColAlign:=CellHorizontalAlignment.Center, ColType:=DiseÒaSpread.Texto, ColVisible:=True, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="% IVA", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=70, RowIndex:=0, ColIndex:=6, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.NumeroConDecimal, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="F1", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=7, ColAlign:=CellHorizontalAlignment.Center, ColType:=DiseÒaSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="F2", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=8, ColAlign:=CellHorizontalAlignment.Center, ColType:=DiseÒaSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="F3", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=9, ColAlign:=CellHorizontalAlignment.Center, ColType:=DiseÒaSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="% IEPS", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=70, RowIndex:=0, ColIndex:=10, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.NumeroConDecimal, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="ArtClave", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=110, RowIndex:=0, ColIndex:=11, ColAlign:=CellHorizontalAlignment.Left, ColType:=DiseÒaSpread.Texto, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="NomLargo", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=280, RowIndex:=0, ColIndex:=12, ColAlign:=CellHorizontalAlignment.Left, ColType:=DiseÒaSpread.Texto, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="Familia", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=90, RowIndex:=0, ColIndex:=13, ColAlign:=CellHorizontalAlignment.Left, ColType:=DiseÒaSpread.Texto, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="CostoCap2", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=114, RowIndex:=0, ColIndex:=14, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.Dinero, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="TipoOferta", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=106, RowIndex:=0, ColIndex:=15, ColAlign:=CellHorizontalAlignment.Center, ColType:=DiseÒaSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="Precio1", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=90, RowIndex:=0, ColIndex:=16, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.Dinero, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="ComisiÛn", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=17, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.Dinero, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="Factor", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=18, ColAlign:=CellHorizontalAlignment.Right, ColType:=DiseÒaSpread.NumeroConDecimal, ColVisible:=False, ColLocked:=True))
-        ColFormatting1.Add(New DiseÒaSpread(Name:="F6", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=19, ColAlign:=CellHorizontalAlignment.Center, ColType:=DiseÒaSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
+        Dim ColFormatting1 As New List(Of Dise√±aSpread)
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Cantidad", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=120, RowIndex:=0, ColIndex:=0, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.NumeroCon4Decimal, ColVisible:=True, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Art√≠culo", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=500, RowIndex:=0, ColIndex:=1, ColAlign:=CellHorizontalAlignment.Left, ColType:=Dise√±aSpread.Texto, ColVisible:=True, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Precio", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=114, RowIndex:=0, ColIndex:=2, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.Dinero, ColVisible:=True, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Total", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=170, RowIndex:=0, ColIndex:=3, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.Dinero, ColVisible:=True, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="UPC CodInv", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=60, RowIndex:=0, ColIndex:=4, ColAlign:=CellHorizontalAlignment.Left, ColType:=Dise√±aSpread.Texto, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Vale", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=5, ColAlign:=CellHorizontalAlignment.Center, ColType:=Dise√±aSpread.Texto, ColVisible:=True, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="% IVA", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=70, RowIndex:=0, ColIndex:=6, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.NumeroConDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="F1", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=7, ColAlign:=CellHorizontalAlignment.Center, ColType:=Dise√±aSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="F2", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=8, ColAlign:=CellHorizontalAlignment.Center, ColType:=Dise√±aSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="F3", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=9, ColAlign:=CellHorizontalAlignment.Center, ColType:=Dise√±aSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="% IEPS", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=70, RowIndex:=0, ColIndex:=10, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.NumeroConDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="ArtClave", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=110, RowIndex:=0, ColIndex:=11, ColAlign:=CellHorizontalAlignment.Left, ColType:=Dise√±aSpread.Texto, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="NomLargo", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=280, RowIndex:=0, ColIndex:=12, ColAlign:=CellHorizontalAlignment.Left, ColType:=Dise√±aSpread.Texto, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Familia", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=90, RowIndex:=0, ColIndex:=13, ColAlign:=CellHorizontalAlignment.Left, ColType:=Dise√±aSpread.Texto, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="CostoCap2", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=114, RowIndex:=0, ColIndex:=14, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.Dinero, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="TipoOferta", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=106, RowIndex:=0, ColIndex:=15, ColAlign:=CellHorizontalAlignment.Center, ColType:=Dise√±aSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Precio1", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=90, RowIndex:=0, ColIndex:=16, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.Dinero, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Comisi√≥n", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=17, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.Dinero, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="Factor", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=18, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.NumeroConDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="F6", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=50, RowIndex:=0, ColIndex:=19, ColAlign:=CellHorizontalAlignment.Center, ColType:=Dise√±aSpread.NumeroSinDecimal, ColVisible:=False, ColLocked:=True))
+        ColFormatting1.Add(New Dise√±aSpread(Name:="FactorFactura", ColHeaderRows:=2, ColHeaderCols:=1, ColWidth:=100, RowIndex:=0, ColIndex:=20, ColAlign:=CellHorizontalAlignment.Right, ColType:=Dise√±aSpread.NumeroConDecimal, ColVisible:=False, ColLocked:=True))
 
 
 
-        DiseÒaSpread.DiseÒaSpreadsGenÈrico(FpFormasPago, ColFormatting)
+        Dise√±aSpread.Dise√±aSpreadsGen√©rico(FpFormasPago, ColFormatting)
         ConfiguraSpread.ConfiguraSpread(FpFormasPago)
 
 
-        DiseÒaSpread.DiseÒaSpreadsGenÈrico(FpArticulos, ColFormatting1)
+        Dise√±aSpread.Dise√±aSpreadsGen√©rico(FpArticulos, ColFormatting1)
         ConfiguraSpread.ConfiguraSpread(FpArticulos)
     End Sub
 
@@ -6875,7 +6949,7 @@ Public Class FrVenta
 
     ' =================================================================================
     ' CLASE: ArticuloVenta
-    ' OBJETO: Contenedor de datos para pasar informaciÛn limpia entre procesos.
+    ' OBJETO: Contenedor de datos para pasar informaci√≥n limpia entre procesos.
     ' =================================================================================
     Public Class ArticuloVenta
         ' Identificadores
@@ -6894,7 +6968,7 @@ Public Class FrVenta
         Public Property PrecioOferta2 As Decimal = -1
         Public Property PrecioOferta3 As Decimal = -1
 
-        ' LÛgica de Venta
+        ' L√≥gica de Venta
         Public Property Renglon As Integer
         Public Property TopeMayoreo As Decimal
         Public Property TipoVenta As Integer ' 1, 2, 3
@@ -6911,17 +6985,146 @@ Public Class FrVenta
         Public Property CargandoPendiente As Boolean = False
         Public Property TraeVale As Boolean = False
         Public Property EsBusquedaF1 As Boolean = False ' FueConF1
-        Public Property EsCancelacion As Boolean = False ' FueConF2 (CancelaciÛn)
+        Public Property EsCancelacion As Boolean = False ' FueConF2 (Cancelaci√≥n)
         Public Property EsCambioCantidad As Boolean = False ' FueConF3
         Public Property EsCajaVirtual As Boolean = False ' FueConF6 (Nueva)
-        Public Property EsKilos As Boolean = False ' Para LÛgica de B·scula
-        Public Property TipoArticulo As Integer = 1 ' 1 Normal, 2 B·scula, 11 CancelaciÛn
+        Public Property EsKilos As Boolean = False ' Para L√≥gica de B√°scula
+        Public Property TipoArticulo As Integer = 1 ' 1 Normal, 2 B√°scula, 11 Cancelaci√≥n
 
         ' Ofertas y Factores
         Public Property TipoOferta As Integer
-        Public Property Factor As Decimal = 1.0 ' Factor de conversiÛn (Cajas)
+        Public Property Factor As Decimal = 1.0 ' Factor de conversi√≥n (Cajas)
+        Public Property FactorFactura As Decimal = 1.0
     End Class
+
+    Private Sub TimerCajon_Tick(sender As Object, e As EventArgs) Handles TimerCajon.Tick
+
+        CajonPOS.Revisar()
+
+    End Sub
+    Private Sub Cajon_EstadoActualizado(abierto As Boolean,
+                                    segundosAbierto As Integer,
+                                    origen As String)
+
+        MostrarBannerCajon(abierto, segundosAbierto, origen)
+
+    End Sub
+    Private Sub Cajon_AlertaTiempoExcedido(segundosAbierto As Integer,
+                                       origen As String)
+
+        System.Media.SystemSounds.Exclamation.Play()
+
+        MostrarBannerCajon(True, segundosAbierto, origen)
+
+    End Sub
+
+    Private Sub Cajon_Error(mensaje As String)
+
+        Debug.Print("Error caj√≥n: " & mensaje)
+
+        MostrarBannerCajonError(mensaje)
+
+
+    End Sub
+    Private Sub MostrarBannerCajonError(mensaje As String)
+
+        If pnlBannerCajon Is Nothing Then Exit Sub
+
+        pnlBannerCajon.Visible = True
+        pnlBannerCajon.BringToFront()
+
+        pnlBannerCajon.BackColor = Color.DimGray
+
+        lblBannerCajonTitulo.Text = "MONITOR DE CAJ√ìN NO DISPONIBLE"
+        lblBannerCajonDetalle.Text = mensaje
+
+    End Sub
+    Private Sub FrVenta_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+
+        Try
+            TimerCajon.Stop()
+            CajonPOS.Liberar()
+        Catch
+        End Try
+
+    End Sub
+    Private Sub MostrarBannerCajon(abierto As Boolean,
+                               segundosAbierto As Integer,
+                               origen As String)
+
+        If pnlBannerCajon Is Nothing Then Exit Sub
+
+        If Not abierto Then
+            pnlBannerCajon.Visible = False
+            Exit Sub
+        End If
+
+        pnlBannerCajon.Visible = True
+        pnlBannerCajon.BringToFront()
+
+        Dim origenTexto As String = If(String.IsNullOrWhiteSpace(origen), "Sin origen", origen)
+
+        If origenTexto.ToUpper().Contains("MANUAL") OrElse origenTexto.ToUpper().Contains("LLAVE") Then
+            pnlBannerCajon.BackColor = Color.Firebrick
+            lblBannerCajonTitulo.Text = "‚ö† CAJ√ìN ABIERTO MANUALMENTE"
+            lblBannerCajonDetalle.Text = segundosAbierto.ToString() & " segundos abierto"
+
+        ElseIf segundosAbierto >= 20 Then
+            pnlBannerCajon.BackColor = Color.Red
+            lblBannerCajonTitulo.Text = "‚ö† CAJ√ìN ABIERTO DEMASIADO TIEMPO"
+            lblBannerCajonDetalle.Text = segundosAbierto.ToString() & " segundos abierto - " & origenTexto
+
+        Else
+            pnlBannerCajon.BackColor = Color.DarkOrange
+            lblBannerCajonTitulo.Text = "CAJ√ìN ABIERTO"
+            lblBannerCajonDetalle.Text = segundosAbierto.ToString() & " segundos abierto - " & origenTexto
+        End If
+
+    End Sub
+    Private Sub CrearBannerCajon()
+
+        pnlBannerCajon = New Panel()
+        pnlBannerCajon.Name = "pnlBannerCajon"
+        pnlBannerCajon.Height = 58
+        pnlBannerCajon.Left = 0
+        pnlBannerCajon.Top = 0
+        pnlBannerCajon.Width = Me.ClientSize.Width
+        pnlBannerCajon.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        pnlBannerCajon.Visible = False
+        pnlBannerCajon.BackColor = Color.OrangeRed
+        pnlBannerCajon.BorderStyle = BorderStyle.FixedSingle
+
+        lblBannerCajonTitulo = New Label()
+        lblBannerCajonTitulo.AutoSize = False
+        lblBannerCajonTitulo.Left = 12
+        lblBannerCajonTitulo.Top = 5
+        lblBannerCajonTitulo.Width = pnlBannerCajon.Width - 24
+        lblBannerCajonTitulo.Height = 28
+        lblBannerCajonTitulo.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        lblBannerCajonTitulo.Font = New Font("Segoe UI", 15.0F, FontStyle.Bold)
+        lblBannerCajonTitulo.ForeColor = Color.White
+        lblBannerCajonTitulo.TextAlign = ContentAlignment.MiddleLeft
+
+        lblBannerCajonDetalle = New Label()
+        lblBannerCajonDetalle.AutoSize = False
+        lblBannerCajonDetalle.Left = 12
+        lblBannerCajonDetalle.Top = 32
+        lblBannerCajonDetalle.Width = pnlBannerCajon.Width - 24
+        lblBannerCajonDetalle.Height = 20
+        lblBannerCajonDetalle.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        lblBannerCajonDetalle.Font = New Font("Segoe UI", 9.5F, FontStyle.Regular)
+        lblBannerCajonDetalle.ForeColor = Color.White
+        lblBannerCajonDetalle.TextAlign = ContentAlignment.MiddleLeft
+
+        pnlBannerCajon.Controls.Add(lblBannerCajonTitulo)
+        pnlBannerCajon.Controls.Add(lblBannerCajonDetalle)
+
+        Me.Controls.Add(pnlBannerCajon)
+        pnlBannerCajon.BringToFront()
+
+    End Sub
 End Class
+
 
 'Imports System.Data.SqlClient
 'Imports FarPoint.Win.Spread.CellType
@@ -6940,8 +7143,8 @@ End Class
 '    Dim cerrar As Integer = 1
 '    Private sConexion As String
 '    Private hashPanel As New Hashtable
-'    Private sCant As String = "" ' Almacena la cantidad de un artÌculo a pedir
-'    Private imgFamilia As Image 'Imagen del tÌtulo principal
+'    Private sCant As String = "" ' Almacena la cantidad de un art√≠culo a pedir
+'    Private imgFamilia As Image 'Imagen del t√≠tulo principal
 '    Private masClicks As Integer
 '    Private claveArt As String
 '    Private preImpresion As New Collection
@@ -7058,14 +7261,14 @@ End Class
 '    Private Declare Function sndPlaySoundA Lib "WinMM" (ByVal nameString As String, ByVal flags As Integer) As Integer
 
 
-'#Region " CÛdigo generado por el DiseÒador de Windows Forms "
+'#Region " C√≥digo generado por el Dise√±ador de Windows Forms "
 
 '    Public Sub New(ByRef con As SqlConnection, ByRef Login As FrLogin)
 '        MyBase.New()
 '        Flogin = Login
-'        'El DiseÒador de Windows Forms requiere esta llamada.
+'        'El Dise√±ador de Windows Forms requiere esta llamada.
 '        InitializeComponent()
-'        'Agregar cualquier inicializaciÛn despuÈs de la llamada a InitializeComponent()
+'        'Agregar cualquier inicializaci√≥n despu√©s de la llamada a InitializeComponent()
 '        SetStyle(ControlStyles.UserPaint Or ControlStyles.AllPaintingInWmPaint Or ControlStyles.DoubleBuffer, True)
 '        xCon = con
 '    End Sub
@@ -7080,12 +7283,12 @@ End Class
 '        MyBase.Dispose(disposing)
 '    End Sub
 
-'    'Requerido por el DiseÒador de Windows Forms
+'    'Requerido por el Dise√±ador de Windows Forms
 '    Private components As System.ComponentModel.IContainer
 
-'    'NOTA: el DiseÒador de Windows Forms requiere el siguiente procedimiento
-'    'Puede modificarse utilizando el DiseÒador de Windows Forms. 
-'    'No lo modifique con el editor de cÛdigo.
+'    'NOTA: el Dise√±ador de Windows Forms requiere el siguiente procedimiento
+'    'Puede modificarse utilizando el Dise√±ador de Windows Forms. 
+'    'No lo modifique con el editor de c√≥digo.
 '    Friend WithEvents tb_total As System.Windows.Forms.TextBox
 '    Friend WithEvents TX_UPC As System.Windows.Forms.TextBox
 '    Friend WithEvents tx_cantidad As System.Windows.Forms.TextBox
@@ -7631,7 +7834,7 @@ End Class
 '        Me.Label26.Name = "Label26"
 '        Me.Label26.Size = New System.Drawing.Size(91, 30)
 '        Me.Label26.TabIndex = 496
-'        Me.Label26.Text = "F8 - CrÈdito"
+'        Me.Label26.Text = "F8 - Cr√©dito"
 '        Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
 '        '
 '        'PictureBox13
@@ -7980,7 +8183,7 @@ End Class
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 1).Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 1).ForeColor = System.Drawing.SystemColors.Highlight
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 1).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Left
-'        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 1).Value = "ArtÌculo"
+'        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 1).Value = "Art√≠culo"
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 1).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 2).Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 2).ForeColor = System.Drawing.SystemColors.Highlight
@@ -8060,7 +8263,7 @@ End Class
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 17).Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold)
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 17).ForeColor = System.Drawing.SystemColors.Highlight
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 17).HorizontalAlignment = FarPoint.Win.Spread.CellHorizontalAlignment.Center
-'        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 17).Value = "ComisiÛn"
+'        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 17).Value = "Comisi√≥n"
 '        Me.fp_articulos_Sheet1.ColumnHeader.Cells.Get(0, 17).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
 '        Me.fp_articulos_Sheet1.ColumnHeader.DefaultStyle.NoteIndicatorColor = System.Drawing.Color.Red
 '        Me.fp_articulos_Sheet1.ColumnHeader.DefaultStyle.Parent = "ColumnHeaderSunburst"
@@ -8075,7 +8278,7 @@ End Class
 '        Me.fp_articulos_Sheet1.Columns.Get(0).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
 '        Me.fp_articulos_Sheet1.Columns.Get(0).Width = 84.0!
 '        Me.fp_articulos_Sheet1.Columns.Get(1).CellType = TextCellType24
-'        Me.fp_articulos_Sheet1.Columns.Get(1).Label = "ArtÌculo"
+'        Me.fp_articulos_Sheet1.Columns.Get(1).Label = "Art√≠culo"
 '        Me.fp_articulos_Sheet1.Columns.Get(1).Locked = True
 '        Me.fp_articulos_Sheet1.Columns.Get(1).VerticalAlignment = FarPoint.Win.Spread.CellVerticalAlignment.Center
 '        Me.fp_articulos_Sheet1.Columns.Get(1).Width = 280.0!
@@ -8192,7 +8395,7 @@ End Class
 '        CurrencyCellType20.Separator = ","
 '        CurrencyCellType20.ShowSeparator = True
 '        Me.fp_articulos_Sheet1.Columns.Get(17).CellType = CurrencyCellType20
-'        Me.fp_articulos_Sheet1.Columns.Get(17).Label = "ComisiÛn"
+'        Me.fp_articulos_Sheet1.Columns.Get(17).Label = "Comisi√≥n"
 '        Me.fp_articulos_Sheet1.Columns.Get(17).Width = 100.0!
 '        Me.fp_articulos_Sheet1.RowHeader.Columns.Default.Resizable = False
 '        Me.fp_articulos_Sheet1.RowHeader.DefaultStyle.NoteIndicatorColor = System.Drawing.Color.Red
@@ -8732,7 +8935,7 @@ End Class
 '        Me.Label2.Name = "Label2"
 '        Me.Label2.Size = New System.Drawing.Size(343, 32)
 '        Me.Label2.TabIndex = 4
-'        Me.Label2.Text = "Autorizar CancelaciÛn de Productos"
+'        Me.Label2.Text = "Autorizar Cancelaci√≥n de Productos"
 '        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 '        '
 '        'txt_cveenc
@@ -8808,7 +9011,7 @@ End Class
 '        Me.Label1.Name = "Label1"
 '        Me.Label1.Size = New System.Drawing.Size(186, 21)
 '        Me.Label1.TabIndex = 471
-'        Me.Label1.Text = "AdministraciÛn de Ventas"
+'        Me.Label1.Text = "Administraci√≥n de Ventas"
 '        '
 '        'Label28
 '        '
@@ -8819,7 +9022,7 @@ End Class
 '        Me.Label28.Name = "Label28"
 '        Me.Label28.Size = New System.Drawing.Size(318, 26)
 '        Me.Label28.TabIndex = 470
-'        Me.Label28.Text = "Venta P˙blico Menudeo y Mayoreo"
+'        Me.Label28.Text = "Venta P√∫blico Menudeo y Mayoreo"
 '        '
 '        'PictureBox2
 '        '
@@ -8896,7 +9099,7 @@ End Class
 '        Me.Label3.Name = "Label3"
 '        Me.Label3.Size = New System.Drawing.Size(168, 44)
 '        Me.Label3.TabIndex = 481
-'        Me.Label3.Text = "F1 - Buscar ArtÌculo"
+'        Me.Label3.Text = "F1 - Buscar Art√≠culo"
 '        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
 '        '
 '        'Label29
@@ -8908,7 +9111,7 @@ End Class
 '        Me.Label29.Name = "Label29"
 '        Me.Label29.Size = New System.Drawing.Size(168, 44)
 '        Me.Label29.TabIndex = 482
-'        Me.Label29.Text = "F2 - Cancelar ArtÌculo"
+'        Me.Label29.Text = "F2 - Cancelar Art√≠culo"
 '        Me.Label29.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
 '        '
 '        'Label30
@@ -8944,7 +9147,7 @@ End Class
 '        Me.Label32.Name = "Label32"
 '        Me.Label32.Size = New System.Drawing.Size(168, 44)
 '        Me.Label32.TabIndex = 485
-'        Me.Label32.Text = "F11 - DevoluciÛn"
+'        Me.Label32.Text = "F11 - Devoluci√≥n"
 '        Me.Label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
 '        '
 '        'Panel3
@@ -9028,7 +9231,7 @@ End Class
 '        Me.Label8.Name = "Label8"
 '        Me.Label8.Size = New System.Drawing.Size(168, 44)
 '        Me.Label8.TabIndex = 488
-'        Me.Label8.Text = "F12 - FacturaciÛn"
+'        Me.Label8.Text = "F12 - Facturaci√≥n"
 '        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
 '        '
 '        'Label7
@@ -9157,7 +9360,7 @@ End Class
 '        Me.Label20.Name = "Label20"
 '        Me.Label20.Size = New System.Drawing.Size(363, 43)
 '        Me.Label20.TabIndex = 4
-'        Me.Label20.Text = "NotificaciÛn de Oferta Expirada"
+'        Me.Label20.Text = "Notificaci√≥n de Oferta Expirada"
 '        Me.Label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 '        '
 '        'Button2
@@ -9285,7 +9488,7 @@ End Class
 '        Me.Label23.Name = "Label23"
 '        Me.Label23.Size = New System.Drawing.Size(280, 32)
 '        Me.Label23.TabIndex = 503
-'        Me.Label23.Text = "ConfirmaciÛn"
+'        Me.Label23.Text = "Confirmaci√≥n"
 '        Me.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 '        '
 '        'Label36
@@ -9296,7 +9499,7 @@ End Class
 '        Me.Label36.Name = "Label36"
 '        Me.Label36.Size = New System.Drawing.Size(344, 43)
 '        Me.Label36.TabIndex = 4
-'        Me.Label36.Text = "N˙mero de telÈfono"
+'        Me.Label36.Text = "N√∫mero de tel√©fono"
 '        Me.Label36.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 '        '
 '        'Button4
@@ -9408,8 +9611,8 @@ End Class
 '        Me.rbTDebito.Size = New System.Drawing.Size(109, 19)
 '        Me.rbTDebito.TabIndex = 1
 '        Me.rbTDebito.TabStop = True
-'        Me.rbTDebito.Tag = "DÈbito"
-'        Me.rbTDebito.Text = "Tarjeta de DÈbito"
+'        Me.rbTDebito.Tag = "D√©bito"
+'        Me.rbTDebito.Text = "Tarjeta de D√©bito"
 '        Me.rbTDebito.UseVisualStyleBackColor = True
 '        '
 '        'rbTCredito
@@ -9420,8 +9623,8 @@ End Class
 '        Me.rbTCredito.Size = New System.Drawing.Size(112, 19)
 '        Me.rbTCredito.TabIndex = 0
 '        Me.rbTCredito.TabStop = True
-'        Me.rbTCredito.Tag = "CrÈdito"
-'        Me.rbTCredito.Text = "Tarjeta de CrÈdito"
+'        Me.rbTCredito.Tag = "Cr√©dito"
+'        Me.rbTCredito.Text = "Tarjeta de Cr√©dito"
 '        Me.rbTCredito.UseVisualStyleBackColor = True
 '        '
 '        'LbClienteTicket
@@ -9433,7 +9636,7 @@ End Class
 '        Me.LbClienteTicket.Name = "LbClienteTicket"
 '        Me.LbClienteTicket.Size = New System.Drawing.Size(531, 26)
 '        Me.LbClienteTicket.TabIndex = 508
-'        Me.LbClienteTicket.Text = "Cliente: P˙blico en General"
+'        Me.LbClienteTicket.Text = "Cliente: P√∫blico en General"
 '        Me.LbClienteTicket.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 '        '
 '        'FrVenta
@@ -9588,7 +9791,7 @@ End Class
 '        If DSC.Tables("Ticket").Rows.Count > 0 Then
 '            Dim Continuar As MsgBoxResult
 '            If Not CambiandoVenta Then
-'                Continuar = MsgBox("Hay una cuenta pendiente, ødesea continuar con esa venta?", vbYesNo)
+'                Continuar = MsgBox("Hay una cuenta pendiente, ¬ødesea continuar con esa venta?", vbYesNo)
 '            Else
 '                Continuar = MsgBoxResult.Yes
 '            End If
@@ -10189,7 +10392,7 @@ End Class
 '                            Base.Ejecuta(SQL, xCon)
 '                            Exit Do
 '                        Catch ex As Exception
-'                            Res = MsgBox("Error al actualizar Tabla " & Globales.caja & Chr(13) & Chr(13) & "øDesea intentar nuevamente?", MsgBoxStyle.YesNo, "Punto de Venta")
+'                            Res = MsgBox("Error al actualizar Tabla " & Globales.caja & Chr(13) & Chr(13) & "¬øDesea intentar nuevamente?", MsgBoxStyle.YesNo, "Punto de Venta")
 '                            If Res = MsgBoxResult.No Then Stop
 '                            'Registrar step en base de datos
 '                        End Try
@@ -10211,10 +10414,10 @@ End Class
 '            Dim Prec As Double
 '            Select Case TIPOVENTA
 '                Case 1
-'                    'Validar cuantos van cobrados por clave, y cuantos por upc, y como existe oferta, definir cu·les para cu·l
+'                    'Validar cuantos van cobrados por clave, y cuantos por upc, y como existe oferta, definir cu√°les para cu√°l
 '                    'Si lo cobrado por upc excede el tope, o si el articulo excede el tope
 
-'                    'Buscar en TmpAuxVta2 con el usuario (caja) en cuestiÛn, y validar
+'                    'Buscar en TmpAuxVta2 con el usuario (caja) en cuesti√≥n, y validar
 
 '                    If CantidadEnTicket >= TOPE Then 'Si la cantidad cobrada en ticket por clave
 '                        Prec = PrecioOferta2
@@ -10235,7 +10438,7 @@ End Class
 '                    Precio1APeinar = Prec
 '            End Select
 '            fp_articulos.ActiveSheet.Cells(RENGLON, ColVenta.ColPrecio).Value = Prec
-'        Else 'Si no hubo oferta o ya no se alcanzÛ la cantidad
+'        Else 'Si no hubo oferta o ya no se alcanz√≥ la cantidad
 '            If (TIPOVENTA = 1 AndAlso CantidadEnTicket >= TOPE) OrElse TIPOVENTA = 2 Then
 '                fp_articulos.ActiveSheet.Cells(RENGLON, ColVenta.ColPrecio).Value = DPRECIO2
 '                Precio2APeinar = DPRECIO2
@@ -10253,7 +10456,7 @@ End Class
 '        fp_articulos.ActiveSheet.Cells(RENGLON, ColVenta.ColTotal).Value = fp_articulos.ActiveSheet.Cells(RENGLON, ColVenta.ColPrecio).Value * fp_articulos.ActiveSheet.Cells(RENGLON, ColVenta.ColCantidad).Value
 '        RECALCULA(IIf(TipoOferta <> 1, ArtClave, UPCUPC), IIf(Precio1APeinar <> -1, Precio1APeinar, Precio2APeinar), TipoOferta)
 
-'        'If (tx_cantidad.Visible AndAlso tx_cantidad.Text <> "") OrElse (CantidadEnTicket >= TOPE AndAlso Not YaEstoyTipo2) OrElse (CantidadEnTicket < TOPE AndAlso YaEstoyTipo2) Then 'Si excedo el tope con lo actualmente cobrado o con lo que estoy cobrando ya me regresÈ a menos del tope
+'        'If (tx_cantidad.Visible AndAlso tx_cantidad.Text <> "") OrElse (CantidadEnTicket >= TOPE AndAlso Not YaEstoyTipo2) OrElse (CantidadEnTicket < TOPE AndAlso YaEstoyTipo2) Then 'Si excedo el tope con lo actualmente cobrado o con lo que estoy cobrando ya me regres√© a menos del tope
 '        '    If YaEstoyTipo2 Then
 '        '        RECALCULA(IIf(TipoOferta <> 1, ArtClave, UPCUPC), IIf(Precio1APeinar <> -1, Precio1APeinar, Precio2APeinar), TipoOferta)
 '        '        'RECALCULA(ArtClave, Precio1APeinar)
@@ -10315,7 +10518,7 @@ End Class
 '        sCant = ""
 '        With fp_articulos.ActiveSheet
 '            If .ActiveRowIndex >= 0 AndAlso .RowCount > 0 Then
-'                Dim VENT As New VENTANITA("øQUITAR EL ARTÕCULO?", "BORRAR")
+'                Dim VENT As New VENTANITA("¬øQUITAR EL ART√çCULO?", "BORRAR")
 '                VENT.BringToFront()
 '                VENT.ShowDialog()
 '                If VENT.DialogResult = System.Windows.Forms.DialogResult.Yes Then
@@ -10390,7 +10593,7 @@ End Class
 '        Try
 '            Base.Ejecuta("insert into TicketsClientes (ClienteID,FolioTicket) Values (" & ClienteID & "," & Ticket & ")", xCon)
 '        Catch ex As Exception
-'            MsgBox("No se registrÛ el ticket en tabla de TicketsClientes.", MsgBoxStyle.Critical, "Punto de Venta")
+'            MsgBox("No se registr√≥ el ticket en tabla de TicketsClientes.", MsgBoxStyle.Critical, "Punto de Venta")
 '        End Try
 '    End Sub
 
@@ -10452,7 +10655,7 @@ End Class
 '                        MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    Catch ex2 As Exception
-'                        MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                        MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    End Try
 '                End Try
@@ -10473,7 +10676,7 @@ End Class
 '                        MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    Catch ex2 As Exception
-'                        MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                        MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    End Try
 '                End Try
@@ -10494,7 +10697,7 @@ End Class
 '                MsgBox("Error al borrar los datos de tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                Return False
 '            Catch ex2 As Exception
-'                MsgBox("Error al borrar los datos de tabla TmpAuxVta1. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                MsgBox("Error al borrar los datos de tabla TmpAuxVta1. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                Return False
 '            End Try
 '        End Try
@@ -10515,7 +10718,7 @@ End Class
 '                        MsgBox("Error al traer los datos de tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return (True, False, False, False, False, False)
 '                    Catch ex2 As Exception
-'                        MsgBox("Error al traer los datos de tabla TmpAuxVta1. No pudo borrarse la informaciÛn de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                        MsgBox("Error al traer los datos de tabla TmpAuxVta1. No pudo borrarse la informaci√≥n de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return (False, False, False, False, False, False)
 '                    End Try
 '                End Try
@@ -10542,14 +10745,14 @@ End Class
 '                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", xCon)
 '                        Try
 '                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", xCon)
-'                            MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+'                            MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                            Return (False, False, False, False, False, False)
 '                        Catch ex2 As Exception
-'                            MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+'                            MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
 '                            Return False
 '                        End Try
 '                    Catch ex3 As Exception
-'                        MsgBox("Error al registrar la informaciÛn en tabla TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                        MsgBox("Error al registrar la informaci√≥n en tabla TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    End Try
 '                End Try
@@ -10613,18 +10816,18 @@ End Class
 '                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", xCon)
 '                        Try
 '                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", xCon)
-'                            MsgBox("Error al registrar la informaciÛn en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+'                            MsgBox("Error al registrar la informaci√≥n en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                            Return False
 '                        Catch ex4 As Exception
-'                            MsgBox("Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1 y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                            MsgBox("Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1 y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                            Return False
 '                        End Try
 '                    Catch ex3 As Exception
-'                        MsgBox("Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta, sÛlo de ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                        MsgBox("Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta, s√≥lo de ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    End Try
 '                Catch ex2 As Exception
-'                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                    Return False
 '                End Try
 '            End Try
@@ -10678,22 +10881,22 @@ End Class
 '                                                        Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", xCon)
 '                                                        Try
 '                                                            Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", xCon)
-'                                                            MsgBox("Error al registrar la informaciÛn en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                            MsgBox("Error al registrar la informaci√≥n en LigasFolios. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                            Return False
 '                                                        Catch ex5 As Exception
-'                                                            MsgBox("Error al registrar la informaciÛn en LigasFolios. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                            MsgBox("Error al registrar la informaci√≥n en LigasFolios. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                            Return False
 '                                                        End Try
 '                                                    Catch ex4 As Exception
-'                                                        MsgBox("Error al registrar la informaciÛn en ECVenta. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta, sÛlo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                        MsgBox("Error al registrar la informaci√≥n en ECVenta. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta, s√≥lo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                        Return False
 '                                                    End Try
 '                                                Catch ex3 As Exception
-'                                                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDete. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDete. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                    Return False
 '                                                End Try
 '                                            Catch ex2 As Exception
-'                                                MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDete. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDete. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                Return False
 '                                            End Try
 '                                        End Try
@@ -10722,19 +10925,19 @@ End Class
 '                                MsgBox("Error al traer los datos de tabla TmpAuxVta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                Return False
 '                            Catch ex5 As Exception
-'                                MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1, ECVenta y ECVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                Return False
 '                            End Try
 '                        Catch ex4 As Exception
-'                            MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                            MsgBox("Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                            Return False
 '                        End Try
 '                    Catch ex3 As Exception
-'                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                        MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    End Try
 '                Catch ex2 As Exception
-'                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                    Return False
 '                End Try
 '            End Try
@@ -10791,23 +10994,23 @@ End Class
 '                                                MsgBox("Error al insertar datos en ECDetVenta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                Return False
 '                                            Catch ex6 As Exception
-'                                                MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                Return False
 '                                            End Try
 '                                        Catch ex5 As Exception
-'                                            MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                            MsgBox("Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                            Return False
 '                                        End Try
 '                                    Catch ex4 As Exception
-'                                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                        MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                        Return False
 '                                    End Try
 '                                Catch ex3 As Exception
-'                                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                    Return False
 '                                End Try
 '                            Catch ex2 As Exception
-'                                MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaciÛn de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta. No pudo borrarse informaci√≥n de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                Return False
 '                            End Try
 '                        End Try
@@ -10851,23 +11054,23 @@ End Class
 '                                    MsgBox("Error al traer los datos de TmpAuxVta1. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                    Return False
 '                                Catch ex6 As Exception
-'                                    MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                    MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                    Return False
 '                                End Try
 '                            Catch ex5 As Exception
-'                                MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                MsgBox("Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                Return False
 '                            End Try
 '                        Catch ex4 As Exception
-'                            MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                            MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                            Return False
 '                        End Try
 '                    Catch ex3 As Exception
-'                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                        MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                        Return False
 '                    End Try
 '                Catch ex2 As Exception
-'                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaciÛn de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1. No pudo borrarse informaci√≥n de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                    Return False
 '                End Try
 '            End Try
@@ -10902,30 +11105,30 @@ End Class
 '                                            Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", xCon)
 '                                            Try
 '                                                Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", xCon)
-'                                                MsgBox("Error al registrar la informaciÛn en ECVentaDet. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                MsgBox("Error al registrar la informaci√≥n en ECVentaDet. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                Return False
 '                                            Catch ex7 As Exception
-'                                                MsgBox("Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                                MsgBox("Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta y TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                                Return False
 '                                            End Try
 '                                        Catch ex6 As Exception
-'                                            MsgBox("Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de TmpAuxVta1 ni de TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                            MsgBox("Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de TmpAuxVta1 ni de TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta, ECVentaDete y ECVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                            Return False
 '                                        End Try
 '                                    Catch ex5 As Exception
-'                                        MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                        MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta y EcVentaDete.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                        Return False
 '                                    End Try
 '                                Catch ex4 As Exception
-'                                    MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECVentaDet, ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                    MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECVentaDet, ECDetVenta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                    Return False
 '                                End Try
 '                            Catch ex3 As Exception
-'                                MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, sÛlo de ECVentaDet.", MsgBoxStyle.Critical, "Punto de Venta")
+'                                MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta, s√≥lo de ECVentaDet.", MsgBoxStyle.Critical, "Punto de Venta")
 '                                Return False
 '                            End Try
 '                        Catch ex2 As Exception
-'                            MsgBox("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet. No pudo borrarse informaciÛn de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                            MsgBox("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet. No pudo borrarse informaci√≥n de ECVentaDet, ECDetVenta, ECVentaDete, ECVenta, TmpAuxVta1 ni TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                            Return False
 '                        End Try
 '                    End Try
@@ -10948,25 +11151,25 @@ End Class
 '            Try
 '                Base.Ejecuta(sql, xCon)
 '            Catch ex As Exception
-'                MsgBox("Error en Procedimiento AplicaVentaInventario. Se requerir· rec·lculo.", MsgBoxStyle.Critical, "Punto de Venta")
+'                MsgBox("Error en Procedimiento AplicaVentaInventario. Se requerir√° rec√°lculo.", MsgBoxStyle.Critical, "Punto de Venta")
 '            End Try
 
 
 '            'dsc.Tables.Remove("maximo")
 '        Catch ex As Exception
-'            'Esto es m·s relevante, no se pudo insertar en ECVenta, aun asÌ, no hay gravedad. Solo reintentar.
+'            'Esto es m√°s relevante, no se pudo insertar en ECVenta, aun as√≠, no hay gravedad. Solo reintentar.
 '            Try
 '                Base.Ejecuta("delete from TmpAuxVta1 where Tmp_Usuario='" & Globales.caja & "'", xCon)
 '                Try
 '                    Base.Ejecuta("delete from TmpAuxVta where Tmp_Usuario='" & Globales.caja & "'", xCon)
-'                    MsgBox("Error al registrar la informaciÛn en ECVenta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
+'                    MsgBox("Error al registrar la informaci√≥n en ECVenta. Progreso borrado correctamente.", MsgBoxStyle.Critical, "Punto de Venta")
 '                    Return False
 '                Catch ex2 As Exception
-'                    MsgBox("Error al registrar la informaciÛn en ECVenta. No pudo borrarse informaciÛn de TmpAuxVta, sÛlo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
+'                    MsgBox("Error al registrar la informaci√≥n en ECVenta. No pudo borrarse informaci√≥n de TmpAuxVta, s√≥lo de TmpAuxVta1.", MsgBoxStyle.Critical, "Punto de Venta")
 '                    Return False
 '                End Try
 '            Catch ex3 As Exception
-'                MsgBox("Error al registrar la informaciÛn en ECVenta. No pudo borrarse informaciÛn de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
+'                MsgBox("Error al registrar la informaci√≥n en ECVenta. No pudo borrarse informaci√≥n de TmpAuxVta1, ni de TmpAuxVta.", MsgBoxStyle.Critical, "Punto de Venta")
 '                Return False
 '            End Try
 '        End Try
@@ -11039,7 +11242,7 @@ End Class
 '                    Base.Ejecuta(sql, xCon)
 '                Catch ex As Exception
 '                    dsc2.Tables.Remove("impri")
-'                    Return ("Error al registrar la informaciÛn en tabla TmpAuxVta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
+'                    Return ("Error al registrar la informaci√≥n en tabla TmpAuxVta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, False, False, False, False, False, False)
 '                End Try
 '                dsc2.Tables.Remove("impri")
 '                'End If
@@ -11088,7 +11291,7 @@ End Class
 '                    Base.Ejecuta(sql, xCon)
 '                Catch ex As Exception
 '                    dsc2.Tables.Remove("impri")
-'                    Return ("Error al registrar la informaciÛn en tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
+'                    Return ("Error al registrar la informaci√≥n en tabla TmpAuxVta1." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
 '                End Try
 '                dsc2.Tables.Remove("impri")
 '                'End If
@@ -11148,7 +11351,7 @@ End Class
 '            Try
 '                Base.Ejecuta("insert into LigasFolios values(" & xven & ",'" & FolioCaja & "')", xCon)
 '            Catch ex As Exception
-'                Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en LigasFolios.", True, True, True, False, False, False, False)
+'                Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en LigasFolios.", True, True, True, False, False, False, False)
 '            End Try
 
 
@@ -11192,7 +11395,7 @@ End Class
 '                                        Try
 '                                            Base.Ejecuta(sql, xCon)
 '                                        Catch ex As Exception
-'                                            Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDete.", True, True, True, True, True, False, False)
+'                                            Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDete.", True, True, True, True, True, False, False)
 '                                        End Try
 '                                    End If
 '                                    'End If
@@ -11208,7 +11411,7 @@ End Class
 '                sql = "Select * from tmpauxvta where tmp_usuario='" & Globales.caja & "'"
 '                Base.daQuery(sql, xCon, dsc2, "detventa")
 '            Catch ex As Exception
-'                Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta.", True, True, True, True, True, False, False)
+'                Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de tabla TmpAuxVta.", True, True, True, True, True, False, False)
 '            End Try
 
 
@@ -11250,7 +11453,7 @@ End Class
 '                            Base.Ejecuta(sSql, xCon)
 '                        Catch ex As Exception
 '                            dsc2.Tables.Remove("detventa")
-'                            Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta.", True, True, True, True, True, True, False)
+'                            Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al insertar datos en ECDetVenta.", True, True, True, True, True, True, False)
 '                        End Try
 
 
@@ -11279,7 +11482,7 @@ End Class
 '            Try
 '                Base.daQuery(sql, xCon, dsc2, "detventa")
 '            Catch ex As Exception
-'                Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1.", True, True, True, True, True, True, False)
+'                Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al traer los datos de TmpAuxVta1.", True, True, True, True, True, True, False)
 '            End Try
 
 
@@ -11300,7 +11503,7 @@ End Class
 '                    Try
 '                        Base.Ejecuta(sSql, xCon)
 '                    Catch ex As Exception
-'                        Return ("Error CrÌtico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaciÛn en ECVentaDet.", True, True, True, True, True, True, True)
+'                        Return ("Error Cr√≠tico, notifique a Jaime Burciaga." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Error al registrar la informaci√≥n en ECVentaDet.", True, True, True, True, True, True, True)
 '                    End Try
 
 
@@ -11322,14 +11525,14 @@ End Class
 '                sql = "exec aplicaventainventario " & iID & ",1" 'serie
 '                Base.Ejecuta(sql, xCon)
 '            Catch ex As Exception
-'                MsgBox("Error en Procedimiento AplicaVentaInventario." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Se requerir· rec·lculo.", MsgBoxStyle.Critical, "Punto de Venta")
+'                MsgBox("Error en Procedimiento AplicaVentaInventario." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13) & "Se requerir√° rec√°lculo.", MsgBoxStyle.Critical, "Punto de Venta")
 '            End Try
 
 
 '            'dsc.Tables.Remove("maximo")
 '        Catch ex As Exception
-'            'Esto es m·s relevante, no se pudo insertar en ECVenta, aun asÌ, no hay gravedad. Solo reintentar.
-'            Return ("Error al registrar la informaciÛn en ECVenta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
+'            'Esto es m√°s relevante, no se pudo insertar en ECVenta, aun as√≠, no hay gravedad. Solo reintentar.
+'            Return ("Error al registrar la informaci√≥n en ECVenta." & Chr(13) & Chr(13) & ex.Message & Chr(13) & Chr(13), True, True, False, False, False, False, False)
 '        End Try
 '        Return ("OK", False, False, False, False, False, False, False)
 '    End Function
@@ -11364,7 +11567,7 @@ End Class
 '        End With
 
 '        TxtControl.Text = "0"
-'        LbClienteTicket.Text = "Cliente: P˙blico en General"
+'        LbClienteTicket.Text = "Cliente: P√∫blico en General"
 
 '        PanelCancelaciones.Visible = False
 '        ListBox1.Items.Clear()
@@ -11445,7 +11648,7 @@ End Class
 '        Dim sql2 As String
 '        Dim errorcode As Integer
 '        Dim iva As Integer
-'        Dim VENT As New VENTANITA("øDesea cancelar el Articulo?", "BORRAR")
+'        Dim VENT As New VENTANITA("¬øDesea cancelar el Articulo?", "BORRAR")
 '        Dim xcve As String
 
 '        If ModifierKeys <> ModifierKeys.None Then
@@ -11466,10 +11669,10 @@ End Class
 '        If e.KeyCode = Keys.Home Then
 '            If fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.RowCount - 1, ColVenta.ColCantidad).Value > 0 Then
 '                If fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value = "*" Then
-'                    MsgBox("Se Registro el ArtÌculo como entregado en caja", MsgBoxStyle.Information)
+'                    MsgBox("Se Registro el Art√≠culo como entregado en caja", MsgBoxStyle.Information)
 '                    fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value = ""
 '                Else
-'                    MsgBox("Se Registro el ArtÌculo para entrega de Producto", MsgBoxStyle.Information)
+'                    MsgBox("Se Registro el Art√≠culo para entrega de Producto", MsgBoxStyle.Information)
 '                    fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value = "*"
 '                End If
 '                sql = "update TMPAUXVTA2 set TraeVale='" & fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.RowCount - 1, ColVenta.ColVale).Value & "' where usuario='" & Globales.caja & "' and Renglon=" & fp_articulos.ActiveSheet.RowCount - 1
@@ -11500,7 +11703,7 @@ End Class
 '            If fp_articulos.ActiveSheet.RowCount = 0 Then
 '                Me.txt_tipoventa.Enabled = True
 '                TxtControl.Text = "0"
-'                LbClienteTicket.Text = "Cliente: P˙blico en General"
+'                LbClienteTicket.Text = "Cliente: P√∫blico en General"
 '                Me.txt_tipoventa.Focus()
 '                txt_tipoventa.SelectionStart = 0
 '                txt_tipoventa.SelectionLength = txt_tipoventa.Text.Length
@@ -11641,7 +11844,7 @@ End Class
 
 '        'pago credito
 '        If e.KeyCode = Keys.F8 And formaspago Then
-'            Me.LFORPAG.Text = "CrÈdito"
+'            Me.LFORPAG.Text = "Cr√©dito"
 '            Me.LFORPAG.Visible = True
 '            tx_cantidad.Text = ""
 '            txb_credito.Text = ""
@@ -11833,7 +12036,7 @@ End Class
 '            If CancelandoConF3 Or Entre Then
 '                MsgBox("La cantidad a cancelar no puede ser mayor a lo ya registrado en la venta.", vbExclamation, "Cancelar")
 '            Else
-'                MsgBox("No puede cancelar productos que no estÈn registrados en la venta.", vbExclamation, "Cancelar")
+'                MsgBox("No puede cancelar productos que no est√©n registrados en la venta.", vbExclamation, "Cancelar")
 '            End If
 
 '            RecorreSpread = False
@@ -11905,7 +12108,7 @@ End Class
 '                            'If TotalPagosEsp + CDbl(tx_cantidad.Text) > (Math.Round(totalote * IIf((TIPOVENTA = 2 Or TIPOVENTA = 3), 1.02, 1), 2)) Then
 '                            If Math.Round(TotalPagosEsp + (CDbl(tx_cantidad.Text) - ComTmp - TotalComision), 2) > totalote Then
 
-'                                MsgBox("Con Formas de Pago distintas al efectivo, la cantidad m·xima a pagar es el monto del ticket.", vbExclamation, "Monto Incorrecto")
+'                                MsgBox("Con Formas de Pago distintas al efectivo, la cantidad m√°xima a pagar es el monto del ticket.", vbExclamation, "Monto Incorrecto")
 '                                LFORPAG.Visible = False
 '                                tx_cantidad.Text = ""
 '                                tx_cantidad.Visible = False
@@ -11930,7 +12133,7 @@ End Class
 '                        End If
 '                        If CDbl(Me.tx_cantidad.Text) > acredito And fpago = 4 Then
 '                            Dim forma As Form
-'                            forma = New VENTANITA("LÌmite de crÈdito insuficiente.", "CrÈdito Inv·lido")
+'                            forma = New VENTANITA("L√≠mite de cr√©dito insuficiente.", "Cr√©dito Inv√°lido")
 '                            forma.BringToFront()
 '                            forma.ShowDialog()
 '                            tx_cantidad.Text = ""
@@ -11944,7 +12147,7 @@ End Class
 '                        End If
 '                        If CDbl(Me.tx_cantidad.Text) > (Math.Round(totalote, 2) - Math.Round(totalpagos, 2)) And fpago = 4 Then
 '                            Dim forma As Form
-'                            forma = New VENTANITA("La cantidad de crÈdito no puede ser mayor a la cantidad pendiente de pago.", "CrÈdito Inv·lido")
+'                            forma = New VENTANITA("La cantidad de cr√©dito no puede ser mayor a la cantidad pendiente de pago.", "Cr√©dito Inv√°lido")
 '                            forma.BringToFront()
 '                            forma.ShowDialog()
 '                            tx_cantidad.Text = ""
@@ -11985,13 +12188,13 @@ End Class
 
 '                        Me.LFORPAG.Text = ""
 '                    Else
-'                        MsgBox("Introduzca una cantidad menor, y/o que no sea cÛdigo de barras.", vbExclamation, "Punto de Venta")
+'                        MsgBox("Introduzca una cantidad menor, y/o que no sea c√≥digo de barras.", vbExclamation, "Punto de Venta")
 '                        tx_cantidad.Text = ""
 '                        Me.tx_cantidad.Focus()
 '                        Exit Sub
 '                    End If
 '                Else
-'                    MsgBox("Introduzca un valor numÈrico.", vbExclamation, "Punto de Venta")
+'                    MsgBox("Introduzca un valor num√©rico.", vbExclamation, "Punto de Venta")
 '                    tx_cantidad.Text = ""
 '                    Me.tx_cantidad.Focus()
 '                    Exit Sub
@@ -12004,7 +12207,7 @@ End Class
 '                            Dim result As Object = dataTable.Compute(tx_cantidad.Text, "")
 '                            Cantidad = Convert.ToDouble(result)
 '                        Catch ex As Exception
-'                            MsgBox("Ingrese operaciÛn matem·tica correcta.", vbExclamation, "Punto de Venta")
+'                            MsgBox("Ingrese operaci√≥n matem√°tica correcta.", vbExclamation, "Punto de Venta")
 '                            tx_cantidad.Focus()
 '                            Exit Sub
 '                        End Try
@@ -12076,7 +12279,7 @@ End Class
 '                                'SQL = "select upc_upc from xupc join articulo on art_clave=upc_cveart where upc_upc='" & fp_articulos.ActiveSheet.Cells(renglon, colventa.colupcinv).Value & "' and (upc_activo<>1 or art_activo<>1)"
 '                                'Base.daQuery(SQL, xCon, DSC, "Activo")
 '                                'If DSC.Tables("Activo").Rows.Count > 0 Then
-'                                '    MsgBox("El artÌculo se encuentra inactivo.", MsgBoxStyle.Exclamation, "Punto de Venta")
+'                                '    MsgBox("El art√≠culo se encuentra inactivo.", MsgBoxStyle.Exclamation, "Punto de Venta")
 '                                'Else
 '                                '    TX_UPC.Enabled = False
 '                                '    Panel1.BringToFront()
@@ -12411,14 +12614,14 @@ End Class
 '                Case "Cheque"
 '                    StrPago = "   Pago con Cheque"
 '                Case "Credito"
-'                    StrPago = "   Pago con CrÈdito de Cliente"
+'                    StrPago = "   Pago con Cr√©dito de Cliente"
 '                Case Else
 '                    StrPago = ""
 '            End Select
 
 '            If StrPago <> "" Then
 '                If ListBox1.Items.Count = 0 Then
-'                    ListBox1.Items.Add("**Autorizaciones Por MÈtodo de Pago**")
+'                    ListBox1.Items.Add("**Autorizaciones Por M√©todo de Pago**")
 '                End If
 '                ListBox1.Items.Add(StrPago)
 '                valido = True
@@ -12432,11 +12635,11 @@ End Class
 '        For i = 0 To fp_articulos.ActiveSheet.RowCount - 1
 '            If fp_articulos.ActiveSheet.Cells(i, ColVenta.ColCantidad).Value <= 0 Then
 '                If ListBox1.Items.Count = 0 Then
-'                    ListBox1.Items.Add("**Autorizaciones Por Cancelaciones de ArtÌculos**")
+'                    ListBox1.Items.Add("**Autorizaciones Por Cancelaciones de Art√≠culos**")
 '                Else
 '                    If Not Entre Then
 '                        ListBox1.Items.Add(" ")
-'                        ListBox1.Items.Add("**Autorizaciones Por Cancelaciones de ArtÌculos**")
+'                        ListBox1.Items.Add("**Autorizaciones Por Cancelaciones de Art√≠culos**")
 '                        Entre = True
 '                    End If
 '                End If
@@ -12462,7 +12665,7 @@ End Class
 
 '            If ValidaTipoVenta() Then
 '                'TxtControl.Text = 0
-'                'LbClienteTicket.Text = "Cliente: P˙blico en General"
+'                'LbClienteTicket.Text = "Cliente: P√∫blico en General"
 '                Dim ClienteOrig As Integer = CInt(TxtControl.Text)
 '                Dim ClienteOrigStr As String = LbClienteTicket.Text
 
@@ -12494,7 +12697,7 @@ End Class
 '                        End If
 '                    Case Else
 
-'                        MsgBox("Tipo de Venta Inv·lida.", vbExclamation, "Punto de Venta")
+'                        MsgBox("Tipo de Venta Inv√°lida.", vbExclamation, "Punto de Venta")
 '                        txt_tipoventa.Enabled = True
 '                        txt_tipoventa.Text = "1"
 '                        txt_tipoventa.Focus()
@@ -12554,7 +12757,7 @@ End Class
 
 '            CambiaCliente(TxtControl.Text, LbClienteTicket.Text, RequiereAutorizacion:=False)
 '        ElseIf e.KeyCode = Keys.Escape Then
-'            LbClienteTicket.Text = "Cliente: P˙blico en General"
+'            LbClienteTicket.Text = "Cliente: P√∫blico en General"
 '            TxtControl.Text = 0
 '            TIPOVENTA = 1
 '            txt_tipoventa.Text = 1
@@ -12569,7 +12772,7 @@ End Class
 
 '        If txt_tipoventa.Text <> "" Then
 '            If Not IsNumeric(txt_tipoventa.Text.Trim) OrElse (CDbl(txt_tipoventa.Text) < 1 OrElse CDbl(txt_tipoventa.Text) > 3) Then
-'                MsgBox("Tipo de Venta Inv·lido, indique un tipo de venta correcto.", MsgBoxStyle.Exclamation)
+'                MsgBox("Tipo de Venta Inv√°lido, indique un tipo de venta correcto.", MsgBoxStyle.Exclamation)
 '                Me.txt_tipoventa.Text = 1
 '                Me.txt_tipoventa.Focus()
 '                txt_tipoventa.SelectAll()
@@ -12701,10 +12904,10 @@ End Class
 '            If e.KeyCode = (Keys.F1) Then
 '                If fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.ActiveRowIndex, ColVenta.ColCantidad).Value > 0 Then
 '                    If fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.ActiveRowIndex, ColVenta.ColVale).Value = "*" Then
-'                        MsgBox("Se Registro el ArtÌculo como entregado en caja", MsgBoxStyle.Information)
+'                        MsgBox("Se Registro el Art√≠culo como entregado en caja", MsgBoxStyle.Information)
 '                        fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.ActiveRowIndex, ColVenta.ColVale).Value = ""
 '                    Else
-'                        MsgBox("Se Registro el ArtÌculo para entrega de Producto", MsgBoxStyle.Information)
+'                        MsgBox("Se Registro el Art√≠culo para entrega de Producto", MsgBoxStyle.Information)
 '                        fp_articulos.ActiveSheet.Cells(fp_articulos.ActiveSheet.ActiveRowIndex, ColVenta.ColVale).Value = "*"
 '                    End If
 '                    Dim SQL As String
@@ -12737,7 +12940,7 @@ End Class
 '            SQL = "select * from ecusuariosx where emp_tipo='Supervisor' and emp_password='" & txt_panelofe.Text & "'"
 '            Base.daQuery(SQL, xCon, dsc, "Autoriza")
 '            If dsc.Tables("Autoriza").Rows.Count > 0 Then
-'                If MsgBox("øYa retirÛ todas las etiquetas de la oferta expirada?", vbYesNo, "Oferta Expirada") = MsgBoxResult.Yes Then
+'                If MsgBox("¬øYa retir√≥ todas las etiquetas de la oferta expirada?", vbYesNo, "Oferta Expirada") = MsgBoxResult.Yes Then
 '                    Base.Ejecuta("update ecboletinofer set EtiqCamb=0, Activo=0, Supervisor='" & dsc.Tables("Autoriza").Rows(0)("emp_nombre") & "' where ID=" & CInt(LbIDOferta.Text), xCon)
 '                    MsgBox("Oferta desactivada correctamente.", vbInformation, "Oferta Expirada")
 '                End If
@@ -12749,7 +12952,7 @@ End Class
 '            End If
 '            dsc.Tables.Remove("Autoriza")
 '        Else
-'            MsgBox("Ingrese cÛdigo de supervisor.", vbInformation, "Oferta Expirada")
+'            MsgBox("Ingrese c√≥digo de supervisor.", vbInformation, "Oferta Expirada")
 '            txt_panelofe.Focus()
 '        End If
 '    End Sub
@@ -12773,7 +12976,7 @@ End Class
 '        End If
 
 '        If Not valido Then
-'            MsgBox("Los datos del n˙mero de telÈfono son inv·lidos, corrija ", MsgBoxStyle.Exclamation)
+'            MsgBox("Los datos del n√∫mero de tel√©fono son inv√°lidos, corrija ", MsgBoxStyle.Exclamation)
 '            txt_ctel1.Text = ""
 '            txt_ctel2.Text = ""
 '            txt_ctel3.Text = ""
@@ -12852,7 +13055,7 @@ End Class
 '        'Dim sql2 As String
 '        'Dim errorcode As Integer
 '        Dim iva, ieps As Double
-'        'Dim VENT As New VENTANITA("øDesea cancelar el Articulo?", "BORRAR")
+'        'Dim VENT As New VENTANITA("¬øDesea cancelar el Articulo?", "BORRAR")
 '        'Dim xcve As String
 
 '        cantidad = 0
@@ -13068,8 +13271,8 @@ End Class
 '                sql = "select upc_upc from xupc join articulo on art_clave=upc_cveart where upc_upc='" & UPCStr & "' and (upc_activo<>1 or art_activo<>1)"
 '                Base.daQuery(sql, xCon, dsc, "Activo")
 '                If dsc.Tables("Activo").Rows.Count > 0 Then
-'                    MsgBox("El artÌculo se encuentra inactivo.", MsgBoxStyle.Exclamation, "Punto de Venta")
-'                    Label24.Text = "ARTÕCULO INACTIVO"
+'                    MsgBox("El art√≠culo se encuentra inactivo.", MsgBoxStyle.Exclamation, "Punto de Venta")
+'                    Label24.Text = "ART√çCULO INACTIVO"
 '                Else
 '                    Label24.Text = "PRODUCTO NO ENCONTRADO"
 '                End If
@@ -13239,7 +13442,7 @@ End Class
 '                        End If
 
 
-'                        agregaArticulo(UPCUPC, ArtClave, nomlargo, ArtNomLargo, Familia, CostoCap, Precio1, Precio2, Precio3, .RowCount - 1, TOPE, xtipo, cantidad, iva, ieps, CargandoPendiente, TraeVale, FueConF1, cancelacion, FueConF3, CantidadDisponible:=dsc.Tables("articulo").Rows(0)("CantidadDisponible"), PrecioOferta1:=dsc.Tables("articulo").Rows(0)("XPrecio1"), PrecioOferta2:=dsc.Tables("articulo").Rows(0)("XPrecio2"), PrecioOferta3:=dsc.Tables("articulo").Rows(0)("XPrecio3"), CantidadCobradas:=CantCob, TipoOferta:=dsc.Tables("articulo").Rows(0)("Tipo_Ofer")) 'Se agrega artÌculo por F2, puede que con F1.
+'                        agregaArticulo(UPCUPC, ArtClave, nomlargo, ArtNomLargo, Familia, CostoCap, Precio1, Precio2, Precio3, .RowCount - 1, TOPE, xtipo, cantidad, iva, ieps, CargandoPendiente, TraeVale, FueConF1, cancelacion, FueConF3, CantidadDisponible:=dsc.Tables("articulo").Rows(0)("CantidadDisponible"), PrecioOferta1:=dsc.Tables("articulo").Rows(0)("XPrecio1"), PrecioOferta2:=dsc.Tables("articulo").Rows(0)("XPrecio2"), PrecioOferta3:=dsc.Tables("articulo").Rows(0)("XPrecio3"), CantidadCobradas:=CantCob, TipoOferta:=dsc.Tables("articulo").Rows(0)("Tipo_Ofer")) 'Se agrega art√≠culo por F2, puede que con F1.
 '                        FueConF1 = False
 '                        ANTERIOR = fp_articulos.ActiveSheet.Cells(.RowCount - 1, ColVenta.ColCantidad).Value
 
@@ -13280,7 +13483,7 @@ End Class
 '    End Sub
 
 '    Private Sub BtnCambiaVenta_Click(sender As Object, e As EventArgs) Handles BtnCambiaVenta.Click
-'        If MsgBox("øDesea cambiar el tipo de venta?", vbYesNo, "Punto de Venta") = MsgBoxResult.Yes Then
+'        If MsgBox("¬øDesea cambiar el tipo de venta?", vbYesNo, "Punto de Venta") = MsgBoxResult.Yes Then
 '            Dim Aprobado As Boolean = False
 '            Dim ResTxt As String = Nothing
 '            Dim ClienteID As Integer = TxtControl.Text
@@ -13344,7 +13547,7 @@ End Class
 '                            MsgBox("El tipo de venta debe ser 1,2 o 3.", vbInformation, "Cambiar Tipo de Venta")
 '                        End If
 '                    Else
-'                        MsgBox("Tipo de Venta debe ser numÈrico.", vbInformation, "Cambiar Tipo de Venta")
+'                        MsgBox("Tipo de Venta debe ser num√©rico.", vbInformation, "Cambiar Tipo de Venta")
 '                    End If
 '                Else
 '                    Exit Sub
@@ -13413,7 +13616,7 @@ End Class
 '                If PanelSeleccionTarjetas.Visible = False Then
 '                    If sender.name = fp_articulos.Name Then
 '                        Corriendo = True
-'                        If MsgBox("øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
+'                        If MsgBox("¬øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
 '                            borrapagos()
 '                            SendKeys.Flush()
 '                        Else
@@ -13453,7 +13656,7 @@ End Class
 '                Else
 '                    If TipoTarj = "" Then
 '                        Corriendo = True
-'                        If MsgBox("No ha seleccionado el tipo de tarjeta, ødesea cerrar ventana de tarjetas?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
+'                        If MsgBox("No ha seleccionado el tipo de tarjeta, ¬ødesea cerrar ventana de tarjetas?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
 '                            borrapagos()
 '                            SendKeys.Flush()
 '                        Else
@@ -13463,12 +13666,12 @@ End Class
 '                    Else
 '                        If sender.name = fp_articulos.Name Then
 '                            Corriendo = True
-'                            If MsgBox("øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
+'                            If MsgBox("¬øDesea cerrar ventana de pagos?", vbYesNo, "Cerrar Pagos") = MsgBoxResult.Yes Then
 '                                PanelSeleccionTarjetas.Visible = False
 '                                borrapagos()
 '                                SendKeys.Flush()
 '                            Else
-'                                MsgBox("Debe seleccionar primero el tipo de tarjeta.", vbExclamation, "SelecciÛn de Tarjeta")
+'                                MsgBox("Debe seleccionar primero el tipo de tarjeta.", vbExclamation, "Selecci√≥n de Tarjeta")
 '                                If TipoTarj = rbTCredito.Tag Then
 '                                    rbTCredito.Focus()
 '                                ElseIf TipoTarj = rbTDebito.Tag Then
@@ -13521,11 +13724,11 @@ End Class
 '            End If
 
 '            If rbTCredito.Checked Then
-'                TipoTarj = "CrÈdito"
+'                TipoTarj = "Cr√©dito"
 '            ElseIf rbTDebito.Checked Then
-'                TipoTarj = "DÈbito"
+'                TipoTarj = "D√©bito"
 '            End If
-'            'Ahora sÌ lo que sigue de f9
+'            'Ahora s√≠ lo que sigue de f9
 '            Label18.Text = "Referencia:"
 '            Me.LFORPAG.Text = "Tarjeta"
 '            Me.LFORPAG.Visible = True
@@ -13603,7 +13806,7 @@ End Class
 '                                    MsgBox("El tipo de venta debe ser 1,2 o 3.", vbInformation, "Cambiar Tipo de Venta")
 '                                End If
 '                            Else
-'                                MsgBox("Tipo de Venta debe ser numÈrico.", vbInformation, "Cambiar Tipo de Venta")
+'                                MsgBox("Tipo de Venta debe ser num√©rico.", vbInformation, "Cambiar Tipo de Venta")
 '                            End If
 '                        Else
 '                            TxtControl.Text = ClienteOrig
@@ -13641,7 +13844,7 @@ End Class
 '        TX_UPC.Focus()
 '    End Sub
 '    Private Sub BtnCambiaCliente_Click(sender As Object, e As EventArgs) Handles BtnCambiaCliente.Click
-'        If MsgBox("øDesea cambiar el cliente?", vbYesNo, "Punto de Venta") = MsgBoxResult.Yes Then
+'        If MsgBox("¬øDesea cambiar el cliente?", vbYesNo, "Punto de Venta") = MsgBoxResult.Yes Then
 '            CambiaCliente(TxtControl.Text, LbClienteTicket.Text, True)
 '        Else
 '            TX_UPC.Focus()
@@ -13684,7 +13887,7 @@ End Class
 '                SQL = "insert into ProporcionVentaTicket values ('" & NumTicket & "'," & CuantosMay & "," & CuantosMen & "," & totalote & ",'" & Globales.nombreusuario & "'," & Math.Round(CuantosMay / (CuantosMen + CuantosMay), 3) & ")"
 '                Base.Ejecuta(SQL, xCon)
 '            Catch ex As Exception
-'                MsgBox("Error al insertar ProporciÛn de Venta." & Chr(13) & Chr(13) & ex.Message)
+'                MsgBox("Error al insertar Proporci√≥n de Venta." & Chr(13) & Chr(13) & ex.Message)
 '        End Try
 '    End Sub
 'End Class

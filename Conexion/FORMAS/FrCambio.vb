@@ -375,8 +375,10 @@ Public Class FrCambio
         Dim dtUPC As New DataTable()
         dtUPC.Columns.Add("dve_articulo", GetType(String))
         dtUPC.Columns.Add("dve_upc", GetType(String))
+        dtUPC.Columns.Add("dve_descripcion", GetType(String))
         dtUPC.Columns.Add("dve_precio", GetType(Decimal))
         dtUPC.Columns.Add("dve_cantidad", GetType(Decimal))
+        dtUPC.Columns.Add("dve_cantcapturada", GetType(Decimal))
         dtUPC.Columns.Add("dve_total", GetType(Decimal))
         dtUPC.Columns.Add("dve_poriva", GetType(Decimal))
         dtUPC.Columns.Add("dve_iva", GetType(Decimal))
@@ -388,6 +390,7 @@ Public Class FrCambio
         dtUPC.Columns.Add("FueConF2", GetType(Integer))
         dtUPC.Columns.Add("FueConF3", GetType(Integer))
         dtUPC.Columns.Add("FueConF6", GetType(Integer))
+        dtUPC.Columns.Add("dve_factoraplicado", GetType(Decimal))
         dtUPC.Columns.Add("dve_porieps", GetType(Decimal))
         dtUPC.Columns.Add("dve_ieps", GetType(Decimal))
 
@@ -481,6 +484,11 @@ Public Class FrCambio
                 Dim Factor As Decimal = CDec(Val(.Cells(i, ColVenta.ColFactor).Value))
                 If Factor <= 0D Then Factor = 1D
 
+                Dim FactorFactura As Decimal = CDec(Val(.Cells(i, ColVenta.ColFactorFactura).Value))
+                If FactorFactura <= 0D Then FactorFactura = Factor
+                If FactorFactura <= 0D Then FactorFactura = 1D
+
+
                 Dim CantidadCapturada As Decimal = Cantidad
                 Dim CantidadInventario As Decimal = Cantidad * Factor
                 Dim PrecioInventario As Decimal = Precio
@@ -492,7 +500,7 @@ Public Class FrCambio
                     UPC & "|" &
                     PrecioInventario.ToString("0.####", CultureInfo.InvariantCulture) & "|" &
                     F6.ToString() & "|" &
-                    Factor.ToString("0.####", CultureInfo.InvariantCulture)
+                    FactorFactura.ToString("0.####", CultureInfo.InvariantCulture)
 
                 Dim KeyImpresion As String =
                     ArtClave & "|" &
@@ -511,13 +519,16 @@ Public Class FrCambio
                 If Not DicInventario.ContainsKey(KeyInventario) Then
                     DicInventario.Add(KeyInventario, New ItemAcumulado With {
                         .UPC = UPC, .Clave = ArtClave, .Descripcion = NomLargo,
-                        .PrecioU = PrecioInventario, .CostoU = CostoU, .Familia = Familia,
+                        .PrecioU = PrecioInventario, .CostoU = CostoU, .Familia = Familia, .CantidadCapturada = 0D,
                         .PorcIVA = PorcIVA, .PorcIEPS = PorcIEPS,
-                        .F1 = F1, .F2 = F2, .F3 = F3, .F6 = F6
+                        .F1 = F1, .F2 = F2, .F3 = F3, .F6 = F6,
+                        .Factor = FactorFactura
                     })
                 End If
+
                 With DicInventario(KeyInventario)
                     .Cantidad += CantidadInventario
+                    .CantidadCapturada += CantidadCapturada
                     .Total += TotalLinea
                     .ImporteIVA += ImpIVA
                     .ImporteIEPS += ImpIEPS
@@ -554,6 +565,10 @@ Public Class FrCambio
                     CantidadNeta -= Restar
                     CancelacionesVales(KeyVale) += Restar
                 End If
+                If CantidadNeta > 0 And TieneAsterisco Then
+                    TraeValeGlobal = True
+                    dtVales.Rows.Add(ArtClave, UPC, CantidadNeta, Precio, (CantidadNeta * Precio), Factor, F6)
+                End If
             Next
         End With
 
@@ -567,9 +582,11 @@ Public Class FrCambio
             Dim itm = kvp.Value
             Dim CostoTotal As Decimal = itm.Cantidad * itm.CostoU
 
-            dtUPC.Rows.Add(itm.Clave, itm.UPC, itm.PrecioU, itm.Cantidad, itm.Total,
-                           itm.PorcIVA, itm.ImporteIVA, itm.CostoU, CostoTotal, itm.Familia,
-                           RenglonInv, itm.F1, itm.F2, itm.F3, itm.F6, itm.PorcIEPS, itm.ImporteIEPS)
+            dtUPC.Rows.Add(itm.Clave, itm.UPC, itm.Descripcion, itm.PrecioU, itm.Cantidad, itm.CantidadCapturada, itm.Total,
+               itm.PorcIVA, itm.ImporteIVA, itm.CostoU, CostoTotal, itm.Familia,
+               RenglonInv, itm.F1, itm.F2, itm.F3, itm.F6, itm.Factor,
+               itm.PorcIEPS, itm.ImporteIEPS)
+
             RenglonInv += 1
         Next
 
@@ -1200,6 +1217,7 @@ Public Class FrCambio
 
         ' Valores Acumulables
         Public Cantidad As Decimal = 0
+        Public CantidadCapturada As Decimal = 0
         Public Total As Decimal = 0
         Public CostoTotal As Decimal = 0
         Public ImporteIVA As Decimal = 0
@@ -1216,6 +1234,8 @@ Public Class FrCambio
         Public F2 As Integer
         Public F3 As Integer
         Public F6 As Integer
+
+        Public Factor As Decimal = 1D
     End Class
 End Class
 'Imports System.Data.SqlClient

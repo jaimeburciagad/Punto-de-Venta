@@ -172,25 +172,68 @@ Public Class preImpresion
         ' --- DETALLE ---
         Dim sqlDetalle As String = ""
         If EsCotizacion Then
-            sqlDetalle = "SELECT dcot_cantidad AS Cantidad, art_nomlargo AS Descripcion, dcot_precio AS Precio, dcot_total AS Total FROM ecdetcotiza JOIN xupc ON dcot_articulo = upc_upc JOIN articulo ON upc_cveart = art_clave WHERE dcot_compra = " & NumTicket & " ORDER BY dcot_renglon ASC"
+            'sqlDetalle = "SELECT dcot_cantidad AS Cantidad, art_nomlargo AS Descripcion, dcot_precio AS Precio, dcot_total AS Total,1 AS Factor FROM ecdetcotiza JOIN xupc ON dcot_articulo = upc_upc JOIN articulo ON upc_cveart = art_clave WHERE dcot_compra = " & NumTicket & " ORDER BY dcot_renglon ASC"
+            sqlDetalle = "SELECT " &
+                         "dcot_cantidad * " &
+                         "CASE " &
+                         "WHEN ISNULL(dcot_factoraplicado, 0) > 1 THEN dcot_factoraplicado " &
+                         "WHEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) > 1 THEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) " &
+                         "ELSE 1 END AS Cantidad, " &
+                         "ISNULL(NULLIF(dcot_descripcion,''), art_nomlargo) AS Descripcion, " &
+                         "dcot_precio AS Precio, " &
+                         "dcot_total AS Total, " &
+                         "CASE " &
+                         "WHEN ISNULL(dcot_factoraplicado, 0) > 1 THEN dcot_factoraplicado " &
+                         "WHEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) > 1 THEN ISNULL(dcot_cap1, 0) * ISNULL(dcot_cap2, 0) " &
+                         "ELSE 1 END AS Factor " &
+                         "FROM ecdetcotiza " &
+                         "JOIN xupc ON dcot_articulo = upc_upc " &
+                         "JOIN articulo ON upc_cveart = art_clave " &
+                         "WHERE dcot_compra = " & NumTicket & " " &
+                         "ORDER BY dcot_renglon ASC"
         Else
-            sqlDetalle = "SELECT dve_cantidad AS Cantidad, art_nomlargo AS Descripcion, dve_precio AS Precio, dve_total AS Total FROM ECDETVENTA JOIN ARTICULO ON dve_articulo = ART_CLAVE WHERE dve_venta = " & NumTicket & " ORDER BY dve_renglon ASC"
+            'sqlDetalle = "SELECT dve_cantidad AS Cantidad, art_nomlargo AS Descripcion, dve_precio AS Precio, dve_total AS Total FROM ECVENTADET JOIN ARTICULO ON dve_articulo = ART_CLAVE WHERE dve_venta = " & NumTicket & " ORDER BY dve_renglon ASC"
+            sqlDetalle = "SELECT " &
+             "CASE WHEN ISNULL(D.DVE_CANTCAPTURADA, 0) <> 0 THEN D.DVE_CANTCAPTURADA ELSE D.dve_cantidad END AS Cantidad, " &
+             "CASE WHEN ISNULL(D.DVE_CANTCAPTURADA, 0) <> 0 THEN D.dve_total / D.DVE_CANTCAPTURADA ELSE D.dve_precio END AS Precio, " &
+             "D.dve_total AS Total, " &
+             "ISNULL(NULLIF(D.DVE_DESCRIPCION, ''), ISNULL(X.upc_descripcion, A.art_nomlargo)) AS Descripcion " &
+             "FROM ECVENTADET D " &
+             "JOIN ARTICULO A ON D.dve_articulo = A.ART_CLAVE " &
+             "LEFT JOIN XUPC X ON D.dve_upc = X.upc_upc " &
+             "WHERE D.dve_venta = " & NumTicket & " " &
+             "ORDER BY D.dve_renglon ASC"
+
+
+
         End If
 
         Dim dsDet As New DataSet
         Base.daQuery(sqlDetalle, sCadenaConexionSQL, dsDet, "Detalle")
 
         For Each row As DataRow In dsDet.Tables("Detalle").Rows
-            Dim Cant As Decimal = CDec(row("Cantidad"))
-            Dim Desc As String = row("Descripcion").ToString()
-            Dim Prec As Decimal = CDec(row("Precio"))
+            Dim CantMostrar As Decimal = CDec(row("Cantidad"))
+            Dim PrecMostrar As Decimal = CDec(row("Precio"))
             Dim Tot As Decimal = CDec(row("Total"))
+            Dim Desc As String = row("Descripcion").ToString()
 
-            If Cant <> 0 Then
+            If EsCotizacion AndAlso dsDet.Tables("Detalle").Columns.Contains("Factor") Then
+                Dim Factor As Decimal = CDec(Val(row("Factor")))
+                If Factor <= 0D Then Factor = 1D
+
+                If Factor > 1D Then
+                    CantMostrar = CantMostrar / Factor
+                    PrecMostrar = PrecMostrar * Factor
+                End If
+            End If
+
+            If CantMostrar <> 0 Then
                 renglones.Add(Left(Desc, Globales.numletras))
-                renglones.Add(TabulaPro(Cant, Prec, Tot))
+                renglones.Add(TabulaPro(CantMostrar, PrecMostrar, Tot))
             End If
         Next
+
+
 
         renglones.Add(StrDup(Globales.numletras, "-"))
 
